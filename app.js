@@ -1,8 +1,12 @@
-var app = require('express')()
+var express = require('express')
 var server = require('http').createServer(app)
 var io = require('socket.io').listen(server)
 var ent = require('ent') // block HTML entities
 var fs = require('fs')
+
+var app = express()
+
+app.use(express.static(__dirname + '/view'))
 
 // load index.html on get /
 app.get('/', function (req, res) {
