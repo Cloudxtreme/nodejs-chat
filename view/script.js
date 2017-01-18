@@ -1,5 +1,10 @@
 // connect to socket.io
-var socket = io.connect('http://localhost:8080')
+var request = new XMLHttpRequest()
+// false makes the request synchronous
+request.open('GET', '/conf', false)
+request.send()
+var conf = JSON.parse(request.responseText)
+var socket = io.connect('http://'+conf.server_ip_address+':'+conf.server_port)
 
 // ask for nickname, send to server and display in the title
 var nickname = prompt('Enter your nickname ?')
