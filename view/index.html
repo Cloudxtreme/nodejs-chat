@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-  <base href="/">
     <meta charset="utf-8">
     <title>Chat</title>
     <link rel="stylesheet" href="./style.css">
@@ -10,14 +9,14 @@
     <script src="./script.js"></script>
   </head>
   <body>
-    <h1>The chat</h1>
+    <h1>nodejs-chat</h1>
 
-    <form action="/" method="post" id="chat_form">
-      <input type="text" name="message" id="message" placeholder="Type your message here..." size="50" autofocus />
-      <input type="submit" id="envoi_message" value="Send" />
-    </form>
+    <section id="chat_form">
+      <input type="text" name="message" id="message" placeholder="Type your message here..." size="50" autofocus onkeydown="pressKey(event)"/>
+	  <button onclick="send()">Send</button>
+    </section>
 
-  <section id="zone_chat">
+  <section id="chat_zone">
 
   </section>
   </body>
