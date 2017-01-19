@@ -1,11 +1,12 @@
 // connect to socket.io
-var local = false // set to true for tests in localhost
-var socket
-if (local) {
-	socket = io.connect('http://'+location.hostname+':8080')
+var port = ''
+if (location.hostname=='localhost') {
+	if (location.port!=''&&location.port!='80')
+	port=':'+location.port
 } else {
-	socket = io.connect('http://'+location.hostname+':8000')
+	port=':8000'
 }
+var socket = io.connect('http://'+location.hostname+port)
 
 // ask for nickname, send to server and display in the title
 var nickname = prompt('Enter your nickname.')
