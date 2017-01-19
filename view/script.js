@@ -23,6 +23,11 @@ socket.on('new_client', function(nickname) {
 	$('#chat_zone').prepend('<p><em>' + nickname + ' joined in.</em></p>')
 })
 
+// display info when a new client joins
+socket.on('client_left', function(nickname) {
+	$('#chat_zone').prepend('<p><em>' + nickname + ' left the chat.</em></p>')
+})
+
 // submit form, send message and diplay it on th page
 function send() {
 	var message = $('#message').val()

@@ -8,6 +8,8 @@ var io = require('socket.io').listen(server)
 var ent = require('ent') // block HTML entities
 var fs = require('fs')
 
+var allClients = []
+
 app.use(express.static(__dirname + '/view'))
 
 // load index.html on get /
@@ -27,12 +29,22 @@ io.sockets.on('connection', function (socket, nickname) {
 		nickname = ent.encode(nickname)
 		socket.nickname = nickname
 		socket.broadcast.emit('new_client', nickname)
+		allClients.push(socket)
 	})
 
 	// upon message reception, the sender's nickname is captured and retransmitted to other clients
 	socket.on('message', function (message) {
 		message = ent.encode(message)
 		socket.broadcast.emit('message', {nickname: socket.nickname, message: message})
+	})
+	
+	// client disconnects
+	socket.on('disconnect', function() {
+		var i = allClients.indexOf(socket)
+		if (allClients[i]) {
+			socket.broadcast.emit('client_left', allClients[i].nickname)
+			allClients.splice(i, 1)
+		}
 	})
 })
 
