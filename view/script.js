@@ -44,7 +44,15 @@ function send() {
 		socket.emit('message', message)
 		// display message in our page as well
 		var date = new Date()
-		time = date.getHours() + ':' + date.getMinutes()
+		var hours = date.getHours()
+		if (hours<10) {
+			hours = '0'+hours
+		}
+		var minutes = date.getMinutes()
+		if (minutes<10) {
+			minutes = '0'+minutes
+		}
+		time = hours + ':' + minutes
 		insertMessage(nickname, message, time, true)
 		// empty chat zone, and set focus on it again
 		$('#message').val('').focus()
