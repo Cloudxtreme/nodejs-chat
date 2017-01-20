@@ -42,6 +42,7 @@ io.sockets.on('connection', function (socket, nickname) {
 		var old_nickname = nickname
 		nickname = ent.encode(nickname)
 		nickname=nickname.split(" ")[nickname.split(" ").length-1]
+		//nickname=nickname.replace(/[^A-Za-z0-9\u00C0-\u017F]/g, '')
 		if (nickname.length>15) {
 			nickname = nickname.substr(nickname.length-15)
 		}
@@ -62,7 +63,8 @@ io.sockets.on('connection', function (socket, nickname) {
 	// upon message reception, the sender's nickname is captured and retransmitted to other clients
 	socket.on('message', function (message) {
 		message = ent.encode(message)
-		socket.broadcast.emit('message', {nickname: socket.nickname, message: message})
+		var date = new Date()
+		socket.broadcast.emit('message', {nickname: socket.nickname, message: message, time: date.getHours() + ':' + date.getMinutes()})
 	})
 	
 	// client disconnects

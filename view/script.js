@@ -18,22 +18,22 @@ document.title = nickname + ' - ' + title
 socket.on('set_nickname', function(new_nickname){
 	nickname = new_nickname
 	document.title = nickname + ' - ' + title
-	$('#chat_zone').prepend('<p><em>your nickname has been changed to <b>' + nickname + '</b> by server.</em></p>')
+	messageFromServer('your nickname has been changed to <b>' + nickname + '</b> by server.')
 })
 
 // insert message in page upon reception
 socket.on('message', function(data) {
-	insertMessage(data.nickname, data.message)
+	insertMessage(data.nickname, data.message, data.time)
 })
 
 // display info when a new client joins
 socket.on('new_client', function(nickname) {
-	$('#chat_zone').prepend('<p><em>' + nickname + ' joined in.</em></p>')
+	messageFromServer(nickname + ' joined in.')
 })
 
 // display info when a new client joins
 socket.on('client_left', function(nickname) {
-	$('#chat_zone').prepend('<p><em>' + nickname + ' left the chat.</em></p>')
+	messageFromServer(nickname + ' left the chat.')
 })
 
 // submit form, send message and diplay it on th page
@@ -43,7 +43,9 @@ function send() {
 		// send message to others
 		socket.emit('message', message)
 		// display message in our page as well
-		insertMessage(nickname, message)
+		var date = new Date()
+		time = date.getHours() + ':' + date.getMinutes()
+		insertMessage(nickname, message, time, true)
 		// empty chat zone, and set focus on it again
 		$('#message').val('').focus()
 	}
@@ -56,6 +58,14 @@ function pressKey(e) {
 }
 
 // add a message in the page
-function insertMessage(nickname, message) {
-	$('#chat_zone').prepend('<p><strong>' + nickname + '</strong> ' + message + '</p>')
+function insertMessage(nickname, message, time, toself) {
+	var cl = 'from_server'
+	if (toself) {
+		cl = 'toself'
+	}
+	$('#chat_zone').prepend('<p class="'+cl+'">'+time+' <strong>' + nickname + '</strong> ' + message + '</p>')
+}
+
+function messageFromServer(message) {
+	$('#chat_zone').prepend('<p class="from_server"><em>'+message+'</em></p>')
 }
