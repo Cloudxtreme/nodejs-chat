@@ -36,19 +36,22 @@ function alreadyUsed(nickname) {
 io.sockets.on('connection', function (socket, nickname) {
 	// upon nickname reception, it is stored as session variable and the other clients are informed
 	socket.on('new_client', function(nickname) {
-		if (nickname) {
-			nickname = ent.encode(nickname)
+		if (!nickname) {
+			nickname=''
 		}
+		var old_nickname = nickname
+		nickname = ent.encode(nickname)
+		nickname=nickname.split(" ")[nickname.split(" ").length-1]
 		if (nickname.length>15) {
 			nickname = nickname.substr(nickname.length-15)
-			socket.emit('set_nickname', nickname)
 		}
-		if (!nickname||nickname==''||nickname=='undefined') {
+		if (nickname==''||nickname=='undefined') {
 			nickname = 'client-'+allClients.length
-			socket.emit('set_nickname', nickname)
 		}
 		if (alreadyUsed(nickname)) {
 			nickname=nickname+'-'+allClients.length
+		}
+		if (old_nickname!=nickname) {
 			socket.emit('set_nickname', nickname)
 		}
 		socket.nickname = nickname
