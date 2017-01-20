@@ -33,6 +33,14 @@ function alreadyUsed(nickname) {
 	return res
 }
 
+function sendConnectedList(socket) {
+	var list = []
+	allClients.forEach(function (socket) {
+		list.push(socket.nickname)
+	})
+	socket.emit('list', list)
+}
+
 io.sockets.on('connection', function (socket, nickname) {
 	// upon nickname reception, it is stored as session variable and the other clients are informed
 	socket.on('new_client', function(nickname) {
@@ -57,6 +65,7 @@ io.sockets.on('connection', function (socket, nickname) {
 		}
 		socket.nickname = nickname
 		socket.broadcast.emit('new_client', nickname)
+		sendConnectedList(socket)
 		allClients.push(socket)
 	})
 

@@ -1,4 +1,3 @@
-// connect to socket.io
 var port = ''
 if (location.hostname=='localhost') {
 	if (location.port!=''&&location.port!='80')
@@ -6,6 +5,7 @@ if (location.hostname=='localhost') {
 } else {
 	port=':8000'
 }
+// connect to socket.io
 var socket = io.connect('http://'+location.hostname+port)
 
 // ask for nickname, send to server and display in the title
@@ -13,6 +13,8 @@ var nickname = prompt('Enter your nickname.')
 socket.emit('new_client', nickname)
 var title=document.title
 document.title = nickname + ' - ' + title
+
+var list = []
 
 // if server requests a change in the nickname
 socket.on('set_nickname', function(new_nickname){
@@ -29,11 +31,18 @@ socket.on('message', function(data) {
 // display info when a new client joins
 socket.on('new_client', function(nickname) {
 	messageFromServer(nickname + ' joined in.')
+	addToList(nickname)
 })
 
-// display info when a new client joins
+// display info when a client lefts
 socket.on('client_left', function(nickname) {
 	messageFromServer(nickname + ' left the chat.')
+	removeFromList(nickname)
+})
+
+// list of connected clients
+socket.on('list', function(list) {
+	setupList(list)
 })
 
 // submit form, send message and diplay it on th page
@@ -76,4 +85,32 @@ function insertMessage(nickname, message, time, toself) {
 
 function messageFromServer(message) {
 	$('#chat_zone').prepend('<p class="from_server"><em>'+message+'</em></p>')
+}
+
+function setupList(new_list) {
+	list = new_list
+	displayList()
+}
+
+function addToList(nickname) {
+	list.push(nickname)
+	displayList()
+}
+
+function removeFromList(nickname) {
+	var index = list.indexOf(nickname)
+	if (index > -1) {
+		list.splice(index, 1)
+	}
+	displayList()
+}
+
+function displayList() {
+	res = '<h3>Connected users:</h3>'
+	res += '<ul>'
+	list.forEach(function (nickname) {
+		res += '<li>'+nickname+'</li>'
+	})
+	res += '</ul>'
+	$('#connected').html(res)
 }

@@ -1,9 +1,17 @@
+aside {
+	float: right
+}
+
 .toself {
 	color: gray
 }
 
 .from_server {
 	color: #00008B
+}
+
+#connected {
+	color: green
 }
 
 #chat_zone strong {
