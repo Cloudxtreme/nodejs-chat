@@ -11,7 +11,15 @@ var socket = io.connect('http://'+location.hostname+port)
 // ask for nickname, send to server and display in the title
 var nickname = prompt('Enter your nickname.')
 socket.emit('new_client', nickname)
-document.title = nickname + ' - ' + document.title
+var title=document.title
+document.title = nickname + ' - ' + title
+
+// if server requests a change in the nickname
+socket.on('set_nickname', function(new_nickname){
+	nickname = new_nickname
+	document.title = nickname + ' - ' + title
+	$('#chat_zone').prepend('<p><em>your nickname has been changed to <b>' + nickname + '</b> by server.</em></p>')
+})
 
 // insert message in page upon reception
 socket.on('message', function(data) {

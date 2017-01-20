@@ -23,10 +23,30 @@ app.get('/conf', function (req, res) {
 	res.end(JSON.stringify({server_port:server_port,server_ip_address:server_ip_address}))
 })
 
+function alreadyUsed(nickname) {
+	var res = false
+	allClients.forEach(function(socket) {
+		if (socket.nickname==nickname) {
+			res = true
+		}
+	})
+	return res
+}
+
 io.sockets.on('connection', function (socket, nickname) {
 	// upon nickname reception, it is stored as session variable and the other clients are informed
 	socket.on('new_client', function(nickname) {
-		nickname = ent.encode(nickname)
+		if (nickname) {
+			nickname = ent.encode(nickname)
+		}
+		if (!nickname||nickname==''||nickname=='undefined') {
+			nickname = 'client-'+allClients.length
+			socket.emit('set_nickname', nickname)
+		}
+		if (alreadyUsed(nickname)) {
+			nickname=nickname+'-'+allClients.length
+			socket.emit('set_nickname', nickname)
+		}
 		socket.nickname = nickname
 		socket.broadcast.emit('new_client', nickname)
 		allClients.push(socket)
