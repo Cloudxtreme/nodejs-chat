@@ -64,7 +64,15 @@ io.sockets.on('connection', function (socket, nickname) {
 	socket.on('message', function (message) {
 		message = ent.encode(message)
 		var date = new Date()
-		socket.broadcast.emit('message', {nickname: socket.nickname, message: message, time: date.getHours() + ':' + date.getMinutes()})
+		var hours = date.getHours()
+		if (hours<10) {
+			hours = '0'+hours
+		}
+		var minutes = date.getMinutes()
+		if (minutes<10) {
+			minutes = '0'+minutes
+		}
+		socket.broadcast.emit('message', {nickname: socket.nickname, message: message, time: hours + ':' + minutes})
 	})
 	
 	// client disconnects
