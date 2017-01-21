@@ -7,6 +7,7 @@ var server = require('http').createServer(app)
 var io = require('socket.io').listen(server)
 var ent = require('ent') // block HTML entities
 var fs = require('fs')
+var moment = require('moment-timezone')
 
 var allClients = []
 
@@ -72,16 +73,7 @@ io.sockets.on('connection', function (socket, nickname) {
 	// upon message reception, the sender's nickname is captured and retransmitted to other clients
 	socket.on('message', function (message) {
 		message = ent.encode(message)
-		var date = new Date()
-		var hours = date.getHours()
-		if (hours<10) {
-			hours = '0'+hours
-		}
-		var minutes = date.getMinutes()
-		if (minutes<10) {
-			minutes = '0'+minutes
-		}
-		socket.broadcast.emit('message', {nickname: socket.nickname, message: message, time: hours + ':' + minutes})
+		socket.broadcast.emit('message', {nickname: socket.nickname, message: message, time: moment().tz("Europe/Paris").format('HH:mm')})
 	})
 	
 	// client disconnects
