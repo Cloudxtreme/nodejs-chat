@@ -16,6 +16,10 @@ document.title = nickname + ' - ' + title
 
 var list = []
 
+var nmsound = new Audio('./audio/new_message.mp3')
+var loginsound = new Audio('./audio/signin.mp3')
+var logoutsound = new Audio('./audio/signout.mp3')
+
 // if server requests a change in the nickname
 socket.on('set_nickname', function(new_nickname){
 	nickname = new_nickname
@@ -27,6 +31,7 @@ socket.on('set_nickname', function(new_nickname){
 socket.on('message', function(data) {
 	document.title = data.nickname + ': new message!'
 	insertMessage(data.nickname, data.message, data.time)
+	nmsound.play()
 })
 
 // display info when a new client joins
@@ -34,6 +39,7 @@ socket.on('new_client', function(nickname) {
 	document.title = nickname + ': joined in.'
 	messageFromServer(nickname + ' joined in.')
 	addToList(nickname)
+	loginsound.play()
 })
 
 // display info when a client lefts
@@ -41,6 +47,7 @@ socket.on('client_left', function(nickname) {
 	document.title = nickname + ': left the chat.'
 	messageFromServer(nickname + ' left the chat.')
 	removeFromList(nickname)
+	logoutsound.play()
 })
 
 // list of connected clients
