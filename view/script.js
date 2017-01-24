@@ -80,7 +80,7 @@ function insertMessage(nickname, message, time, toself) {
 	if (toself) {
 		cl = 'toself'
 	}
-	$('#chat_zone').prepend('<p class="'+cl+'">'+time+' <strong>' + nickname + '</strong> ' + message + '</p>')
+	$('#chat_zone').prepend('<p class="'+cl+'">'+time+' <strong>' + nickname + '</strong> ' + message + '</p>').linkify()
 }
 
 function messageFromServer(message) {
