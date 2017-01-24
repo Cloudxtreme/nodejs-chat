@@ -25,17 +25,20 @@ socket.on('set_nickname', function(new_nickname){
 
 // insert message in page upon reception
 socket.on('message', function(data) {
+	document.title = data.nickname + ': new message!'
 	insertMessage(data.nickname, data.message, data.time)
 })
 
 // display info when a new client joins
 socket.on('new_client', function(nickname) {
+	document.title = nickname + ': joined in.'
 	messageFromServer(nickname + ' joined in.')
 	addToList(nickname)
 })
 
 // display info when a client lefts
 socket.on('client_left', function(nickname) {
+	document.title = nickname + ': left the chat.'
 	messageFromServer(nickname + ' left the chat.')
 	removeFromList(nickname)
 })
@@ -113,4 +116,8 @@ function displayList() {
 	})
 	res += '</ul>'
 	$('#connected').html(res)
+}
+
+function focus() {
+	document.title = nickname + ' - ' + title
 }
