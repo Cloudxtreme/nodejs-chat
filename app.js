@@ -45,7 +45,8 @@ function sendConnectedList(socket) {
 
 io.sockets.on('connection', function (socket, nickname) {
 	// upon nickname reception, it is stored as session variable and the other clients are informed
-	socket.on('new_client', function(nickname) {
+	socket.on('new_client', function(data) {
+		var nickname = data.nickname
 		if (!nickname) {
 			nickname=''
 		}

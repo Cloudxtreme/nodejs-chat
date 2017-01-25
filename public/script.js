@@ -9,8 +9,15 @@ if (location.hostname=='localhost') {
 var socket = io.connect('http://'+location.hostname+port)
 
 // ask for nickname, send to server and display in the title
-var nickname = prompt('Enter your nickname.')
-socket.emit('new_client', nickname)
+var nickname = sessionStorage.nickname
+var password = ''
+if (!nickname) {
+	nickname = prompt('Enter your nickname.')
+	sessionStorage.nickname = nickname
+} else if (sessionStorage.password) {
+	password = sessionStorage.password
+}
+socket.emit('new_client', {nickname:nickname,password:password})
 var title=document.title
 document.title = nickname + ' - ' + title
 
@@ -25,6 +32,7 @@ socket.on('set_nickname', function(new_nickname){
 	nickname = new_nickname
 	document.title = nickname + ' - ' + title
 	messageFromServer('your nickname has been changed to <b>' + nickname + '</b> by server.')
+	sessionStorage.nickname = nickname
 })
 
 // insert message in page upon reception
