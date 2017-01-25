@@ -16,10 +16,11 @@ if (!nickname) {
 	sessionStorage.nickname = nickname
 } else if (sessionStorage.password) {
 	password = sessionStorage.password
+	document.querySelector('#login_button').setAttribute('hidden','')
 }
 socket.emit('new_client', {nickname:nickname,password:password})
 var title=document.title
-document.title = nickname + ' - ' + title
+setNickname()
 
 var list = []
 
@@ -30,7 +31,7 @@ var logoutsound = new Audio('./audio/signout.mp3')
 // if server requests a change in the nickname
 socket.on('set_nickname', function(new_nickname){
 	nickname = new_nickname
-	document.title = nickname + ' - ' + title
+	setNickname()
 	messageFromServer('your nickname has been changed to <b>' + nickname + '</b> by server.')
 	sessionStorage.nickname = nickname
 })
@@ -135,4 +136,9 @@ function displayList() {
 
 function focus() {
 	document.title = nickname + ' - ' + title
+}
+
+function setNickname() {
+	document.title = nickname + ' - ' + title
+	document.querySelector('#nickname').innerHTML = nickname
 }
