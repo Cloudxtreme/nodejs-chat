@@ -5,3 +5,9 @@ function login() {
 	sessionStorage.password = password
 	window.location = '/'
 }
+
+function pressKey(e) {
+	if (e.key=='Enter') {
+		login()
+	}
+}
