@@ -4,12 +4,13 @@
   <meta charset="UTF-8">
   <title>Login to Chat</title>
   <script src="/script_login.js"></script>
+  <link rel="stylesheet" href="/style_login.css">
 </head>
 <body>
-  <form action="/validate">
+  <section id="login_form">
     <label for="nickname">nickname</label><input id="nickname" type="text"><br>
     <label for="password">password</label><input id="password" type="text"><br>
-    <input type="submit" value="login">
-  </form>
+    <button onclick="login()">login</button>
+  </section>
 </body>
 </html>

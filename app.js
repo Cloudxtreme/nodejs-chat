@@ -11,12 +11,20 @@ var moment = require('moment-timezone')
 
 var allClients = []
 var specialNicknames = [{name:'levg34',password:'meuh'},{name:'madblade',password:'cuicui'}]
+var sns = specialNicknames.map(function (d) {
+	return d.name
+})
 
 app.use(express.static(__dirname + '/public'))
 
 // load index.html on get /
 app.get('/', function (req, res) {
 	res.sendFile(__dirname + '/view/index.html')
+})
+
+// load login.html on get /login
+app.get('/login', function (req, res) {
+	res.sendFile(__dirname + '/view/login.html')
 })
 
 // load config variables on get /conf
@@ -47,6 +55,7 @@ io.sockets.on('connection', function (socket, nickname) {
 	// upon nickname reception, it is stored as session variable and the other clients are informed
 	socket.on('new_client', function(data) {
 		var nickname = data.nickname
+		var password = data.password
 		if (!nickname) {
 			nickname=''
 		}
@@ -57,7 +66,8 @@ io.sockets.on('connection', function (socket, nickname) {
 		if (nickname.length>15) {
 			nickname = nickname.substr(nickname.length-15)
 		}
-		if (nickname==''||nickname=='undefined') {
+		var index = sns.indexOf(nickname)
+		if (nickname==''||nickname=='undefined'||(index!=-1&&specialNicknames[index].password!=password)) {
 			nickname = 'client-'+allClients.length
 		}
 		if (alreadyUsed(nickname)) {
