@@ -10,8 +10,9 @@ var fs = require('fs')
 var moment = require('moment-timezone')
 
 var allClients = []
+var specialNicknames = [{name:'levg34',password:'meuh'},{name:'madblade',password:'cuicui'}]
 
-app.use(express.static(__dirname + '/view'))
+app.use(express.static(__dirname + '/public'))
 
 // load index.html on get /
 app.get('/', function (req, res) {
