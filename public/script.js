@@ -11,6 +11,9 @@ var socket = io.connect('http://'+location.hostname+port)
 // ask for nickname, send to server and display in the title
 var nickname = sessionStorage.nickname
 var password = ''
+var privkey = localStorage.privkey
+var pubkey = localStorage.pubkey
+
 if (!nickname) {
 	nickname = prompt('Enter your nickname.')
 	sessionStorage.nickname = nickname
@@ -146,4 +149,19 @@ function focus() {
 function setNickname() {
 	document.title = nickname + ' - ' + title
 	document.querySelector('#nickname').innerHTML = nickname
+}
+
+function genKey(pass) {
+	var options = {
+		userIds: [{ name:nickname, email:nickname+'@example.com' }],
+		numBits: 2048,
+		passphrase: pass
+	}
+	openpgp.generateKey(options).then(function(key) {
+		privkey = key.privateKeyArmored
+		pubkey = key.publicKeyArmored
+		localStorage.privkey = privkey
+		localStorage.pubkey = pubkey
+		socket.emit('pubkey',pubkey)
+	})
 }
