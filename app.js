@@ -85,7 +85,13 @@ io.sockets.on('connection', function (socket, nickname) {
 	// upon message reception, the sender's nickname is captured and retransmitted to other clients
 	socket.on('message', function (message) {
 		message = ent.encode(message)
-		socket.broadcast.emit('message', {nickname: socket.nickname, message: message, time: moment().tz("Europe/Paris").format('HH:mm')})
+		if (socket.nickname) {
+			socket.broadcast.emit('message', {nickname: socket.nickname, message: message, time: moment().tz("Europe/Paris").format('HH:mm')})
+		} else {
+			var ts = Math.floor(Math.random()*1000)
+			socket.broadcast.emit('message', {nickname: 'temp-'+ts, message: message, time: moment().tz("Europe/Paris").format('HH:mm')})
+			socket.emit('refresh')
+		}
 	})
 	
 	// client disconnects

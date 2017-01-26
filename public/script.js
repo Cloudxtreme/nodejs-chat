@@ -64,6 +64,11 @@ socket.on('list', function(list) {
 	setupList(list)
 })
 
+// list of connected clients
+socket.on('refresh', function() {
+	window.location = '/'
+})
+
 // submit form, send message and diplay it on th page
 function send() {
 	var message = $('#message').val()
