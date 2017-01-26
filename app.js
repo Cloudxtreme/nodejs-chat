@@ -89,7 +89,8 @@ io.sockets.on('connection', function (socket, nickname) {
 			socket.broadcast.emit('message', {nickname: socket.nickname, message: message, time: moment().tz("Europe/Paris").format('HH:mm')})
 		} else {
 			var ts = Math.floor(Math.random()*1000)
-			socket.broadcast.emit('message', {nickname: 'temp-'+ts, message: message, time: moment().tz("Europe/Paris").format('HH:mm')})
+			socket.nickname = 'temp-'+ts
+			socket.broadcast.emit('message', {nickname: socket.nickname, message: message, time: moment().tz("Europe/Paris").format('HH:mm')})
 			socket.emit('refresh')
 		}
 	})
