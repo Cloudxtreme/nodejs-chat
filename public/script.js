@@ -59,7 +59,7 @@ function displayMessage(data) {
 }
 
 socket.on('message', function(data) {
-	if (dest&&dest.pubkey) {
+	if (dest&&dest.name==data.nickname&&dest.pubkey) {
 		decrypt(data)
 	} else {
 		displayMessage(data)
@@ -100,21 +100,6 @@ socket.on('pubkey', function(pubkey) {
 function sendMessage(message) {
 	// send message to others
 	socket.emit('message', {message: message, to: dest.name})
-	// display message in our page as well
-	var date = new Date()
-	var hours = date.getHours()
-	if (hours<10) {
-		hours = '0'+hours
-	}
-	var minutes = date.getMinutes()
-	if (minutes<10) {
-		minutes = '0'+minutes
-	}
-	time = hours + ':' + minutes
-	if (dest.name!='all') {
-		message += ' <em>(to '+dest.name+')</em>'
-	}
-	insertMessage(nickname, message, time, true)
 	// empty chat zone, and set focus on it again
 	$('#message').val('').focus()
 }
@@ -128,6 +113,24 @@ function send() {
 		} else {
 			sendMessage(message)
 		}
+		// display message in our page as well
+		var date = new Date()
+		var hours = date.getHours()
+		if (hours<10) {
+			hours = '0'+hours
+		}
+		var minutes = date.getMinutes()
+		if (minutes<10) {
+			minutes = '0'+minutes
+		}
+		time = hours + ':' + minutes
+		if (dest.name!='all') {
+			message += ' <em>(to '+dest.name+')</em>'
+			if (dest.pubkey) {
+				message += ' <img src="/img/secure.jpg">'
+			}
+		}
+		insertMessage(nickname, message, time, true)
 	}
 }
 
@@ -201,8 +204,7 @@ function genKey() {
 	var pass = password
 	var options = {
 		userIds: [{ name:nickname, email:nickname+'@example.com' }],
-		numBits: 2048,
-		passphrase: pass
+		numBits: 2048
 	}
 	openpgp.generateKey(options).then(function(key) {
 		privkey = key.privateKeyArmored
@@ -244,6 +246,7 @@ function decrypt(data) {
 
 	openpgp.decrypt(options).then(function(plaintext) {
 		data.message = plaintext.data
+		data.message += ' <img src="/img/secure.jpg">'
 		displayMessage(data)
 	})
 }
