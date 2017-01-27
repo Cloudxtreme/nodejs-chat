@@ -13,7 +13,8 @@ var nickname = sessionStorage.nickname
 var password = ''
 var privkey = localStorage.privkey
 var pubkey = localStorage.pubkey
-var dest = 'all'
+var dest = {}
+dest.name = 'all'
 
 if (!nickname) {
 	nickname = prompt('Enter your nickname.','')
@@ -51,10 +52,18 @@ socket.on('set_nickname', function(new_nickname){
 })
 
 // insert message in page upon reception
-socket.on('message', function(data) {
+function displayMessage(data) {
 	document.title = data.nickname + ': new message!'
 	insertMessage(data.nickname, data.message, data.time)
 	nmsound.play()
+}
+
+socket.on('message', function(data) {
+	if (dest&&dest.pubkey) {
+		decrypt(data)
+	} else {
+		displayMessage(data)
+	}
 })
 
 // display info when a new client joins
@@ -83,29 +92,42 @@ socket.on('refresh', function() {
 	window.location = '/'
 })
 
-// submit form, send message and diplay it on th page
+// receive public key
+socket.on('pubkey', function(pubkey) {
+	dest.pubkey = pubkey
+})
+
+function sendMessage(message) {
+	// send message to others
+	socket.emit('message', {message: message, to: dest.name})
+	// display message in our page as well
+	var date = new Date()
+	var hours = date.getHours()
+	if (hours<10) {
+		hours = '0'+hours
+	}
+	var minutes = date.getMinutes()
+	if (minutes<10) {
+		minutes = '0'+minutes
+	}
+	time = hours + ':' + minutes
+	if (dest.name!='all') {
+		message += ' <em>(to '+dest.name+')</em>'
+	}
+	insertMessage(nickname, message, time, true)
+	// empty chat zone, and set focus on it again
+	$('#message').val('').focus()
+}
+
+// submit form, send message and diplay it on the page
 function send() {
 	var message = $('#message').val()
 	if (message!='') {
-		// send message to others
-		socket.emit('message', {message: message, to: dest})
-		// display message in our page as well
-		var date = new Date()
-		var hours = date.getHours()
-		if (hours<10) {
-			hours = '0'+hours
+		if (dest&&dest.pubkey) {
+			encrypt(message)
+		} else {
+			sendMessage(message)
 		}
-		var minutes = date.getMinutes()
-		if (minutes<10) {
-			minutes = '0'+minutes
-		}
-		time = hours + ':' + minutes
-		if (dest!='all') {
-			message += ' <em>(to '+dest+')</em>'
-		}
-		insertMessage(nickname, message, time, true)
-		// empty chat zone, and set focus on it again
-		$('#message').val('').focus()
 	}
 }
 
@@ -166,8 +188,12 @@ function setNickname() {
 }
 
 function selectConnected(nickname) {
-	dest = nickname
-	$('#dest').html(dest)
+	dest = {}
+	dest.name = nickname
+	$('#dest').html(dest.name)
+	if (dest.name!='all') {
+		socket.emit('get_pubkey',dest.name)
+	}
 }
 
 function genKey() {
@@ -193,4 +219,31 @@ function showkey() {
 	} else {
 		alert('You have no key. Generate one by clicking the button.')
 	}
+}
+
+function encrypt(message) {
+	var options = {
+		data: message,                             // input as String
+		publicKeys: openpgp.key.readArmored(dest.pubkey).keys,  // for encryption
+		privateKeys: openpgp.key.readArmored(privkey).keys // for signing (optional)
+	}
+
+	openpgp.encrypt(options).then(function(ciphertext) {
+		var encrypted = ciphertext.data
+		sendMessage(encrypted)
+	})
+}
+
+function decrypt(data) {
+	var encrypted = data.message
+	options = {
+		message: openpgp.message.readArmored(encrypted),     // parse armored message
+		publicKeys: openpgp.key.readArmored(dest.pubkey).keys,    // for verification (optional)
+		privateKey: openpgp.key.readArmored(privkey).keys[0] // for decryption
+	}
+
+	openpgp.decrypt(options).then(function(plaintext) {
+		data.message = plaintext.data
+		displayMessage(data)
+	})
 }

@@ -10,7 +10,7 @@ var fs = require('fs')
 var moment = require('moment-timezone')
 
 var allClients = []
-var specialNicknames = [{name:'levg34',password:'meuh'},{name:'madblade',password:'cuicui'},{name:'BorisG7',password:'petitbourgeois'},{name:'admin',password:'meuh'}]
+var specialNicknames = [{name:'levg34',password:'meuh'},{name:'madblade',password:'cuicui'},{name:'BorisG7',password:'petitbourgeois'},{name:'admin',password:'meuh'},{name:'all',password:'donotuse'}]
 var sns = specialNicknames.map(function (d) {
 	return d.name
 })
@@ -117,6 +117,10 @@ io.sockets.on('connection', function (socket, nickname) {
 	// client sends public key
 	socket.on('pubkey', function(pubkey) {
 		socket.pubkey = pubkey
+	})
+
+	socket.on('get_pubkey', function(nickname) {
+		socket.emit('pubkey',findSocket(nickname).pubkey)
 	})
 })
 
