@@ -14,7 +14,7 @@ aside {
 	color: green
 }
 
-#connected:hover {
+#connected li:hover {
 	text-decoration: underline
 }
 

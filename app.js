@@ -10,7 +10,7 @@ var fs = require('fs')
 var moment = require('moment-timezone')
 
 var allClients = []
-var specialNicknames = [{name:'levg34',password:'meuh'},{name:'madblade',password:'cuicui'}]
+var specialNicknames = [{name:'levg34',password:'meuh'},{name:'madblade',password:'cuicui'},{name:'BorisG7',password:'petitbourgeois'},{name:'admin',password:'meuh'}]
 var sns = specialNicknames.map(function (d) {
 	return d.name
 })
@@ -51,6 +51,13 @@ function sendConnectedList(socket) {
 	socket.emit('list', list)
 }
 
+function findSocket(nickname) {
+	var index = allClients.map(function(socket){
+		return socket.nickname
+	}).indexOf(nickname)
+	return allClients[index]
+}
+
 io.sockets.on('connection', function (socket, nickname) {
 	// upon nickname reception, it is stored as session variable and the other clients are informed
 	socket.on('new_client', function(data) {
@@ -83,14 +90,19 @@ io.sockets.on('connection', function (socket, nickname) {
 	})
 
 	// upon message reception, the sender's nickname is captured and retransmitted to other clients
-	socket.on('message', function (message) {
-		message = ent.encode(message)
+	socket.on('message', function (data) {
+		var message = ent.encode(data.message)
+		var to = data.to
 		if (!socket.nickname) {
 			var ts = Math.floor(Math.random() * 1000)
 			socket.nickname = 'temp-' + ts
 			socket.emit('refresh')
 		}
-		socket.broadcast.emit('message', {nickname: socket.nickname, message: message, time: moment().tz("Europe/Paris").format('HH:mm')})
+		if (to=='all') {
+			socket.broadcast.emit('message', {nickname: socket.nickname, message: message, time: moment().tz("Europe/Paris").format('HH:mm')})
+		} else {
+			findSocket(to).emit('message', {nickname: socket.nickname, message: message, time: moment().tz("Europe/Paris").format('HH:mm')})
+		}
 	})
 	
 	// client disconnects

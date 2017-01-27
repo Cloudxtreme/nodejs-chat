@@ -13,6 +13,7 @@ var nickname = sessionStorage.nickname
 var password = ''
 var privkey = localStorage.privkey
 var pubkey = localStorage.pubkey
+var dest = 'all'
 
 if (!nickname) {
 	nickname = prompt('Enter your nickname.')
@@ -87,7 +88,7 @@ function send() {
 	var message = $('#message').val()
 	if (message!='') {
 		// send message to others
-		socket.emit('message', message)
+		socket.emit('message', {message: message, to: dest})
 		// display message in our page as well
 		var date = new Date()
 		var hours = date.getHours()
@@ -99,6 +100,9 @@ function send() {
 			minutes = '0'+minutes
 		}
 		time = hours + ':' + minutes
+		if (dest!='all') {
+			message += ' <em>(to '+dest+')</em>'
+		}
 		insertMessage(nickname, message, time, true)
 		// empty chat zone, and set focus on it again
 		$('#message').val('').focus()
@@ -162,28 +166,25 @@ function setNickname() {
 }
 
 function selectConnected(nickname) {
-	console.log(nickname)
+	dest = nickname
+	$('#dest').html(dest)
 }
 
 function genKey() {
 	//var pass = prompt('Enter your passphrase.')
-	try {
-		var pass = password
-		var options = {
-			userIds: [{ name:nickname, email:nickname+'@example.com' }],
-			numBits: 2048,
-			passphrase: pass
-		}
-		openpgp.generateKey(options).then(function(key) {
-			privkey = key.privateKeyArmored
-			pubkey = key.publicKeyArmored
-			localStorage.privkey = privkey
-			localStorage.pubkey = pubkey
-			window.location = '/'
-		})
-	} catch (e) {
-		$('.keyarea').hide()
+	var pass = password
+	var options = {
+		userIds: [{ name:nickname, email:nickname+'@example.com' }],
+		numBits: 2048,
+		passphrase: pass
 	}
+	openpgp.generateKey(options).then(function(key) {
+		privkey = key.privateKeyArmored
+		pubkey = key.publicKeyArmored
+		localStorage.privkey = privkey
+		localStorage.pubkey = pubkey
+		window.location = '/'
+	})
 }
 
 function showkey() {
