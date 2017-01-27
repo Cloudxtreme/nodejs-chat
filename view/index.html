@@ -11,9 +11,10 @@
     <script src="/socket.io/socket.io.js"></script>
   </head>
   <body onfocus="focus()">
-    <h1>nodejs-chat</h1>
+    <h1>nodejs-chat <img src="/img/keyko.png" id="key" class="keyarea" hidden onclick="showkey()"></h1>
     <p>You are <b><span id="nickname">client-x</span></b>. Click <a href="/" onclick="sessionStorage.clear()">here</a> to change nickname</p>
     <p id="login_button">You have an account? Click <a href="/login">here</a> to login.</p>
+	<p class="keyarea" hidden><button id="genkey" onclick="genKey()">Generate key</button></p>
     <section id="chat_form">
       <input type="text" name="message" id="message" placeholder="Type your message here..." size="50" autofocus onkeydown="pressKey(event)"/>
     <button onclick="send()">Send</button>

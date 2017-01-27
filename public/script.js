@@ -25,6 +25,14 @@ socket.emit('new_client', {nickname:nickname,password:password})
 var title=document.title
 setNickname()
 
+if (password) {
+	$('.keyarea').show()
+	if (privkey&&pubkey) {
+		$('#key').attr('src','/img/keyok.png')
+		socket.emit('pubkey',pubkey)
+	}
+}
+
 var list = []
 
 var nmsound = new Audio('./audio/new_message.mp3')
@@ -37,6 +45,8 @@ socket.on('set_nickname', function(new_nickname){
 	setNickname()
 	messageFromServer('your nickname has been changed to <b>' + nickname + '</b> by server.')
 	sessionStorage.nickname = nickname
+	sessionStorage.password = ''
+	$('.keyarea').hide()
 })
 
 // insert message in page upon reception
@@ -136,7 +146,7 @@ function displayList() {
 	res = '<h3>Connected users:</h3>'
 	res += '<ul>'
 	list.forEach(function (nickname) {
-		res += '<li>'+nickname+'</li>'
+		res += '<li onclick="selectConnected(\''+nickname+'\')">'+nickname+'</li>'
 	})
 	res += '</ul>'
 	$('#connected').html(res)
@@ -151,7 +161,13 @@ function setNickname() {
 	document.querySelector('#nickname').innerHTML = nickname
 }
 
-function genKey(pass) {
+function selectConnected(nickname) {
+	console.log(nickname)
+}
+
+function genKey() {
+	//var pass = prompt('Enter your passphrase.')
+	var pass = password
 	var options = {
 		userIds: [{ name:nickname, email:nickname+'@example.com' }],
 		numBits: 2048,
@@ -162,6 +178,14 @@ function genKey(pass) {
 		pubkey = key.publicKeyArmored
 		localStorage.privkey = privkey
 		localStorage.pubkey = pubkey
-		socket.emit('pubkey',pubkey)
+		window.location = '/'
 	})
+}
+
+function showkey() {
+	if (privkey&&pubkey) {
+		alert(privkey)
+	} else {
+		alert('You have no key. Generate one by clicking the button.')
+	}
 }

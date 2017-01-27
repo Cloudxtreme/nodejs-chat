@@ -14,8 +14,17 @@ aside {
 	color: green
 }
 
+#connected:hover {
+	text-decoration: underline
+}
+
 #chat_zone strong {
 	color: white;
 	background-color: black;
 	padding: 2px;
+}
+
+#key {
+	height: 50px;
+	width: 50px
 }
