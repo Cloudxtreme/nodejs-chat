@@ -16,7 +16,7 @@ var pubkey = localStorage.pubkey
 var dest = 'all'
 
 if (!nickname) {
-	nickname = prompt('Enter your nickname.')
+	nickname = prompt('Enter your nickname.','')
 	sessionStorage.nickname = nickname
 } else if (sessionStorage.password) {
 	password = sessionStorage.password
@@ -171,7 +171,7 @@ function selectConnected(nickname) {
 }
 
 function genKey() {
-	//var pass = prompt('Enter your passphrase.')
+	//var pass = prompt('Enter your passphrase.','')
 	var pass = password
 	var options = {
 		userIds: [{ name:nickname, email:nickname+'@example.com' }],
