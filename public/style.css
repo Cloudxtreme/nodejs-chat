@@ -15,11 +15,13 @@ aside {
 }
 
 #connected li:hover {
-	text-decoration: underline
+	text-decoration: underline;
+	cursor: pointer;
 }
 
 #dest:hover {
-	text-decoration: underline
+	text-decoration: underline;
+	cursor: pointer;
 }
 
 #chat_zone strong {
