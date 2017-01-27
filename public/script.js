@@ -167,19 +167,23 @@ function selectConnected(nickname) {
 
 function genKey() {
 	//var pass = prompt('Enter your passphrase.')
-	var pass = password
-	var options = {
-		userIds: [{ name:nickname, email:nickname+'@example.com' }],
-		numBits: 2048,
-		passphrase: pass
+	try {
+		var pass = password
+		var options = {
+			userIds: [{ name:nickname, email:nickname+'@example.com' }],
+			numBits: 2048,
+			passphrase: pass
+		}
+		openpgp.generateKey(options).then(function(key) {
+			privkey = key.privateKeyArmored
+			pubkey = key.publicKeyArmored
+			localStorage.privkey = privkey
+			localStorage.pubkey = pubkey
+			window.location = '/'
+		})
+	} catch (e) {
+		$('.keyarea').hide()
 	}
-	openpgp.generateKey(options).then(function(key) {
-		privkey = key.privateKeyArmored
-		pubkey = key.publicKeyArmored
-		localStorage.privkey = privkey
-		localStorage.pubkey = pubkey
-		window.location = '/'
-	})
 }
 
 function showkey() {
