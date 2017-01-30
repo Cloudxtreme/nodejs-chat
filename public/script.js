@@ -147,6 +147,15 @@ function pressKey(e) {
 	}
 }
 
+function escapeHtml(unsafe) {
+	return unsafe
+		.replace(/&/g, "&amp;")
+		.replace(/</g, "&lt;")
+		.replace(/>/g, "&gt;")
+		.replace(/"/g, "&quot;")
+		.replace(/'/g, "&#039;");
+}
+
 // add a message in the page
 function insertMessage(nickname, message, time, toself) {
 	var cl = 'from_server'
