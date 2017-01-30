@@ -120,7 +120,12 @@ io.sockets.on('connection', function (socket, nickname) {
 	})
 
 	socket.on('get_pubkey', function(nickname) {
-		socket.emit('pubkey',findSocket(nickname).pubkey)
+		var pubkey = findSocket(nickname).pubkey
+		if (pubkey&&pubkey.startsWith('-----BEGIN PGP PUBLIC KEY BLOCK-----')) {
+			socket.emit('pubkey',pubkey)
+		} else {
+			socket.emit('pubkey','')
+		}
 	})
 })
 

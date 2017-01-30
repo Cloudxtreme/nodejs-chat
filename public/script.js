@@ -59,7 +59,7 @@ function displayMessage(data) {
 }
 
 socket.on('message', function(data) {
-	if (dest&&dest.name==data.nickname&&dest.pubkey) {
+	if (privkey&&data.message.startsWith('-----BEGIN PGP MESSAGE-----')) {
 		decrypt(data)
 	} else {
 		displayMessage(data)
@@ -80,6 +80,9 @@ socket.on('client_left', function(nickname) {
 	messageFromServer(nickname + ' left the chat.')
 	removeFromList(nickname)
 	logoutsound.play()
+	if (nickname==dest.name) {
+		selectConnected('all')
+	}
 })
 
 // list of connected clients
@@ -94,7 +97,11 @@ socket.on('refresh', function() {
 
 // receive public key
 socket.on('pubkey', function(pubkey) {
-	dest.pubkey = pubkey
+	if (pubkey.startsWith('-----BEGIN PGP PUBLIC KEY BLOCK-----')) {
+		dest.pubkey = pubkey
+	} else {
+		delete dest.pubkey
+	}
 })
 
 function sendMessage(message) {
@@ -219,7 +226,7 @@ function showkey() {
 	if (privkey&&pubkey) {
 		alert(privkey)
 	} else {
-		alert('You have no key. Generate one by clicking the button.')
+		genKey()
 	}
 }
 
