@@ -233,8 +233,8 @@ function showkey() {
 function encrypt(message) {
 	var options = {
 		data: message,                             // input as String
-		publicKeys: openpgp.key.readArmored(dest.pubkey).keys,  // for encryption
-		privateKeys: openpgp.key.readArmored(privkey).keys // for signing (optional)
+		publicKeys: openpgp.key.readArmored(dest.pubkey).keys  // for encryption
+		//privateKeys: openpgp.key.readArmored(privkey).keys // for signing (optional)
 	}
 
 	openpgp.encrypt(options).then(function(ciphertext) {
@@ -247,7 +247,7 @@ function decrypt(data) {
 	var encrypted = data.message
 	options = {
 		message: openpgp.message.readArmored(encrypted),     // parse armored message
-		publicKeys: openpgp.key.readArmored(dest.pubkey).keys,    // for verification (optional)
+		//publicKeys: openpgp.key.readArmored(dest.pubkey).keys,    // for verification (optional)
 		privateKey: openpgp.key.readArmored(privkey).keys[0] // for decryption
 	}
 
@@ -256,4 +256,12 @@ function decrypt(data) {
 		data.message += ' <img src="/img/secure.jpg">'
 		displayMessage(data)
 	})
+}
+
+// IE
+if (!String.prototype.startsWith) {
+	String.prototype.startsWith = function(searchString, position) {
+		position = position || 0
+		return this.indexOf(searchString, position) === position
+	}
 }
