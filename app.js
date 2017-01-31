@@ -98,7 +98,7 @@ io.sockets.on('connection', function (socket, nickname) {
 			socket.nickname = 'temp-' + ts
 			socket.emit('refresh')
 		}
-		if (to=='all') {
+		if (to=='all'||!findSocket(to)) {
 			socket.broadcast.emit('message', {nickname: socket.nickname, message: message, time: moment().tz("Europe/Paris").format('HH:mm')})
 		} else {
 			findSocket(to).emit('message', {nickname: socket.nickname, message: data.message, time: moment().tz("Europe/Paris").format('HH:mm')})

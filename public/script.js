@@ -161,9 +161,9 @@ function insertMessage(nickname, message, time, toself, secured, to) {
 	var totag = ''
 	if (toself) {
 		cl = 'toself'
-	}
-	if (to&&to!='all') {
-		totag = ' <em>(to '+dest.name+')</em>'	
+		if (to&&to!='all') {
+			totag = ' <em>(to '+dest.name+')</em>'	
+		}
 	}
 	if (secured) {
 		secimg = '/img/secure.jpg'
