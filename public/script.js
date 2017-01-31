@@ -135,7 +135,7 @@ function send() {
 			minutes = '0'+minutes
 		}
 		time = hours + ':' + minutes
-		insertMessage(nickname, message, time, true, dest.name, secured)
+		insertMessage(nickname, message, time, true, secured, dest.name)
 	}
 }
 
@@ -155,15 +155,15 @@ function escapeHtml(unsafe) {
 }
 
 // add a message in the page
-function insertMessage(nickname, message, time, toself, to, secured) {
+function insertMessage(nickname, message, time, toself, secured, to) {
 	var cl = 'from_server'
 	var secimg = '/img/blanksecure.jpg'
 	var totag = ''
 	if (toself) {
 		cl = 'toself'
 	}
-	if (to!='all') {
-		totag += ' <em>(to '+dest.name+')</em>'	
+	if (to&&to!='all') {
+		totag = ' <em>(to '+dest.name+')</em>'	
 	}
 	if (secured) {
 		secimg = '/img/secure.jpg'
@@ -270,8 +270,7 @@ function decrypt(data) {
 
 	openpgp.decrypt(options).then(function(plaintext) {
 		data.message = plaintext.data
-		data.message += ' <img src="/img/secure.jpg">'
-		displayMessage(data)
+		displayMessage(data,true)
 	})
 }
 
