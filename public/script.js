@@ -15,6 +15,7 @@ var privkey = localStorage.privkey
 var pubkey = localStorage.pubkey
 var dest = {}
 dest.name = 'all'
+var usesecure = false
 
 if (!nickname) {
 	nickname = prompt('Enter your nickname.','')
@@ -28,6 +29,7 @@ var title=document.title
 setNickname()
 
 if (password) {
+	usesecure = true
 	$('.keyarea').show()
 	if (privkey&&pubkey) {
 		$('#key').attr('src','/img/keyok.png')
@@ -115,8 +117,10 @@ function sendMessage(message) {
 function send() {
 	var message = $('#message').val()
 	if (message!='') {
+		var secured = false
 		if (dest&&dest.pubkey) {
 			encrypt(message)
+			secured = true
 		} else {
 			sendMessage(message)
 		}
@@ -131,13 +135,7 @@ function send() {
 			minutes = '0'+minutes
 		}
 		time = hours + ':' + minutes
-		if (dest.name!='all') {
-			message += ' <em>(to '+dest.name+')</em>'
-			if (dest.pubkey) {
-				message += ' <img src="/img/secure.jpg">'
-			}
-		}
-		insertMessage(nickname, message, time, true)
+		insertMessage(nickname, message, time, true, dest.name, secured)
 	}
 }
 
@@ -157,12 +155,22 @@ function escapeHtml(unsafe) {
 }
 
 // add a message in the page
-function insertMessage(nickname, message, time, toself) {
+function insertMessage(nickname, message, time, toself, to, secured) {
 	var cl = 'from_server'
+	var secimg = '/img/blanksecure.jpg'
+	var totag = ''
 	if (toself) {
 		cl = 'toself'
 	}
-	$('#chat_zone').prepend('<p class="'+cl+'">'+time+' <strong>' + nickname + '</strong> ' + message + '</p>').linkify()
+	if (to!='all') {
+		totag += ' <em>(to '+dest.name+')</em>'	
+	}
+	if (secured) {
+		secimg = '/img/secure.jpg'
+	} else if (usesecure) {
+		secimg = '/img/unsecure.jpg'
+	}
+	$('#chat_zone').prepend('<p class="'+cl+'">'+time+' <img src="'+secimg+'" class="keyarea"> <strong>' + nickname + '</strong> ' + escapeHtml(message) + totag +'</p>').linkify()
 }
 
 function messageFromServer(message) {
