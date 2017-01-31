@@ -56,7 +56,7 @@ socket.on('set_nickname', function(new_nickname){
 // insert message in page upon reception
 function displayMessage(data) {
 	document.title = data.nickname + ': new message!'
-	insertMessage(data.nickname, data.message, data.time)
+	insertMessage(data.nickname, data.message, data.time, false, data.secured)
 	nmsound.play()
 }
 
@@ -270,7 +270,8 @@ function decrypt(data) {
 
 	openpgp.decrypt(options).then(function(plaintext) {
 		data.message = plaintext.data
-		displayMessage(data,true)
+		data.secured = true
+		displayMessage(data)
 	})
 }
 
