@@ -101,6 +101,7 @@ socket.on('refresh', function() {
 socket.on('pubkey', function(pubkey) {
 	if (pubkey.startsWith('-----BEGIN PGP PUBLIC KEY BLOCK-----')) {
 		dest.pubkey = pubkey
+		$('#send_secured').attr('src','/img/secured.png')
 	} else {
 		delete dest.pubkey
 	}
@@ -218,6 +219,7 @@ function selectConnected(nickname) {
 	dest = {}
 	dest.name = nickname
 	$('#dest').html(dest.name)
+	$('#send_secured').attr('src','/img/unsecured.png')
 	if (dest.name!='all') {
 		socket.emit('get_pubkey',dest.name)
 	}
