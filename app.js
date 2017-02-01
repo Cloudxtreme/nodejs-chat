@@ -10,7 +10,7 @@ var fs = require('fs')
 var moment = require('moment-timezone')
 
 var allClients = []
-var specialNicknames = [{name:'levg34',password:'meuh'},{name:'madblade',password:'cuicui'},{name:'BorisG7',password:'petitbourgeois'},{name:'admin',password:'meuh'},{name:'all',password:'donotuse'}]
+var specialNicknames = [{name:'levg34',password:'meuh'},{name:'madblade',password:'cuicui'},{name:'BorisG7',password:'petitbourgeois'},{name:'Remy',password:'bloup'},{name:'admin',password:'meuh'},{name:'all',password:'donotuse'}]
 var sns = specialNicknames.map(function (d) {
 	return d.name
 })

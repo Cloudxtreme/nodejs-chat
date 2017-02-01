@@ -168,10 +168,11 @@ function insertMessage(nickname, message, time, toself, secured, to) {
 	}
 	if (secured) {
 		secimg = '/img/secure.jpg'
+		message = escapeHtml(message)
 	} else if (usesecure) {
 		secimg = '/img/unsecure.jpg'
 	}
-	$('#chat_zone').prepend('<p class="'+cl+'">'+time+' <img src="'+secimg+'" class="keyarea"> <strong>' + nickname + '</strong> ' + escapeHtml(message) + totag +'</p>').linkify()
+	$('#chat_zone').prepend('<p class="'+cl+'">'+time+' <img src="'+secimg+'" class="keyarea"> <strong>' + nickname + '</strong> ' + message + totag +'</p>').linkify()
 }
 
 function messageFromServer(message) {
