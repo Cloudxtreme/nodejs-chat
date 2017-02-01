@@ -8,7 +8,6 @@ var io = require('socket.io').listen(server)
 var ent = require('ent') // block HTML entities
 var fs = require('fs')
 var moment = require('moment-timezone')
-var formidable = require('formidable')
 
 var allClients = []
 var specialNicknames = [{name:'levg34',password:'meuh'},{name:'madblade',password:'cuicui'},{name:'BorisG7',password:'petitbourgeois'},{name:'Remy',password:'bloup'},{name:'admin',password:'meuh'},{name:'all',password:'donotuse'}]
@@ -32,29 +31,6 @@ app.get('/login', function (req, res) {
 app.get('/conf', function (req, res) {
 	res.setHeader('Content-Type', 'text/json')
 	res.end(JSON.stringify({server_port:server_port,server_ip_address:server_ip_address}))
-})
-
-app.post('/upload', function (request, response) {
-	var form = new formidable.IncomingForm()
-	console.log('about to parse')
-	form.parse(request, function (error, fields, files) {
-		console.log('parsing done')
-
-		/* Possible error on Windows systems:
-		 tried to rename to an already existing file */
-		fs.rename(files.upload.path, './public/img/test.png', function (error) {
-			if (error) {
-				fs.unlink('./public/img/test.png')
-				fs.rename(files.upload.path, './public/img/test.png')
-			}
-		});
-		response.writeHead(200, {
-			'Content-Type': 'text/html'
-		});
-		response.write('received image:<br/>')
-		response.write('<img src="/public/img/test.png"/>')
-		response.end()
-	});
 })
 
 function alreadyUsed(nickname) {
