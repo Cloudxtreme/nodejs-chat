@@ -19,6 +19,7 @@
     <section id="chat_form">
       <input type="text" name="message" id="message" placeholder="Type your message here..." size="50" autofocus onkeydown="pressKey(event)"/>
 	    <b> [to <span id="dest" onclick="selectConnected('all')">all</span>] </b>
+	    <img id="send_secured" class="keyarea" hidden src="/img/unsecured.png">
       <button onclick="send()">Send</button>
       <form action="/upload" enctype="multipart/form-data" method="post">
         <input type="file" name="upload">

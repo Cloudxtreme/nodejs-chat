@@ -11,7 +11,7 @@ var moment = require('moment-timezone')
 var formidable = require('formidable')
 
 var allClients = []
-var specialNicknames = [{name:'levg34',password:'meuh'},{name:'madblade',password:'cuicui'},{name:'BorisG7',password:'petitbourgeois'},{name:'admin',password:'meuh'},{name:'all',password:'donotuse'}]
+var specialNicknames = [{name:'levg34',password:'meuh'},{name:'madblade',password:'cuicui'},{name:'BorisG7',password:'petitbourgeois'},{name:'Remy',password:'bloup'},{name:'admin',password:'meuh'},{name:'all',password:'donotuse'}]
 var sns = specialNicknames.map(function (d) {
 	return d.name
 })
@@ -122,7 +122,7 @@ io.sockets.on('connection', function (socket, nickname) {
 			socket.nickname = 'temp-' + ts
 			socket.emit('refresh')
 		}
-		if (to=='all') {
+		if (to=='all'||!findSocket(to)) {
 			socket.broadcast.emit('message', {nickname: socket.nickname, message: message, time: moment().tz("Europe/Paris").format('HH:mm')})
 		} else {
 			findSocket(to).emit('message', {nickname: socket.nickname, message: data.message, time: moment().tz("Europe/Paris").format('HH:mm')})
