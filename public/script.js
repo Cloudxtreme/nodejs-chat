@@ -109,7 +109,7 @@ socket.on('pubkey', function(pubkey) {
 
 socket.on('disconnect', function(){
 	messageFromServer('<b>WARNING:</b> lost connexion with server.')
-	messageFromServer('try <a href=".">refreshing</a> the page.')
+	messageFromServer('try <a href="/">refreshing</a> the page.')
 })
 
 function sendMessage(message) {
