@@ -107,6 +107,11 @@ socket.on('pubkey', function(pubkey) {
 	}
 })
 
+socket.on('disconnect', function(){
+	messageFromServer('<b>WARNING:</b> lost connexion with server.')
+	messageFromServer('try <a href=".">refreshing</a> the page.')
+})
+
 function sendMessage(message) {
 	// send message to others
 	socket.emit('message', {message: message, to: dest.name})
@@ -152,7 +157,7 @@ function escapeHtml(unsafe) {
 		.replace(/</g, "&lt;")
 		.replace(/>/g, "&gt;")
 		.replace(/"/g, "&quot;")
-		.replace(/'/g, "&#039;");
+		.replace(/'/g, "&#039;")
 }
 
 // add a message in the page

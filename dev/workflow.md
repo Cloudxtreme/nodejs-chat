@@ -2,15 +2,15 @@
 
 ## Start
 - connect to socket.io
-var socket = io.connect('http://'+location.hostname+port)
+  - var socket = io.connect('http://'+location.hostname+port)
 - send nickname (new_client) & password 
-socket.emit('new_client', {nickname:nickname,password:password})
+  - socket.emit('new_client', {nickname:nickname,password:password})
 - key
-genKey()
-socket.emit('pubkey',pubkey)
+  - genKey()
+  - socket.emit('pubkey',pubkey)
 - get list of connected users
 - send hello all
-send()
+  - send()
 
 ## On 'message'
 - select dest
