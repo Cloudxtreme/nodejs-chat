@@ -159,6 +159,7 @@ function pressKey(e) {
 	if (e.key=='Enter') {
 		send()
 	}
+	//$('#send_secured').attr('src','/img/security_warning.png')
 }
 
 function escapeHtml(unsafe) {
@@ -236,9 +237,7 @@ function selectConnected(nickname) {
 	dest.name = nickname
 	$('#dest').html(dest.name)
 	$('#send_secured').attr('src','/img/unsecured.png')
-	if (dest.name=='server') {
-		$('#send_secured').attr('src','/img/security_warning.png')
-	} else if (dest.name!='all') {
+	if (dest.name!='all') {
 		socket.emit('get_pubkey',dest.name)
 	}
 }

@@ -76,12 +76,12 @@ function say(params) {
 	var to = params[2]
 	var socket = findSocket(from)
 	if (!socket) {
-		return 'no socket corresponding to '+user+' found.'
+		return 'no socket corresponding to '+from+' found.'
 	}
 	if (to&&to!='all') {
 		socket = findSocket(to)
 		if (!socket) {
-			return 'no socket corresponding to '+user+' found.'
+			return 'no socket corresponding to '+to+' found.'
 		}
 		socket.emit('message',{nickname: from, message: message, time: moment().tz("Europe/Paris").format('HH:mm')})
 		return 'message from '+from+' sent to '+to+'.'
