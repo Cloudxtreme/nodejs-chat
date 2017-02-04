@@ -16,6 +16,7 @@ var pubkey = localStorage.pubkey
 var dest = {}
 dest.name = 'all'
 var usesecure = false
+var disco = false
 
 if (!nickname) {
 	nickname = prompt('Enter your nickname.','')
@@ -108,8 +109,17 @@ socket.on('pubkey', function(pubkey) {
 })
 
 socket.on('disconnect', function(){
+	disco = true
 	messageFromServer('<b>WARNING:</b> lost connexion with server.')
-	messageFromServer('try <a href="/">refreshing</a> the page.')
+	messageFromServer('try <a href="/">refreshing</a> the page, or wait for server to reconnect.')
+})
+
+socket.on('connect', function(){
+	if (disco) {
+		disco = false
+		socket.emit('new_client', {nickname:nickname,password:password})
+		messageFromServer('reconnected to server.')
+	}
 })
 
 function sendMessage(message) {
