@@ -14,6 +14,8 @@ const specialNicknames = [{name:'levg34',password:'meuh'},{name:'madblade',passw
 var sns = specialNicknames.map(function (d) {
 	return d.name
 })
+var admins = ['admin','levg34']
+var ops = []
 
 app.use(express.static(__dirname + '/public'))
 
@@ -89,6 +91,17 @@ function say(params) {
 	}
 }
 
+function op(user) {
+	if (ops.indexOf(user)!=-1) {
+		return user + ' is already OP.'
+	} else if (!findSocket(user)) {
+		return 'no socket corresponding to '+user+' found.'
+	} else {
+		ops.push(user)
+		return user + ' added to OP list.'
+	}
+}
+
 function execCommand(command,params) {
 	var res = command+': '
 	switch (command) {
@@ -107,6 +120,13 @@ function execCommand(command,params) {
 				res += 'not enough parameters.'
 			} else {
 				res += say(params)
+			}
+			break
+		case 'op':
+			if (params.length<1) {
+				res += 'not enough parameters.'
+			} else {
+				res += op(params[0])
 			}
 			break
 		default:
@@ -144,11 +164,6 @@ io.sockets.on('connection', function (socket, nickname) {
 		socket.broadcast.emit('new_client', nickname)
 		sendConnectedList(socket)
 		allClients.push(socket)
-
-		// admin commands
-		if (nickname=='admin') {
-			socket.emit('new_client', 'server')
-		}
 	})
 
 	// upon message reception, the sender's nickname is captured and retransmitted to other clients
@@ -160,7 +175,12 @@ io.sockets.on('connection', function (socket, nickname) {
 			socket.nickname = 'temp-' + ts
 			socket.emit('refresh')
 		}
-		if (to=='server'&&socket.nickname=='admin'&&data.message.startsWith('/')) {
+		if (admins.indexOf(socket.nickname)>-1&&data.message.startsWith('/')) {
+			var tab = data.message.split(' ')
+			var command = tab.shift().substring(1)
+			var params = tab
+			socket.emit('message', {nickname: 'server', message: execCommand(command,params), time: moment().tz("Europe/Paris").format('HH:mm')})
+		} else if (ops.indexOf(socket.nickname)>-1&&data.message.startsWith('/ban')) {
 			var tab = data.message.split(' ')
 			var command = tab.shift().substring(1)
 			var params = tab
