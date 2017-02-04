@@ -10,7 +10,7 @@ var fs = require('fs')
 var moment = require('moment-timezone')
 
 var allClients = []
-var specialNicknames = [{name:'levg34',password:'meuh'},{name:'madblade',password:'cuicui'},{name:'BorisG7',password:'petitbourgeois'},{name:'Remy',password:'bloup'},{name:'admin',password:'meuh'},{name:'all',password:'donotuse'}]
+const specialNicknames = [{name:'levg34',password:'meuh'},{name:'madblade',password:'cuicui'},{name:'BorisG7',password:'petitbourgeois'},{name:'Remy',password:'bloup'},{name:'admin',password:'meuh'},{name:'all',password:'donotuse'},{name:'server',password:'donotuse'}]
 var sns = specialNicknames.map(function (d) {
 	return d.name
 })
@@ -74,7 +74,7 @@ io.sockets.on('connection', function (socket, nickname) {
 			nickname = nickname.substr(nickname.length-15)
 		}
 		var index = sns.indexOf(nickname)
-		if (nickname==''||nickname=='undefined'||(index!=-1&&specialNicknames[index].password!=password)) {
+		if (nickname==''||nickname=='undefined'||index!=-1&&specialNicknames[index].password=='donotuse'||(index!=-1&&specialNicknames[index].password!=password)) {
 			nickname = 'client-'+allClients.length
 		}
 		if (alreadyUsed(nickname)) {
@@ -87,6 +87,11 @@ io.sockets.on('connection', function (socket, nickname) {
 		socket.broadcast.emit('new_client', nickname)
 		sendConnectedList(socket)
 		allClients.push(socket)
+
+		// admin commands
+		if (nickname=='admin') {
+			socket.emit('new_client', 'server')
+		}
 	})
 
 	// upon message reception, the sender's nickname is captured and retransmitted to other clients
@@ -98,7 +103,9 @@ io.sockets.on('connection', function (socket, nickname) {
 			socket.nickname = 'temp-' + ts
 			socket.emit('refresh')
 		}
-		if (to=='all'||!findSocket(to)) {
+		if (to=='server'&&socket.nickname=='admin') {
+			//
+		} else if (to=='all'||!findSocket(to)) {
 			socket.broadcast.emit('message', {nickname: socket.nickname, message: message, time: moment().tz("Europe/Paris").format('HH:mm')})
 		} else {
 			findSocket(to).emit('message', {nickname: socket.nickname, message: data.message, time: moment().tz("Europe/Paris").format('HH:mm')})
@@ -120,7 +127,11 @@ io.sockets.on('connection', function (socket, nickname) {
 	})
 
 	socket.on('get_pubkey', function(nickname) {
-		var pubkey = findSocket(nickname).pubkey
+		var client_socket = findSocket(nickname)
+		var pubkey = ''
+		if (client_socket) {
+			pubkey = client_socket.pubkey
+		}
 		if (pubkey&&pubkey.startsWith('-----BEGIN PGP PUBLIC KEY BLOCK-----')) {
 			socket.emit('pubkey',pubkey)
 		} else {
