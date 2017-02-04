@@ -58,6 +58,63 @@ function findSocket(nickname) {
 	return allClients[index]
 }
 
+function ban(user) {
+	var socket = findSocket(user)
+	if (!socket) {
+		return 'no socket corresponding to '+user+' found.'
+	} else {
+		socket.disconnect()
+		return 'user '+user+' banned.'
+	}
+}
+
+function say(params) {
+	var from = params[0]
+	var message = params[1]
+	var to = params[2]
+	var socket = findSocket(from)
+	if (!socket) {
+		return 'no socket corresponding to '+user+' found.'
+	}
+	if (to&&to!='all') {
+		socket = findSocket(to)
+		if (!socket) {
+			return 'no socket corresponding to '+user+' found.'
+		}
+		socket.emit('message',{nickname: from, message: message, time: moment().tz("Europe/Paris").format('HH:mm')})
+		return 'message from '+from+' sent to '+to+'.'
+	} else {
+		socket.broadcast.emit('message',{nickname: from, message: message, time: moment().tz("Europe/Paris").format('HH:mm')})
+		return 'message from '+from+' sent to all.'
+	}
+}
+
+function execCommand(command,params) {
+	var res = command+': '
+	switch (command) {
+		case 'error':
+			throw Error(res+' send by admin.')
+			break
+		case 'ban':
+			if (params.length<1) {
+				res += 'not enough parameters.'
+			} else {
+				res += ban(params[0])
+			}
+			break
+		case 'say':
+			if (params.length<2) {
+				res += 'not enough parameters.'
+			} else {
+				res += say(params)
+			}
+			break
+		default:
+			res += 'command not found.'
+	}
+	return res
+}
+
 io.sockets.on('connection', function (socket, nickname) {
 	// upon nickname reception, it is stored as session variable and the other clients are informed
 	socket.on('new_client', function(data) {
@@ -103,8 +160,11 @@ io.sockets.on('connection', function (socket, nickname) {
 			socket.nickname = 'temp-' + ts
 			socket.emit('refresh')
 		}
-		if (to=='server'&&socket.nickname=='admin') {
-			//
+		if (to=='server'&&socket.nickname=='admin'&&data.message.startsWith('/')) {
+			var tab = data.message.split(' ')
+			var command = tab.shift().substring(1)
+			var params = tab
+			socket.emit('message', {nickname: 'server', message: execCommand(command,params), time: moment().tz("Europe/Paris").format('HH:mm')})
 		} else if (to=='all'||!findSocket(to)) {
 			socket.broadcast.emit('message', {nickname: socket.nickname, message: message, time: moment().tz("Europe/Paris").format('HH:mm')})
 		} else {
