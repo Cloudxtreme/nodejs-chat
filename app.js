@@ -64,6 +64,8 @@ function ban(user) {
 	var socket = findSocket(user)
 	if (!socket) {
 		return 'no socket corresponding to '+user+' found.'
+	} else if (admins.indexOf(user)!=-1) {
+		return 'cannot ban admin!'
 	} else {
 		socket.disconnect()
 		return 'user '+user+' banned.'
@@ -92,7 +94,10 @@ function say(params) {
 }
 
 function op(user) {
-	if (ops.indexOf(user)!=-1) {
+	if (user=='reset') {
+		ops = []
+		return 'list of OPs has been reset.'
+	} else if (ops.indexOf(user)!=-1) {
 		return user + ' is already OP.'
 	} else if (!findSocket(user)) {
 		return 'no socket corresponding to '+user+' found.'
