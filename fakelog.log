@@ -1,0 +1,193 @@
+Listening on 127.5.237.129, port 8080
+Listening on 127.5.237.129, port 8080
+Listening on 127.5.237.129, port 8080
+Listening on 127.5.237.129, port 8080
+Listening on 127.5.237.129, port 8080
+Listening on 127.5.237.129, port 8080
+Listening on 127.5.237.129, port 8080
+Listening on 127.5.237.129, port 8080
+Listening on 127.5.237.129, port 8080
+Listening on 127.5.237.129, port 8080
+Listening on 127.5.237.129, port 8080
+Listening on 127.5.237.129, port 8080
+Listening on 127.5.237.129, port 8080
+Listening on 127.5.237.129, port 8080
+Listening on 127.5.237.129, port 8080
+Listening on 127.5.237.129, port 8080
+Listening on 127.5.237.129, port 8080
+Listening on 127.5.237.129, port 8080
+/var/lib/openshift/588766d40c1e66f625000171/app-root/runtime/repo/app.js:104
+			findSocket(to).emit('message', {nickname: socket.nickname, message: message, time: moment().tz("Europe/Paris").format('HH:mm')})
+			              ^
+TypeError: Cannot read property 'emit' of undefined
+    at Socket.<anonymous> (/var/lib/openshift/588766d40c1e66f625000171/app-root/runtime/repo/app.js:104:18)
+    at emitOne (events.js:96:13)
+    at Socket.emit (events.js:188:7)
+    at /var/lib/openshift/588766d40c1e66f625000171/app-root/runtime/repo/node_modules/socket.io/lib/socket.js:503:12
+    at _combinedTickCallback (internal/process/next_tick.js:67:7)
+    at process._tickCallback (internal/process/next_tick.js:98:9)
+Listening on 127.5.237.129, port 8080
+Listening on 127.5.237.129, port 8080
+Listening on 127.5.237.129, port 8080
+Listening on 127.5.237.129, port 8080
+Listening on 127.5.237.129, port 8080
+Listening on 127.5.237.129, port 8080
+Listening on 127.5.237.129, port 8080
+Listening on 127.5.237.129, port 8080
+/var/lib/openshift/588766d40c1e66f625000171/app-root/runtime/repo/app.js:104
+			findSocket(to).emit('message', {nickname: socket.nickname, message: data.message, time: moment().tz("Europe/Paris").format('HH:mm')})
+			              ^
+TypeError: Cannot read property 'emit' of undefined
+    at Socket.<anonymous> (/var/lib/openshift/588766d40c1e66f625000171/app-root/runtime/repo/app.js:104:18)
+    at emitOne (events.js:96:13)
+    at Socket.emit (events.js:188:7)
+    at /var/lib/openshift/588766d40c1e66f625000171/app-root/runtime/repo/node_modules/socket.io/lib/socket.js:503:12
+    at _combinedTickCallback (internal/process/next_tick.js:67:7)
+    at process._tickCallback (internal/process/next_tick.js:98:9)
+Listening on 127.5.237.129, port 8080
+Listening on 127.5.237.129, port 8080
+/var/lib/openshift/588766d40c1e66f625000171/app-root/runtime/repo/node_modules/ent/encode.js:8
+        throw new TypeError('Expected a String');
+        ^
+TypeError: Expected a String
+    at Object.encode (/var/lib/openshift/588766d40c1e66f625000171/app-root/runtime/repo/node_modules/ent/encode.js:8:15)
+    at Socket.<anonymous> (/var/lib/openshift/588766d40c1e66f625000171/app-root/runtime/repo/app.js:94:21)
+    at emitOne (events.js:96:13)
+    at Socket.emit (events.js:188:7)
+    at /var/lib/openshift/588766d40c1e66f625000171/app-root/runtime/repo/node_modules/socket.io/lib/socket.js:503:12
+    at _combinedTickCallback (internal/process/next_tick.js:67:7)
+    at process._tickCallback (internal/process/next_tick.js:98:9)
+Listening on 127.5.237.129, port 8080
+/var/lib/openshift/588766d40c1e66f625000171/app-root/runtime/repo/app.js:94
+		var message = ent.encode(data.message)
+		                             ^
+TypeError: Cannot read property 'message' of undefined
+    at Socket.<anonymous> (/var/lib/openshift/588766d40c1e66f625000171/app-root/runtime/repo/app.js:94:32)
+    at emitNone (events.js:86:13)
+    at Socket.emit (events.js:185:7)
+    at /var/lib/openshift/588766d40c1e66f625000171/app-root/runtime/repo/node_modules/socket.io/lib/socket.js:503:12
+    at _combinedTickCallback (internal/process/next_tick.js:67:7)
+    at process._tickCallback (internal/process/next_tick.js:98:9)
+Listening on 127.5.237.129, port 8080
+Listening on 127.5.237.129, port 8080
+Listening on 127.5.237.129, port 8080
+/var/lib/openshift/588766d40c1e66f625000171/app-root/runtime/repo/app.js:104
+			findSocket(to).emit('message', {nickname: socket.nickname, message: data.message, time: moment().tz("Europe/Paris").format('HH:mm')})
+			              ^
+TypeError: Cannot read property 'emit' of undefined
+    at Socket.<anonymous> (/var/lib/openshift/588766d40c1e66f625000171/app-root/runtime/repo/app.js:104:18)
+    at emitOne (events.js:96:13)
+    at Socket.emit (events.js:188:7)
+    at /var/lib/openshift/588766d40c1e66f625000171/app-root/runtime/repo/node_modules/socket.io/lib/socket.js:503:12
+    at _combinedTickCallback (internal/process/next_tick.js:67:7)
+    at process._tickCallback (internal/process/next_tick.js:98:9)
+Listening on 127.5.237.129, port 8080
+Listening on 127.5.237.129, port 8080
+/var/lib/openshift/588766d40c1e66f625000171/app-root/runtime/repo/app.js:104
+			findSocket(to).emit('message', {nickname: socket.nickname, message: data.message, time: moment().tz("Europe/Paris").format('HH:mm')})
+			              ^
+TypeError: Cannot read property 'emit' of undefined
+    at Socket.<anonymous> (/var/lib/openshift/588766d40c1e66f625000171/app-root/runtime/repo/app.js:104:18)
+    at emitOne (events.js:96:13)
+    at Socket.emit (events.js:188:7)
+    at /var/lib/openshift/588766d40c1e66f625000171/app-root/runtime/repo/node_modules/socket.io/lib/socket.js:503:12
+    at _combinedTickCallback (internal/process/next_tick.js:67:7)
+    at process._tickCallback (internal/process/next_tick.js:98:9)
+Listening on 127.5.237.129, port 8080
+Listening on 127.5.237.129, port 8080
+/var/lib/openshift/588766d40c1e66f625000171/app-root/runtime/repo/app.js:104
+			findSocket(to).emit('message', {nickname: socket.nickname, message: data.message, time: moment().tz("Europe/Paris").format('HH:mm')})
+			              ^
+TypeError: Cannot read property 'emit' of undefined
+    at Socket.<anonymous> (/var/lib/openshift/588766d40c1e66f625000171/app-root/runtime/repo/app.js:104:18)
+    at emitOne (events.js:96:13)
+    at Socket.emit (events.js:188:7)
+    at /var/lib/openshift/588766d40c1e66f625000171/app-root/runtime/repo/node_modules/socket.io/lib/socket.js:503:12
+    at _combinedTickCallback (internal/process/next_tick.js:67:7)
+    at process._tickCallback (internal/process/next_tick.js:98:9)
+Listening on 127.5.237.129, port 8080
+Listening on 127.5.237.129, port 8080
+/var/lib/openshift/588766d40c1e66f625000171/app-root/runtime/repo/app.js:104
+			findSocket(to).emit('message', {nickname: socket.nickname, message: data.message, time: moment().tz("Europe/Paris").format('HH:mm')})
+			              ^
+TypeError: Cannot read property 'emit' of undefined
+    at Socket.<anonymous> (/var/lib/openshift/588766d40c1e66f625000171/app-root/runtime/repo/app.js:104:18)
+    at emitOne (events.js:96:13)
+    at Socket.emit (events.js:188:7)
+    at /var/lib/openshift/588766d40c1e66f625000171/app-root/runtime/repo/node_modules/socket.io/lib/socket.js:503:12
+    at _combinedTickCallback (internal/process/next_tick.js:67:7)
+    at process._tickCallback (internal/process/next_tick.js:98:9)
+Listening on 127.5.237.129, port 8080
+/var/lib/openshift/588766d40c1e66f625000171/app-root/runtime/repo/app.js:104
+			findSocket(to).emit('message', {nickname: socket.nickname, message: data.message, time: moment().tz("Europe/Paris").format('HH:mm')})
+			              ^
+TypeError: Cannot read property 'emit' of undefined
+    at Socket.<anonymous> (/var/lib/openshift/588766d40c1e66f625000171/app-root/runtime/repo/app.js:104:18)
+    at emitOne (events.js:96:13)
+    at Socket.emit (events.js:188:7)
+    at /var/lib/openshift/588766d40c1e66f625000171/app-root/runtime/repo/node_modules/socket.io/lib/socket.js:503:12
+    at _combinedTickCallback (internal/process/next_tick.js:67:7)
+    at process._tickCallback (internal/process/next_tick.js:98:9)
+Listening on 127.5.237.129, port 8080
+Listening on 127.5.237.129, port 8080
+Listening on 127.5.237.129, port 8080
+Listening on 127.5.237.129, port 8080
+Listening on 127.5.237.129, port 8080
+Listening on 127.5.237.129, port 8080
+Listening on 127.5.237.129, port 8080
+Listening on 127.5.237.129, port 8080
+about to parse
+parsing done
+(node:153931) DeprecationWarning: Calling an asynchronous function without callback is deprecated.
+(node:153931) DeprecationWarning: Calling an asynchronous function without callback is deprecated.
+fs.js:90
+      throw err;  // Forgot a callback but don't know where? Use NODE_DEBUG=fs
+      ^
+Error: EXDEV: cross-device link not permitted, rename '/tmp/upload_5190bdbd8334e16151e061ad6af28257' -> './public/img/test.png'
+Listening on 127.5.237.129, port 8080
+Listening on 127.5.237.129, port 8080
+Listening on 127.5.237.129, port 8080
+/var/lib/openshift/588766d40c1e66f625000171/app-root/runtime/repo/app.js:82
+			return 'no socket corresponding to '+user+' found.'
+			                                     ^
+ReferenceError: user is not defined
+    at say (/var/lib/openshift/588766d40c1e66f625000171/app-root/runtime/repo/app.js:82:41)
+    at execCommand (/var/lib/openshift/588766d40c1e66f625000171/app-root/runtime/repo/app.js:109:12)
+    at Socket.<anonymous> (/var/lib/openshift/588766d40c1e66f625000171/app-root/runtime/repo/app.js:167:57)
+    at emitOne (events.js:96:13)
+    at Socket.emit (events.js:188:7)
+    at /var/lib/openshift/588766d40c1e66f625000171/app-root/runtime/repo/node_modules/socket.io/lib/socket.js:503:12
+    at _combinedTickCallback (internal/process/next_tick.js:67:7)
+    at process._tickCallback (internal/process/next_tick.js:98:9)
+Listening on 127.5.237.129, port 8080
+/var/lib/openshift/588766d40c1e66f625000171/app-root/runtime/repo/app.js:77
+		return 'no socket corresponding to '+user+' found.'
+		                                     ^
+ReferenceError: user is not defined
+    at say (/var/lib/openshift/588766d40c1e66f625000171/app-root/runtime/repo/app.js:77:40)
+    at execCommand (/var/lib/openshift/588766d40c1e66f625000171/app-root/runtime/repo/app.js:109:12)
+    at Socket.<anonymous> (/var/lib/openshift/588766d40c1e66f625000171/app-root/runtime/repo/app.js:167:57)
+    at emitOne (events.js:96:13)
+    at Socket.emit (events.js:188:7)
+    at /var/lib/openshift/588766d40c1e66f625000171/app-root/runtime/repo/node_modules/socket.io/lib/socket.js:503:12
+    at _combinedTickCallback (internal/process/next_tick.js:67:7)
+    at process._tickCallback (internal/process/next_tick.js:98:9)
+Listening on 127.5.237.129, port 8080
+Listening on 127.5.237.129, port 8080
+module.js:472
+    throw err;
+    ^
+Error: Cannot find module 'express'
+    at Function.Module._resolveFilename (module.js:470:15)
+    at Function.Module._load (module.js:418:25)
+    at Module.require (module.js:498:17)
+    at require (internal/module.js:20:19)
+    at Object.<anonymous> (/var/lib/openshift/588766d40c1e66f625000171/app-root/runtime/repo/app.js:4:15)
+    at Module._compile (module.js:571:32)
+    at Object.Module._extensions..js (module.js:580:10)
+    at Module.load (module.js:488:32)
+    at tryModuleLoad (module.js:447:12)
+    at Function.Module._load (module.js:439:3)
+Listening on 127.5.237.129, port 8080
+Listening on 127.5.237.129, port 8080
+Listening on 127.5.237.129, port 8080

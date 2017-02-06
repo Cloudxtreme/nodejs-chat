@@ -162,10 +162,6 @@ function pressKey(e) {
 	if (e.key=='Enter') {
 		send()
 	}
-	/*if (e.key=='/'&&$('#message').val().length==0) {
-		old_dest = dest.name
-		selectConnected('server')
-	}*/
 }
 
 function inputChange() {
