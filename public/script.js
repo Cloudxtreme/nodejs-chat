@@ -52,6 +52,7 @@ socket.on('set_nickname', function(new_nickname){
 	sessionStorage.nickname = nickname
 	sessionStorage.password = ''
 	$('.keyarea').hide()
+	usesecure = false
 })
 
 // insert message in page upon reception
@@ -134,7 +135,7 @@ function send() {
 	var message = $('#message').val()
 	if (message!='') {
 		var secured = false
-		if (dest&&dest.pubkey) {
+		if (dest&&dest.pubkey&&!message.startsWith('/') {
 			encrypt(message)
 			secured = true
 		} else {
@@ -159,7 +160,16 @@ function pressKey(e) {
 	if (e.key=='Enter') {
 		send()
 	}
-	//$('#send_secured').attr('src','/img/security_warning.png')
+	/*if (e.key=='/'&&$('#message').val().length==0) {
+		//
+	}
+	if ($('#message').val().startsWith('/')) {
+		old_dest = dest.name
+		selectConnected('server')
+	} else if (old_dest) {
+		selectConnected(old_dest)
+		old_dest = ''
+	}*/
 }
 
 function escapeHtml(unsafe) {
@@ -176,17 +186,22 @@ function insertMessage(nickname, message, time, toself, secured, to) {
 	var cl = 'from_server'
 	var secimg = '/img/blanksecure.jpg'
 	var totag = ''
+	var needEscape = false
 	if (toself) {
 		cl = 'toself'
 		if (to&&to!='all') {
 			totag = ' <em>(to '+dest.name+')</em>'	
 		}
+		needEscape = true
 	}
 	if (secured) {
 		secimg = '/img/secure.jpg'
-		message = escapeHtml(message)
+		needEscape = true
 	} else if (usesecure) {
 		secimg = '/img/unsecure.jpg'
+	}
+	if (needEscape) {
+		message = escapeHtml(message)
 	}
 	$('#chat_zone').prepend('<p class="'+cl+'">'+time+' <img src="'+secimg+'" class="keyarea"> <strong>' + nickname + '</strong> ' + message + totag +'</p>').linkify()
 }
@@ -239,6 +254,9 @@ function selectConnected(nickname) {
 	$('#send_secured').attr('src','/img/unsecured.png')
 	if (dest.name!='all') {
 		socket.emit('get_pubkey',dest.name)
+	}
+	if (dest.name=='server') {
+		$('#send_secured').attr('src','/img/security_warning.png')
 	}
 }
 
