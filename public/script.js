@@ -15,6 +15,7 @@ var privkey = localStorage.privkey
 var pubkey = localStorage.pubkey
 var dest = {}
 dest.name = 'all'
+old_dest = ''
 var usesecure = false
 var disco = false
 
@@ -128,6 +129,7 @@ function sendMessage(message) {
 	socket.emit('message', {message: message, to: dest.name})
 	// empty chat zone, and set focus on it again
 	$('#message').val('').focus()
+	inputChange()
 }
 
 // submit form, send message and diplay it on the page
@@ -135,7 +137,7 @@ function send() {
 	var message = $('#message').val()
 	if (message!='') {
 		var secured = false
-		if (dest&&dest.pubkey&&!message.startsWith('/') {
+		if (dest&&dest.pubkey) {
 			encrypt(message)
 			secured = true
 		} else {
@@ -161,15 +163,21 @@ function pressKey(e) {
 		send()
 	}
 	/*if (e.key=='/'&&$('#message').val().length==0) {
-		//
-	}
-	if ($('#message').val().startsWith('/')) {
 		old_dest = dest.name
 		selectConnected('server')
+	}*/
+}
+
+function inputChange() {
+	if ($('#message').val().startsWith('/')) {
+		if (dest.name!='server') {
+			old_dest = dest.name
+			selectConnected('server')
+		}
 	} else if (old_dest) {
 		selectConnected(old_dest)
 		old_dest = ''
-	}*/
+	}
 }
 
 function escapeHtml(unsafe) {

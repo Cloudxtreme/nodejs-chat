@@ -97,6 +97,8 @@ function op(user) {
 	if (user=='reset') {
 		ops = []
 		return 'list of OPs has been reset.'
+	} else if (user=='get') {
+		return 'list of OPs: '+ops.toString()
 	} else if (ops.indexOf(user)!=-1) {
 		return user + ' is already OP.'
 	} else if (!findSocket(user)) {
@@ -105,6 +107,10 @@ function op(user) {
 		ops.push(user)
 		return user + ' added to OP list.'
 	}
+}
+
+function logs() {
+	return 0
 }
 
 function execCommand(command,params) {
@@ -133,6 +139,9 @@ function execCommand(command,params) {
 			} else {
 				res += op(params[0])
 			}
+			break
+		case 'logs':
+			res += logs()
 			break
 		default:
 			res += 'command not found.'
