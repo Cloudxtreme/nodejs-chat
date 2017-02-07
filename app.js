@@ -125,7 +125,7 @@ function read(file, callback) {
 }
 
 function logs(socket) {
-	var log = './fakelog.log'
+	var log = './npm-debug.log'
 	if (process.env.OPENSHIFT_NODEJS_IP) {
 		log = '../../logs/nodejs.log'
 	}

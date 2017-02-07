@@ -17,7 +17,7 @@
     <p id="login_button">You have an account? Click <a href="/login">here</a> to login.</p>
 	  <p class="keyarea" hidden><button id="genkey" onclick="genKey()">Generate key</button></p>
     <section id="chat_form">
-      <input type="text" name="message" id="message" placeholder="Type your message here..." size="50" autofocus onkeydown="pressKey(event)" oninput="inputChange()"/>
+      <input type="text" name="message" id="message" placeholder="Type your message here..." size="50" autofocus onkeydown="pressKey(event)" oninput="inputChange()" onfocus="inputChange()"/>
 	    <b> [to <span id="dest" onclick="selectConnected('all')">all</span>] </b>
 	    <img id="send_secured" class="keyarea" hidden src="/img/unsecured.png">
       <button onclick="send()">Send</button>

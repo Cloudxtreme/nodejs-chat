@@ -137,7 +137,6 @@ function sendMessage(message) {
 	}
 	// empty chat zone, and set focus on it again
 	$('#message').val('').focus()
-	inputChange()
 }
 
 // submit form, send message and diplay it on the page
@@ -175,7 +174,7 @@ function pressKey(e) {
 			lc--
 		}
 	} else if (e.key=='ArrowDown') {
-		if (cmd[lc+1]) {
+		if (lc<cmd.length) {
 			lc++
 		}
 		$('#message').val(cmd[lc]).focus()
