@@ -130,7 +130,11 @@ function logs(socket) {
 		log = '../../logs/nodejs.log'
 	}
 	log = read(log,function(data){
-		data = data.replace(/(?:\r\n|\r|\n)/g, '<br>')
+		if (data) {
+			data = data.replace(/(?:\r\n|\r|\n)/g, '<br>')
+		} else {
+			data = 'no data.'
+		}
 		socket.emit('message', {nickname: 'server', message: 'server logs: <br>'+data, time: moment().tz("Europe/Paris").format('HH:mm')})
 	})
 }

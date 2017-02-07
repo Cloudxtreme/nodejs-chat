@@ -18,6 +18,9 @@ dest.name = 'all'
 old_dest = ''
 var usesecure = false
 var disco = false
+var cmd = []
+cmd.push('')
+var lc = 0
 
 if (!nickname) {
 	nickname = prompt('Enter your nickname.','')
@@ -127,6 +130,11 @@ socket.on('connect', function(){
 function sendMessage(message) {
 	// send message to others
 	socket.emit('message', {message: message, to: dest.name})
+	// if command, store
+	if (message.startsWith('/')) {
+		lc = cmd.length
+		cmd.push(message)
+	}
 	// empty chat zone, and set focus on it again
 	$('#message').val('').focus()
 	inputChange()
@@ -161,6 +169,16 @@ function send() {
 function pressKey(e) {
 	if (e.key=='Enter') {
 		send()
+	} else if (e.key=='ArrowUp') {
+		$('#message').val(cmd[lc]).focus()
+		if (lc>0) {
+			lc--
+		}
+	} else if (e.key=='ArrowDown') {
+		if (cmd[lc+1]) {
+			lc++
+		}
+		$('#message').val(cmd[lc]).focus()
 	}
 }
 
