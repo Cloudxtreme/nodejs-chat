@@ -234,6 +234,10 @@ io.sockets.on('connection', function (socket, nickname) {
 	
 	// client disconnects
 	socket.on('disconnect', function() {
+		var j = ops.indexOf(socket.nickname)
+		if (j!=-1) {
+			ops.splice(j, 1)
+		}
 		var i = allClients.indexOf(socket)
 		if (allClients[i]) {
 			socket.broadcast.emit('client_left', allClients[i].nickname)
