@@ -97,6 +97,14 @@ function op(user) {
 	if (user=='reset') {
 		ops = []
 		return 'list of OPs has been reset.'
+	} else if (user=='get') {
+		var lop
+		if (ops.length==0) {
+			lop = 'no OPs'
+		} else {
+			lop = 'list of OPs: '+ops.toString()
+		}
+		return lop
 	} else if (ops.indexOf(user)!=-1) {
 		return user + ' is already OP.'
 	} else if (!findSocket(user)) {
@@ -107,35 +115,62 @@ function op(user) {
 	}
 }
 
-function execCommand(command,params) {
-	var res = command+': '
+function read(file, callback) {
+    fs.readFile(file, 'utf8', function(err, data) {
+        if (err) {
+            console.log(err)
+        }
+        callback(data)
+    })
+}
+
+function logs(socket) {
+	var log = './npm-debug.log'
+	if (process.env.OPENSHIFT_NODEJS_IP) {
+		log = '../../logs/nodejs.log'
+	}
+	log = read(log,function(data){
+		if (data) {
+			data = data.replace(/(?:\r\n|\r|\n)/g, '<br>')
+		} else {
+			data = 'no data.'
+		}
+		socket.emit('message', {nickname: 'server', message: 'server logs: <br>'+data, time: moment().tz("Europe/Paris").format('HH:mm')})
+	})
+}
+
+function execCommand(command,params,socket) {
+	var res = ''
 	switch (command) {
 		case 'error':
 			throw Error(res+' send by admin.')
 			break
 		case 'ban':
 			if (params.length<1) {
-				res += 'not enough parameters.'
+				res = 'not enough parameters.'
 			} else {
-				res += ban(params[0])
+				res = ban(params[0])
 			}
 			break
 		case 'say':
 			if (params.length<2) {
-				res += 'not enough parameters.'
+				res = 'not enough parameters.'
 			} else {
-				res += say(params)
+				res = say(params)
 			}
 			break
 		case 'op':
 			if (params.length<1) {
-				res += 'not enough parameters.'
+				res = 'not enough parameters.'
 			} else {
-				res += op(params[0])
+				res = op(params[0])
 			}
 			break
+		case 'logs':
+			logs(socket)
+			break
 		default:
-			res += 'command not found.'
+			res = 'command not found.'
 	}
 	return res
 }
@@ -180,16 +215,16 @@ io.sockets.on('connection', function (socket, nickname) {
 			socket.nickname = 'temp-' + ts
 			socket.emit('refresh')
 		}
-		if (admins.indexOf(socket.nickname)>-1&&data.message.startsWith('/')) {
+		if ((admins.indexOf(socket.nickname)>-1&&data.message.startsWith('/'))||
+		(ops.indexOf(socket.nickname)>-1&&data.message.startsWith('/ban'))) {
 			var tab = data.message.split(' ')
 			var command = tab.shift().substring(1)
 			var params = tab
-			socket.emit('message', {nickname: 'server', message: execCommand(command,params), time: moment().tz("Europe/Paris").format('HH:mm')})
-		} else if (ops.indexOf(socket.nickname)>-1&&data.message.startsWith('/ban')) {
-			var tab = data.message.split(' ')
-			var command = tab.shift().substring(1)
-			var params = tab
-			socket.emit('message', {nickname: 'server', message: execCommand(command,params), time: moment().tz("Europe/Paris").format('HH:mm')})
+			var res = execCommand(command,params,socket)
+			if (res) {
+				res = command+': '+res
+				socket.emit('message', {nickname: 'server', message: res, time: moment().tz("Europe/Paris").format('HH:mm')})
+			}
 		} else if (to=='all'||!findSocket(to)) {
 			socket.broadcast.emit('message', {nickname: socket.nickname, message: message, time: moment().tz("Europe/Paris").format('HH:mm')})
 		} else {

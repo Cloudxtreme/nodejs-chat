@@ -4,6 +4,14 @@ var http = require('http')
 //Lets define a port we want to listen to
 const PORT=8081
 
+function genAnswer(message) {
+	var h=''
+	while(Math.random()>0.01&&h.length<100){
+		h+=(Math.random()>0.5?'h':'H')
+	}
+	return h
+}
+
 //We need a function which handles requests and send response
 function handleRequest(request, response){
 	response.end('It Works!! Path Hit: ' + request.url)

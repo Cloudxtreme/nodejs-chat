@@ -15,8 +15,12 @@ var privkey = localStorage.privkey
 var pubkey = localStorage.pubkey
 var dest = {}
 dest.name = 'all'
+old_dest = ''
 var usesecure = false
 var disco = false
+var cmd = []
+cmd.push('')
+var lc = 0
 
 if (!nickname) {
 	nickname = prompt('Enter your nickname.','')
@@ -52,6 +56,7 @@ socket.on('set_nickname', function(new_nickname){
 	sessionStorage.nickname = nickname
 	sessionStorage.password = ''
 	$('.keyarea').hide()
+	usesecure = false
 })
 
 // insert message in page upon reception
@@ -125,6 +130,11 @@ socket.on('connect', function(){
 function sendMessage(message) {
 	// send message to others
 	socket.emit('message', {message: message, to: dest.name})
+	// if command, store
+	if (message.startsWith('/')) {
+		lc = cmd.length
+		cmd.push(message)
+	}
 	// empty chat zone, and set focus on it again
 	$('#message').val('').focus()
 }
@@ -158,8 +168,29 @@ function send() {
 function pressKey(e) {
 	if (e.key=='Enter') {
 		send()
+	} else if (e.key=='ArrowUp') {
+		$('#message').val(cmd[lc]).focus()
+		if (lc>0) {
+			lc--
+		}
+	} else if (e.key=='ArrowDown') {
+		if (lc<cmd.length) {
+			lc++
+		}
+		$('#message').val(cmd[lc]).focus()
 	}
-	//$('#send_secured').attr('src','/img/security_warning.png')
+}
+
+function inputChange() {
+	if ($('#message').val().startsWith('/')) {
+		if (dest.name!='server') {
+			old_dest = dest.name
+			selectConnected('server')
+		}
+	} else if (old_dest) {
+		selectConnected(old_dest)
+		old_dest = ''
+	}
 }
 
 function escapeHtml(unsafe) {
@@ -176,17 +207,22 @@ function insertMessage(nickname, message, time, toself, secured, to) {
 	var cl = 'from_server'
 	var secimg = '/img/blanksecure.jpg'
 	var totag = ''
+	var needEscape = false
 	if (toself) {
 		cl = 'toself'
 		if (to&&to!='all') {
 			totag = ' <em>(to '+dest.name+')</em>'	
 		}
+		needEscape = true
 	}
 	if (secured) {
 		secimg = '/img/secure.jpg'
-		message = escapeHtml(message)
+		needEscape = true
 	} else if (usesecure) {
 		secimg = '/img/unsecure.jpg'
+	}
+	if (needEscape) {
+		message = escapeHtml(message)
 	}
 	$('#chat_zone').prepend('<p class="'+cl+'">'+time+' <img src="'+secimg+'" class="keyarea"> <strong>' + nickname + '</strong> ' + message + totag +'</p>').linkify()
 }
@@ -239,6 +275,9 @@ function selectConnected(nickname) {
 	$('#send_secured').attr('src','/img/unsecured.png')
 	if (dest.name!='all') {
 		socket.emit('get_pubkey',dest.name)
+	}
+	if (dest.name=='server') {
+		$('#send_secured').attr('src','/img/security_warning.png')
 	}
 }
 
