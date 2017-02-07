@@ -127,7 +127,7 @@ function read(file, callback) {
 function logs(socket) {
 	var log = './fakelog.log'
 	if (process.env.OPENSHIFT_NODEJS_IP) {
-		log = '../logs/nodejs.log'
+		log = '../../logs/nodejs.log'
 	}
 	log = read(log,function(data){
 		data = data.replace(/(?:\r\n|\r|\n)/g, '<br>')
