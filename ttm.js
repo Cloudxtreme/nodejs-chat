@@ -6,4 +6,9 @@ function genAnswer(message) {
 	return h
 }
 
+function greet(nickname) {
+	return 'Hi '+nickname+'! Let\'s talk!'
+}
+
 exports.answer = genAnswer
+exports.greet = greet

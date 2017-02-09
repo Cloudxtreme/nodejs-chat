@@ -51,6 +51,7 @@ function sendConnectedList(socket) {
 	allClients.forEach(function (socket) {
 		list.push(socket.nickname)
 	})
+	list.push('talktome')
 	socket.emit('list', list)
 }
 
@@ -205,6 +206,7 @@ io.sockets.on('connection', function (socket, nickname) {
 		socket.broadcast.emit('new_client', nickname)
 		sendConnectedList(socket)
 		allClients.push(socket)
+		socket.emit('message', {nickname: 'talktome', message: ttm.greet(nickname), time: moment().tz("Europe/Paris").format('HH:mm')})
 	})
 
 	// upon message reception, the sender's nickname is captured and retransmitted to other clients
@@ -226,6 +228,8 @@ io.sockets.on('connection', function (socket, nickname) {
 				res = command+': '+res
 				socket.emit('message', {nickname: 'server', message: res, time: moment().tz("Europe/Paris").format('HH:mm')})
 			}
+		} else if (to=='talktome') {
+			socket.emit('message', {nickname: 'talktome', message: ttm.answer(message), time: moment().tz("Europe/Paris").format('HH:mm')})
 		} else if (to=='all'||!findSocket(to)) {
 			socket.broadcast.emit('message', {nickname: socket.nickname, message: message, time: moment().tz("Europe/Paris").format('HH:mm')})
 		} else {
