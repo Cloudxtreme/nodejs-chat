@@ -11,7 +11,7 @@ var moment = require('moment-timezone')
 var ttm = require('./ttm')
 
 var allClients = []
-const specialNicknames = [{name:'levg34',password:'meuh'},{name:'madblade',password:'cuicui'},{name:'BorisG7',password:'petitbourgeois'},{name:'Remy',password:'bloup'},{name:'admin',password:'meuh'},{name:'all',password:'donotuse'},{name:'server',password:'donotuse'}]
+const specialNicknames = [{name:'levg34',password:'meuh'},{name:'madblade',password:'cuicui'},{name:'BorisG7',password:'petitbourgeois'},{name:'Remy',password:'bloup'},{name:'admin',password:'meuh'},{name:'all',locked:true},{name:'server',locked:true},{name:'talktome',locked:true}]
 var sns = specialNicknames.map(function (d) {
 	return d.name
 })
@@ -193,7 +193,7 @@ io.sockets.on('connection', function (socket, nickname) {
 			nickname = nickname.substr(nickname.length-15)
 		}
 		var index = sns.indexOf(nickname)
-		if (nickname==''||nickname=='undefined'||index!=-1&&specialNicknames[index].password=='donotuse'||(index!=-1&&specialNicknames[index].password!=password)) {
+		if (nickname==''||nickname=='undefined'||index!=-1&&specialNicknames[index].locked||(index!=-1&&specialNicknames[index].password!=password)) {
 			nickname = 'client-'+allClients.length
 		}
 		if (alreadyUsed(nickname)) {
