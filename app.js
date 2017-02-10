@@ -132,13 +132,27 @@ function logs(socket) {
 	if (process.env.OPENSHIFT_NODEJS_IP) {
 		log = '../../logs/nodejs.log'
 	}
-	log = read(log,function(data){
+	read(log,function(data){
 		if (data) {
 			data = data.replace(/(?:\r\n|\r|\n)/g, '<br>')
 		} else {
 			data = 'no data.'
 		}
 		socket.emit('message', {nickname: 'server', message: 'server logs: <br>'+data, time: moment().tz("Europe/Paris").format('HH:mm')})
+	})
+}
+
+function printTtmMessages(socket) {
+	fs.readFile('./data/messages.log', 'utf-8', function (err,data) {
+		if (err) {
+			return console.log(err)
+		}
+		var messages = JSON.parse('['+data.replace(/\n/g, ",").slice(0, -1)+']')
+		messages.forEach(function (fromMess) {
+			var from = fromMess.from
+			var message = fromMess.message
+			socket.emit('message', {nickname: from, message: message, time: moment().tz("Europe/Paris").format('HH:mm')})
+		})
 	})
 }
 
@@ -171,6 +185,9 @@ function execCommand(command,params,socket) {
 			break
 		case 'logs':
 			logs(socket)
+			break
+		case 'ttm':
+			printTtmMessages(socket)
 			break
 		default:
 			res = 'command not found.'
