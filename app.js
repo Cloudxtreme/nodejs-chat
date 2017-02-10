@@ -149,6 +149,7 @@ function printTtmMessages(socket,params) {
 			if(err) {
 				return console.log(err)
 			}
+			socket.emit('message', {nickname: 'server', message: 'ttm: ttm logs deleted.', time: moment().tz("Europe/Paris").format('HH:mm')})
 		})
 	} else {
 		fs.readFile(filepath, 'utf-8', function (err, data) {
