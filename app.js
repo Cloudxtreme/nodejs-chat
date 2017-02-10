@@ -15,6 +15,7 @@ const specialNicknames = [{name:'levg34',password:'meuh'},{name:'madblade',passw
 var sns = specialNicknames.map(function (d) {
 	return d.name
 })
+ttm.sns(sns)
 var admins = ['admin','levg34']
 var ops = []
 
@@ -206,7 +207,7 @@ io.sockets.on('connection', function (socket, nickname) {
 		socket.broadcast.emit('new_client', nickname)
 		sendConnectedList(socket)
 		allClients.push(socket)
-		socket.emit('message', {nickname: 'talktome', message: ttm.greet(nickname), time: moment().tz("Europe/Paris").format('HH:mm')})
+		ttm.greet(socket)
 	})
 
 	// upon message reception, the sender's nickname is captured and retransmitted to other clients
@@ -229,9 +230,10 @@ io.sockets.on('connection', function (socket, nickname) {
 				socket.emit('message', {nickname: 'server', message: res, time: moment().tz("Europe/Paris").format('HH:mm')})
 			}
 		} else if (to=='talktome') {
-			socket.emit('message', {nickname: 'talktome', message: ttm.answer(message), time: moment().tz("Europe/Paris").format('HH:mm')})
+			ttm.answer(socket,message)
 		} else if (to=='all'||!findSocket(to)) {
 			socket.broadcast.emit('message', {nickname: socket.nickname, message: message, time: moment().tz("Europe/Paris").format('HH:mm')})
+			ttm.notify('message',{socket:socket,message:message})
 		} else {
 			findSocket(to).emit('message', {nickname: socket.nickname, message: data.message, time: moment().tz("Europe/Paris").format('HH:mm')})
 		}
@@ -239,7 +241,8 @@ io.sockets.on('connection', function (socket, nickname) {
 	
 	// client disconnects
 	socket.on('disconnect', function() {
-		var j = ops.indexOf(socket.nickname)
+		var nickname = socket.nickname
+		var j = ops.indexOf(nickname)
 		if (j!=-1) {
 			ops.splice(j, 1)
 		}
@@ -248,6 +251,7 @@ io.sockets.on('connection', function (socket, nickname) {
 			socket.broadcast.emit('client_left', allClients[i].nickname)
 			allClients.splice(i, 1)
 		}
+		ttm.notify('client_left',nickname)
 	})
 
 	// client sends public key
