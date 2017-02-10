@@ -142,19 +142,28 @@ function logs(socket) {
 	})
 }
 
-function printTtmMessages(socket) {
-	fs.readFile('./data/messages.log', 'utf-8', function (err,data) {
-		if (err) {
-			return console.log(err)
-		}
-		var messages = JSON.parse('['+data.replace(/\n/g, ",").slice(0, -1)+']')
-		messages.forEach(function (fromMess) {
-			var from = fromMess.from
-			var message = fromMess.message
-			var time = fromMess.time
-			socket.emit('message', {nickname: from, message: message, time: time})
+function printTtmMessages(socket,params) {
+	var filepath = './data/messages.log';
+	if (params[0]=='reset') {
+		fs.writeFile(filepath, '', function(err) {
+			if(err) {
+				return console.log(err)
+			}
 		})
-	})
+	} else {
+		fs.readFile(filepath, 'utf-8', function (err, data) {
+			if (err) {
+				return console.log(err)
+			}
+			var messages = JSON.parse('[' + data.replace(/\n/g, ",").slice(0, -1) + ']')
+			messages.forEach(function (fromMess) {
+				var from = fromMess.from
+				var message = fromMess.message
+				var time = fromMess.time
+				socket.emit('message', {nickname: from, message: message, time: time})
+			})
+		})
+	}
 }
 
 function execCommand(command,params,socket) {
@@ -188,7 +197,7 @@ function execCommand(command,params,socket) {
 			logs(socket)
 			break
 		case 'ttm':
-			printTtmMessages(socket)
+			printTtmMessages(socket,params)
 			break
 		default:
 			res = 'command not found.'
