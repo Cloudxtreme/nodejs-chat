@@ -5,8 +5,8 @@ var specialNicknames = []
 var knownNicknames = []
 var infoNicknames = []
 
-function logMessage(nickname,message) {
-	fs.appendFile('./data/messages.log', JSON.stringify({from:nickname,message:message})+'\n', function(err) {
+function logMessage(nickname,message,time) {
+	fs.appendFile('./data/messages.log', JSON.stringify({from:nickname,message:message,time:time})+'\n', function(err) {
 		if(err) {
 			return console.log(err)
 		}
@@ -47,7 +47,7 @@ function answer(socket,message) {
 			say(socket, genAnswer())
 		}
 	}
-	logMessage(socket.nickname,message)
+	logMessage(socket.nickname,message,moment().tz("Europe/Paris").format('HH:mm'))
 }
 
 function receive(event,data) {

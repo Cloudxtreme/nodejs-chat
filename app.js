@@ -151,7 +151,8 @@ function printTtmMessages(socket) {
 		messages.forEach(function (fromMess) {
 			var from = fromMess.from
 			var message = fromMess.message
-			socket.emit('message', {nickname: from, message: message, time: moment().tz("Europe/Paris").format('HH:mm')})
+			var time = fromMess.time
+			socket.emit('message', {nickname: from, message: message, time: time})
 		})
 	})
 }
