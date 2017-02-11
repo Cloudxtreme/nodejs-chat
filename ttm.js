@@ -4,9 +4,27 @@ var fs = require('fs')
 var specialNicknames = []
 var knownNicknames = []
 var infoNicknames = []
+var filepath = './data/messages.log'
+
+function shuffle(array) {
+	var currentIndex = array.length, temporaryValue, randomIndex;
+	// While there remain elements to shuffle...
+	while (0 !== currentIndex) {
+		// Pick a remaining element...
+		randomIndex = Math.floor(Math.random() * currentIndex)
+		currentIndex -= 1
+
+		// And swap it with the current element.
+		temporaryValue = array[currentIndex]
+		array[currentIndex] = array[randomIndex]
+		array[randomIndex] = temporaryValue
+	}
+
+	return array
+}
 
 function logMessage(nickname,message,time) {
-	fs.appendFile('./data/messages.log', JSON.stringify({from:nickname,message:message,time:time})+'\n', function(err) {
+	fs.appendFile(filepath, JSON.stringify({from:nickname,message:message,time:time})+'\n', function(err) {
 		if(err) {
 			return console.log(err)
 		}
@@ -17,7 +35,31 @@ function setSNS(sns) {
 	specialNicknames=sns
 }
 
-function genAnswer() {
+function genAnswer(socket,message) {
+	fs.readFile(filepath, 'utf-8', function (err, data) {
+		if (err) {
+			return console.log(err)
+		}
+		var messages = JSON.parse('[' + data.replace(/\n/g, ",").slice(0, -1) + ']')
+		messages = shuffle(messages)
+		var said = false
+		messages.some(function (fromMess) {
+			var from = fromMess.from
+			var message = fromMess.message
+			var time = fromMess.time
+			if (from!=socket.nickname) {
+				say(socket,message)
+				said = Math.random()>0.8
+			}
+			return said
+		})
+		if (!said) {
+			say(socket,genHh())
+		}
+	})
+}
+
+function genHh() {
 	var h=''
 	while(Math.random()>0.01&&h.length<100){
 		h+=(Math.random()>0.5?'h':'H')
@@ -26,7 +68,8 @@ function genAnswer() {
 }
 
 function greet(socket) {
-	say(socket,'Hi '+socket.nickname+'! Let\'s talk!')
+	say(socket,'Hi '+socket.nickname+'!')
+	say(socket,'Let\'s talk!')
 }
 
 function say(socket,message) {
@@ -35,19 +78,25 @@ function say(socket,message) {
 
 function answer(socket,message) {
 	var nickname = socket.nickname
-	//if (specialNicknames.indexOf(nickname)!=-1) {
-	if (0) {
-		say(socket, genAnswer())
+
+	if (knownNicknames.indexOf(nickname)==-1) {
+		say(socket, 'I am learning to talk.')
+		say(socket, 'The more you talk to me, the better I will be.')
+		knownNicknames.push(nickname)
 	} else {
-		if (knownNicknames.indexOf(nickname)==-1) {
-			say(socket, 'Thank you for your message.')
-			say(socket, 'I do not know how to talk yet, but I am learning!')
-			knownNicknames.push(nickname)
-		} else {
-			say(socket, genAnswer())
-		}
+		genAnswer(socket,message)
 	}
 	logMessage(socket.nickname,message,moment().tz("Europe/Paris").format('HH:mm'))
+}
+
+function react(socket, message) {
+	var nickname = socket.nickname
+	var reactions = shuffle(['I agree with you, '+nickname+'.','It\'s true!','I think so.',nickname+' is right.','I must disagree here, '+nickname+'.'])
+	var question = shuffle(['I do not know.','I am just a machine.','Well, '+nickname+', let me see...'])
+	if (Math.random()<0.5) {
+		say(socket,question[0])
+	}
+	say(socket,reactions[0])
 }
 
 function receive(event,data) {
@@ -73,6 +122,10 @@ function receive(event,data) {
 			if (knownNicknames.indexOf(nickname)==-1&&infoNicknames.indexOf(nickname)==-1) {
 				say(socket,'To talk to me, select my name in the "Connected users" list.')
 				infoNicknames.push(nickname)
+			} else {
+				if (Math.random()<0.05) {
+					react(socket,message)
+				}
 			}
 			break
 		default:
