@@ -118,6 +118,7 @@ socket.on('disconnect', function(){
 	disco = true
 	messageFromServer('<b>WARNING:</b> lost connexion with server.')
 	messageFromServer('try <a href="/">refreshing</a> the page, or wait for server to reconnect.')
+	selectConnected('all')
 })
 
 socket.on('connect', function(){
@@ -340,4 +341,10 @@ if (!String.prototype.startsWith) {
 		position = position || 0
 		return this.indexOf(searchString, position) === position
 	}
+}
+
+// tutorial
+function help() {
+	socket.emit('help')
+	selectConnected('talktome')
 }

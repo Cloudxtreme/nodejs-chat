@@ -4,6 +4,7 @@ var fs = require('fs')
 var specialNicknames = []
 var knownNicknames = []
 var infoNicknames = []
+var tutorial = []
 var filepath = './data/messages.log'
 var messages = []
 
@@ -116,6 +117,25 @@ function sayAll(socket,message) {
 	socket.broadcast.emit('message', {nickname: 'talktome', message: message, time: moment().tz("Europe/Paris").format('HH:mm')})
 }
 
+function followTutorial(socket, message) {
+	message = message.toLowerCase()
+	if (message.indexOf('yes')!=-1) {
+		//
+	} else if (message.indexOf('no')!=-1) {
+		//
+	} else {
+		var didntGetIt = shuffle(['I did not understand your request.','I only speak English.','Could you be clearer?','I am sorry, could you rephrase that?'])
+		say(socket,didntGetIt[0])
+	}
+}
+
+function launchTutorial(socket) {
+	tutorial.push(socket.nickname)
+	say(socket, 'So '+socket.nickname+', I heard you need help!')
+	say(socket, 'Do not panic, I am here.')
+	say(socket, 'What is your question?')
+}
+
 function answer(socket,message) {
 	var nickname = socket.nickname
 
@@ -123,6 +143,8 @@ function answer(socket,message) {
 		say(socket, 'I am learning to talk.')
 		say(socket, 'The more you talk to me, the better I will be.')
 		knownNicknames.push(nickname)
+	} else if (tutorial.indexOf(nickname!=-1)) {
+		followTutorial(socket,message)
 	} else {
 		genAnswer(socket,message)
 	}
@@ -172,6 +194,9 @@ function receive(event,data) {
 				}
 			}
 			break
+		case 'help':
+			var socket = data
+			launchTutorial(socket)
 		default:
 
 			break

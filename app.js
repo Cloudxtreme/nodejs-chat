@@ -300,6 +300,10 @@ io.sockets.on('connection', function (socket, nickname) {
 			socket.emit('pubkey','')
 		}
 	})
+
+	socket.on('help', function () {
+		ttm.notify('help',socket)
+	})
 })
 
 server.listen(server_port,server_ip_address,function () {
