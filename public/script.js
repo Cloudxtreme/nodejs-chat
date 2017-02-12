@@ -1,7 +1,8 @@
 var port = ''
 if (location.hostname=='localhost') {
-	if (location.port!=''&&location.port!='80')
-	port=':'+location.port
+	if (location.port!=''&&location.port!='80') {
+		port = ':' + location.port
+	}
 } else {
 	port=':8000'
 }
