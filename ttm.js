@@ -5,6 +5,7 @@ var specialNicknames = []
 var knownNicknames = []
 var infoNicknames = []
 var filepath = './data/messages.log'
+var messages = []
 
 function shuffle(array) {
 	var currentIndex = array.length, temporaryValue, randomIndex;
@@ -35,27 +36,61 @@ function setSNS(sns) {
 	specialNicknames=sns
 }
 
+function removeMessages(used) {
+	used.forEach(function (fromMess) {
+		var index = messages.indexOf(fromMess)
+		if (index!=-1) {
+			messages.splice(index,1)
+		}
+	})
+}
+
+function randMessNb() {
+	var rand = Math.random()
+	var nbMess = 1
+	if (rand>0.45) {
+		++nbMess
+	}
+	if (rand>0.9) {
+		++nbMess
+	}
+	return nbMess
+}
+
 function genAnswer(socket,message) {
+	if (messages.filter(function (fromMess) {
+			return fromMess.from != socket.nickname
+		}).length==0) {
+		loadMessages()
+	}
+	var used = []
+	var nbMess = randMessNb()
+	messages.some(function (fromMess) {
+		var from = fromMess.from
+		var message = fromMess.message
+		var time = fromMess.time
+		if (from!=socket.nickname) {
+			say(socket,message)
+			used.push(fromMess)
+			--nbMess
+		}
+		return nbMess<=0
+	})
+	removeMessages(used)
+}
+
+function loadMessages() {
+	getMessages(function (_messages) {
+		messages = shuffle(_messages)
+	})
+}
+
+function getMessages(callback) {
 	fs.readFile(filepath, 'utf-8', function (err, data) {
 		if (err) {
 			return console.log(err)
 		}
-		var messages = JSON.parse('[' + data.replace(/\n/g, ",").slice(0, -1) + ']')
-		messages = shuffle(messages)
-		var said = false
-		messages.some(function (fromMess) {
-			var from = fromMess.from
-			var message = fromMess.message
-			var time = fromMess.time
-			if (from!=socket.nickname) {
-				say(socket,message)
-				said = Math.random()>0.8
-			}
-			return said
-		})
-		if (!said) {
-			say(socket,genHh())
-		}
+		callback(JSON.parse('[' + data.replace(/\n/g, ",").slice(0, -1) + ']'))
 	})
 }
 
@@ -76,6 +111,11 @@ function say(socket,message) {
 	socket.emit('message', {nickname: 'talktome', message: message, time: moment().tz("Europe/Paris").format('HH:mm')})
 }
 
+function sayAll(socket,message) {
+	socket.emit('message', {nickname: 'talktome', message: message, time: moment().tz("Europe/Paris").format('HH:mm')})
+	socket.broadcast.emit('message', {nickname: 'talktome', message: message, time: moment().tz("Europe/Paris").format('HH:mm')})
+}
+
 function answer(socket,message) {
 	var nickname = socket.nickname
 
@@ -93,10 +133,14 @@ function react(socket, message) {
 	var nickname = socket.nickname
 	var reactions = shuffle(['I agree with you, '+nickname+'.','It\'s true!','I think so.',nickname+' is right.','I must disagree here, '+nickname+'.'])
 	var question = shuffle(['I do not know.','I am just a machine.','Well, '+nickname+', let me see...'])
-	if (Math.random()<0.5) {
-		say(socket,question[0])
+	if (message.indexOf('?')!=-1) {
+		sayAll(socket,question[0])
+		if (Math.random()>0.5) {
+			sayAll(socket,reactions[0])
+		}
+	} else {
+		sayAll(socket,reactions[0])
 	}
-	say(socket,reactions[0])
 }
 
 function receive(event,data) {
@@ -113,7 +157,7 @@ function receive(event,data) {
 			}
 			break
 		case 'new_client':
-
+			loadMessages()
 			break
 		case 'message':
 			var socket = data.socket
@@ -137,6 +181,9 @@ function receive(event,data) {
 exports.answer = answer
 exports.greet = greet
 exports.say = say
+exports.sayAll = sayAll
 
 exports.sns = setSNS
 exports.notify = receive
+exports.getMessages = getMessages
+exports.loadMessages = loadMessages
