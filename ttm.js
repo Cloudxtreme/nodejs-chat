@@ -192,6 +192,10 @@ function explainAdvanced2(socket) {
 	say(socket,'admin may "op" any user.')
 	say(socket,'If you are OP, you can ban any user, except admin.')
 	say(socket,'You can send /ban username to server.')
+	say(socket,'For exemple, to ban an user named Smith, send:')
+	say(socket,'/ban Smith')
+	say(socket,'If you are not OP, you will send "/ban Smith" in plain text to everyone.')
+	say(socket,'If you are OP, Smith will be banned.')
 }
 
 function followTutorial(socket, message) {
