@@ -284,6 +284,7 @@ function selectConnected(nickname) {
 }
 
 function genKey() {
+	$('#wait_please').show()
 	//var pass = prompt('Enter your passphrase.','')
 	var pass = password
 	var options = {
@@ -291,6 +292,7 @@ function genKey() {
 		numBits: 2048
 	}
 	openpgp.generateKey(options).then(function(key) {
+		$('#wait_please').hide()
 		privkey = key.privateKeyArmored
 		pubkey = key.publicKeyArmored
 		localStorage.privkey = privkey
@@ -305,6 +307,29 @@ function showkey() {
 	} else {
 		genKey()
 	}
+}
+
+function httpGetAsync(url, callback) {
+    var xmlHttp = new XMLHttpRequest()
+    xmlHttp.onreadystatechange = function() { 
+        if (xmlHttp.readyState == 4 && xmlHttp.status == 200)
+            callback(xmlHttp.responseText)
+    }
+    xmlHttp.open("GET", url, true)
+    xmlHttp.send(null)
+}
+
+function genKeyNode() {
+	$('#wait_please').show()
+	httpGetAsync('http://localhost:8888/keys/'+nickname, function(response){
+		$('#wait_please').hide()
+		var keys = JSON.parse(response)
+		privkey = keys.privkey
+		pubkey = keys.pubkey
+		localStorage.privkey = privkey
+		localStorage.pubkey = pubkey
+		window.location = '/'
+	})
 }
 
 function encrypt(message) {
