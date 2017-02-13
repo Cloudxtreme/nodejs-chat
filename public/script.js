@@ -302,19 +302,19 @@ function genKey() {
 		userIds: [{ name:nickname, email:nickname+'@example.com' }],
 		numBits: 2048
 	}
-	try {
-		openpgp.generateKey(options).then(function (key) {
+	openpgp.generateKey(options).then(function (key) {
+		try {
 			$('#wait_please').hide()
 			privkey = key.privateKeyArmored
 			pubkey = key.publicKeyArmored
 			localStorage.privkey = privkey
 			localStorage.pubkey = pubkey
 			window.location = '/'
-		})
-	} catch (e) {
-		$('#wait_please').hide()
-		$('#gen_error').show()
-	}
+		} catch (e) {
+			$('#wait_please').hide()
+			$('#gen_error').show()
+		}
+	})
 }
 
 function showkey() {
@@ -328,8 +328,12 @@ function showkey() {
 function httpGetAsync(url, callback) {
     var xmlHttp = new XMLHttpRequest()
     xmlHttp.onreadystatechange = function() { 
-        if (xmlHttp.readyState == 4 && xmlHttp.status == 200)
-            callback(xmlHttp.responseText)
+        if (xmlHttp.readyState == 4 && xmlHttp.status == 200) {
+			callback(xmlHttp.responseText)
+		} else {
+			$('#wait_please').hide()
+			$('#gen_error').show()
+		}
     }
     xmlHttp.open("GET", url, true)
     xmlHttp.send(null)
@@ -338,8 +342,8 @@ function httpGetAsync(url, callback) {
 function genKeyNode() {
 	$('#gen_error').hide()
 	$('#wait_please').show()
-	try {
-		httpGetAsync('http://localhost:8888/keys/'+nickname, function(response){
+	httpGetAsync('http://localhost:8888/keys/'+nickname, function(response){
+		try {
 			$('#wait_please').hide()
 			var keys = JSON.parse(response)
 			privkey = keys.privkey
@@ -347,11 +351,11 @@ function genKeyNode() {
 			localStorage.privkey = privkey
 			localStorage.pubkey = pubkey
 			window.location = '/'
-		})
-	} catch (e) {
-		$('#wait_please').hide()
-		$('#gen_error').show()
-	}
+		} catch (e) {
+			$('#wait_please').hide()
+			$('#gen_error').show()
+		}
+	})
 }
 
 function encrypt(message) {
