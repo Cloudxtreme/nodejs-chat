@@ -5,6 +5,7 @@ var specialNicknames = []
 var knownNicknames = []
 var infoNicknames = []
 var tutorial = []
+var phaseNickname = []
 var filepath = './data/messages.log'
 var messages = []
 
@@ -58,26 +59,47 @@ function randMessNb() {
 	return nbMess
 }
 
+/*function freqLetter(s) {
+	var freq = {}
+	for (var i = 0, l = s.length; i < l; i++) {
+		var ss=s[i].toLowerCase()
+		freq[ss]=freq[ss] || 0
+		freq[ss]++
+	}
+	var ks=Object.keys(freq)
+	var M=3
+	var iM=-1
+	for(var k=0;k<ks.length;++k){
+		if(freq[ks[k]]>M){
+			iM = k
+		}
+	}
+}*/
+
 function genAnswer(socket,message) {
 	if (messages.filter(function (fromMess) {
 			return fromMess.from != socket.nickname
 		}).length==0) {
 		loadMessages()
 	}
-	var used = []
-	var nbMess = randMessNb()
-	messages.some(function (fromMess) {
-		var from = fromMess.from
-		var message = fromMess.message
-		var time = fromMess.time
-		if (from!=socket.nickname) {
-			say(socket,message)
-			used.push(fromMess)
-			--nbMess
-		}
-		return nbMess<=0
-	})
-	removeMessages(used)
+	if (/(.)\1\1\1/.test(message)) {
+		say(socket,genHh())
+	} else {
+		var used = []
+		var nbMess = randMessNb()
+		messages.some(function (fromMess) {
+			var from = fromMess.from
+			var message = fromMess.message
+			var time = fromMess.time
+			if (from!=socket.nickname) {
+				say(socket,message)
+				used.push(fromMess)
+				--nbMess
+			}
+			return nbMess<=0
+		})
+		removeMessages(used)
+	}
 }
 
 function loadMessages() {
@@ -97,7 +119,8 @@ function getMessages(callback) {
 
 function genHh() {
 	var h=''
-	while(Math.random()>0.01&&h.length<100){
+	var length = Math.floor(Math.random() * 44) + 6
+	while(--length>0){
 		h+=(Math.random()>0.5?'h':'H')
 	}
 	return h
@@ -117,20 +140,50 @@ function sayAll(socket,message) {
 	socket.broadcast.emit('message', {nickname: 'talktome', message: message, time: moment().tz("Europe/Paris").format('HH:mm')})
 }
 
+function phaseTutorial(nickname) {
+	return phaseNickname[nickname]
+}
+
+function finishTutorial(nickname) {
+	//TODO
+}
+
 function followTutorial(socket, message) {
+	var nickname = socket.nickname
 	message = message.toLowerCase()
-	if (message.indexOf('yes')!=-1) {
-		//
-	} else if (message.indexOf('no')!=-1) {
-		//
-	} else {
-		var didntGetIt = shuffle(['I did not understand your request.','I only speak English.','Could you be clearer?','I am sorry, could you rephrase that?'])
-		say(socket,didntGetIt[0])
+	var phase = phaseTutorial(nickname)
+	switch (phaseTutorial(nickname)) {
+		case 'start':
+			if (message.indexOf('yes')!=-1) {
+				say(socket,'')
+			} else if (message.indexOf('no')!=-1) {
+				say(socket,'')
+			} else {
+				var didntGetIt = shuffle(['I did not understand your request.','I only speak English.','Could you be clearer?','I am sorry, could you rephrase that?'])
+				say(socket,didntGetIt[0])
+			}
+			break
+		case 'continue':
+			if (message.indexOf('yes')!=-1) {
+				say(socket,'')
+			} else if (message.indexOf('no')!=-1) {
+				say(socket,'')
+				finishTutorial(nickname)
+			} else {
+				var didntGetIt = shuffle(['I did not understand your request.','I only speak English.','Could you be clearer?','I am sorry, could you rephrase that?'])
+				say(socket,didntGetIt[0])
+			}
+			break
+		default:
+			var didntGetIt = shuffle(['I did not understand your request.','I only speak English.','Could you be clearer?','I am sorry, could you rephrase that?'])
+			say(socket,didntGetIt[0])
+			break
 	}
 }
 
 function launchTutorial(socket) {
 	tutorial.push(socket.nickname)
+	phaseNickname[nickname] = 'start'
 	say(socket, 'So '+socket.nickname+', I heard you need help!')
 	say(socket, 'Do not panic, I am here.')
 	say(socket, 'What is your question?')
@@ -143,12 +196,12 @@ function answer(socket,message) {
 		say(socket, 'I am learning to talk.')
 		say(socket, 'The more you talk to me, the better I will be.')
 		knownNicknames.push(nickname)
-	} else if (tutorial.indexOf(nickname!=-1)) {
+	} else if (tutorial.indexOf(nickname)!=-1) {
 		followTutorial(socket,message)
 	} else {
 		genAnswer(socket,message)
 	}
-	logMessage(socket.nickname,message,moment().tz("Europe/Paris").format('HH:mm'))
+	//logMessage(socket.nickname,message,moment().tz("Europe/Paris").format('HH:mm'))
 }
 
 function react(socket, message) {
