@@ -129,6 +129,16 @@ socket.on('connect', function(){
 	}
 })
 
+socket.on('help_end', function(){
+	selectConnected('all')
+	$('#help').show()
+})
+
+socket.on('help_start',function () {
+	selectConnected('talktome')
+	$('#help').hide()
+})
+
 function sendMessage(message) {
 	// send message to others
 	socket.emit('message', {message: message, to: dest.name})
@@ -371,5 +381,4 @@ if (!String.prototype.startsWith) {
 // tutorial
 function help() {
 	socket.emit('help')
-	selectConnected('talktome')
 }

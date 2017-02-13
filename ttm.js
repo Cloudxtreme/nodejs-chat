@@ -297,6 +297,7 @@ function launchTutorial(socket) {
 	say(socket, 'So '+socket.nickname+', I heard you need help!')
 	say(socket, 'Do not panic, I am here.')
 	say(socket, 'What is your question?')
+	socket.emit('help_start')
 }
 
 function answer(socket,message) {
@@ -307,6 +308,9 @@ function answer(socket,message) {
 	} else if (knownNicknames.indexOf(nickname)==-1) {
 		if (message.toLowerCase().indexOf('yes')!=-1) {
 			launchTutorial(socket)
+		} else if (message.toLowerCase().indexOf('no')!=-1) {
+			say(socket,'Great.')
+			say(socket,'Talk to me anytime!')
 		} else {
 			say(socket, 'I am learning to talk.')
 			say(socket, 'The more you talk to me, the better I will be.')
@@ -344,6 +348,7 @@ function receive(event,data) {
 			if (index!=-1) {
 				infoNicknames.splice(index,1)
 			}
+			delete tutorialPhase[nickname]
 			break
 		case 'new_client':
 			loadMessages()
@@ -355,6 +360,9 @@ function receive(event,data) {
 			if (knownNicknames.indexOf(nickname)==-1&&infoNicknames.indexOf(nickname)==-1) {
 				if (message.toLowerCase().indexOf('yes')!=-1) {
 					launchTutorial(socket)
+				} else if (message.toLowerCase().indexOf('no')!=-1) {
+					say(socket,'Great.')
+					say(socket,'Talk to me anytime!')
 				} else {
 					say(socket,'To talk to me, select my name in the "Connected users" list.')
 					infoNicknames.push(nickname)
