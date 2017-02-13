@@ -294,8 +294,13 @@ function selectConnected(nickname) {
 }
 
 function genKey() {
-	$('#gen_error').hide()
-	$('#wait_please').show()
+	var isChrome = navigator.userAgent.toLowerCase().indexOf('chrome')
+	if (isChrome) {
+		$('#gen_error').show()
+	} else {
+		$('#gen_error').hide()
+		$('#wait_please').show()
+	}
 	//var pass = prompt('Enter your passphrase.','')
 	var pass = password
 	var options = {
@@ -305,6 +310,7 @@ function genKey() {
 	openpgp.generateKey(options).then(function (key) {
 		try {
 			$('#wait_please').hide()
+			$('#gen_error').hide()
 			privkey = key.privateKeyArmored
 			pubkey = key.publicKeyArmored
 			localStorage.privkey = privkey
@@ -345,6 +351,7 @@ function genKeyNode() {
 	httpGetAsync('http://localhost:8888/keys/'+nickname, function(response){
 		try {
 			$('#wait_please').hide()
+			$('#gen_error').hide()
 			var keys = JSON.parse(response)
 			privkey = keys.privkey
 			pubkey = keys.pubkey
