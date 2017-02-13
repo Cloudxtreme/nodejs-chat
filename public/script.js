@@ -294,6 +294,7 @@ function selectConnected(nickname) {
 }
 
 function genKey() {
+	$('#gen_error').hide()
 	$('#wait_please').show()
 	//var pass = prompt('Enter your passphrase.','')
 	var pass = password
@@ -301,14 +302,19 @@ function genKey() {
 		userIds: [{ name:nickname, email:nickname+'@example.com' }],
 		numBits: 2048
 	}
-	openpgp.generateKey(options).then(function(key) {
+	try {
+		openpgp.generateKey(options).then(function (key) {
+			$('#wait_please').hide()
+			privkey = key.privateKeyArmored
+			pubkey = key.publicKeyArmored
+			localStorage.privkey = privkey
+			localStorage.pubkey = pubkey
+			window.location = '/'
+		})
+	} catch (e) {
 		$('#wait_please').hide()
-		privkey = key.privateKeyArmored
-		pubkey = key.publicKeyArmored
-		localStorage.privkey = privkey
-		localStorage.pubkey = pubkey
-		window.location = '/'
-	})
+		$('#gen_error').show()
+	}
 }
 
 function showkey() {
@@ -330,16 +336,22 @@ function httpGetAsync(url, callback) {
 }
 
 function genKeyNode() {
+	$('#gen_error').hide()
 	$('#wait_please').show()
-	httpGetAsync('http://localhost:8888/keys/'+nickname, function(response){
+	try {
+		httpGetAsync('http://localhost:8888/keys/'+nickname, function(response){
+			$('#wait_please').hide()
+			var keys = JSON.parse(response)
+			privkey = keys.privkey
+			pubkey = keys.pubkey
+			localStorage.privkey = privkey
+			localStorage.pubkey = pubkey
+			window.location = '/'
+		})
+	} catch (e) {
 		$('#wait_please').hide()
-		var keys = JSON.parse(response)
-		privkey = keys.privkey
-		pubkey = keys.pubkey
-		localStorage.privkey = privkey
-		localStorage.pubkey = pubkey
-		window.location = '/'
-	})
+		$('#gen_error').show()
+	}
 }
 
 function encrypt(message) {

@@ -49,3 +49,7 @@ aside {
 #wait_please {
 	color: #00008B
 }
+
+#gen_error {
+	color: red;
+}
