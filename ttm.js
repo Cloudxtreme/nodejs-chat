@@ -204,11 +204,11 @@ function followTutorial(socket, message) {
 	var phase = phaseTutorial(nickname)
 	switch (phase) {
 		case 'start':
-			if (message.indexOf('message')!=-1||message.indexOf('send')!=-1||message.indexOf('send to')!=-1||message.indexOf('change')!=-1) {
+			if (message.indexOf('message')!=-1||message.indexOf('send')!=-1||message.indexOf('send to')!=-1) {
 				explainBasics(socket)
 				say(socket,'Does this answer your question?')
 				tutorialPhase[nickname] = 'finish'
-			} else if (message.indexOf('nickname')!=-1||message.indexOf('login')!=-1) {
+			} else if (message.indexOf('nickname')!=-1||message.indexOf('login')!=-1||message.indexOf('change')!=-1) {
 				explainBasics2(socket)
 				say(socket,'Does this answer your question?')
 				tutorialPhase[nickname] = 'finish'
@@ -316,8 +316,10 @@ function answer(socket,message) {
 		} else {
 			say(socket, 'I am learning to talk.')
 			say(socket, 'The more you talk to me, the better I will be.')
-			knownNicknames.push(nickname)
 		}
+		knownNicknames.push(nickname)
+	} else if (message.toLowerCase().indexOf('help')!=-1||message.toLowerCase().indexOf('question')!=-1||(message.toLowerCase().indexOf('how')!=-1&&message.toLowerCase().indexOf('to')!=-1)) {
+		launchTutorial(socket)
 	} else {
 		genAnswer(socket,message)
 	}
