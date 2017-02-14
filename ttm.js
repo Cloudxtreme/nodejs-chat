@@ -182,7 +182,7 @@ function explainAdvanced(socket) {
 	say(socket,'You can check before sending a message if it will be encrypted or not')
 	say(socket,'by looking at the shield next to the "Send" button.')
 	say(socket,'If it is green, it is secure, if not it is not.')
-	say(socket,'After sending a message, if a lock appears on the left,')
+	say(socket,'After sending or receiving a message, if a lock appears on the left,')
 	say(socket,'it means it has been encrypted or decrypted.')
 }
 
@@ -280,14 +280,12 @@ function followTutorial(socket, message) {
 				// finish
 				say(socket,'Did you understand everything?')
 				tutorialPhase[nickname] = 'finish'
-			} else if (message.indexOf('no')!=-1||message.indexOf('basics')!=-1) {
+			} else {
 				say(socket,'Let\'s go over the basics together.')
 				explainBasics(socket)
 				explainBasics2(socket)
 				say(socket,'Do you need information about more advanced features?')
 				tutorialPhase[nickname] = 'continue'
-			} else {
-				didntGetAnswer(socket)
 			}
 			break
 		default:
