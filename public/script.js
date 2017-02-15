@@ -16,7 +16,7 @@ var privkey = localStorage.privkey
 var pubkey = localStorage.pubkey
 var dest = {}
 dest.name = 'all'
-old_dest = ''
+var old_dest = ''
 var usesecure = false
 var disco = false
 var cmd = []
@@ -37,10 +37,6 @@ setNickname()
 if (password) {
 	usesecure = true
 	$('.keyarea').show()
-	if (privkey&&pubkey) {
-		$('#key').attr('src','/img/keyok.png')
-		socket.emit('pubkey',pubkey)
-	}
 }
 
 var list = []
@@ -344,7 +340,12 @@ function genKey() {
 			pubkey = key.publicKeyArmored
 			localStorage.privkey = privkey
 			localStorage.pubkey = pubkey
-			window.location = '/'
+			if (privkey.startsWith('-----BEGIN PGP PRIVATE KEY BLOCK-----')&&pubkey.startsWith('-----BEGIN PGP PUBLIC KEY BLOCK-----')) {
+				$('#key').attr('src','/img/keyok.png')
+				socket.emit('pubkey',pubkey)
+			} else {
+				$('#gen_error').show()
+			}
 		} catch (e) {
 			$('#wait_please').hide()
 			$('#gen_error').show()
@@ -386,7 +387,12 @@ function genKeyNode() {
 			pubkey = keys.pubkey
 			localStorage.privkey = privkey
 			localStorage.pubkey = pubkey
-			window.location = '/'
+			if (privkey.startsWith('-----BEGIN PGP PRIVATE KEY BLOCK-----')&&pubkey.startsWith('-----BEGIN PGP PUBLIC KEY BLOCK-----')) {
+				$('#key').attr('src','/img/keyok.png')
+				socket.emit('pubkey',pubkey)
+			} else {
+				$('#gen_error').show()
+			}
 		} catch (e) {
 			$('#wait_please').hide()
 			$('#gen_error').show()
