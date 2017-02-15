@@ -130,6 +130,10 @@ function greet(socket) {
 	say(socket,'Do you need any help?')
 }
 
+function sendImage(socket,image) {
+	socket.emit('image', {nickname: 'talktome', image: image, time: moment().tz("Europe/Paris").format('HH:mm')})
+}
+
 function say(socket,message) {
 	socket.emit('message', {nickname: 'talktome', message: message, time: moment().tz("Europe/Paris").format('HH:mm')})
 }
@@ -156,9 +160,12 @@ function didntGetAnswer(socket) {
 function explainBasics(socket) {
 	say(socket, 'If you send a message, it will be sent to everyone connected to the chat,')
 	say(socket, 'including myself!')
+	sendImage(socket,'/img/send_all.gif')
 	say(socket, 'To talk to someone privately, click on his/her nickname on the "Connected users" list.')
+	sendImage(socket,'/img/send_one.gif')
 	say(socket, 'To talk to someone else, just click on his/her nickname on the "Connected users" list.')
 	say(socket, 'To talk to everyone again, click on the [to X].')
+	sendImage(socket,'/img/one_toall.gif')
 }
 
 // change nickname, login, nickname rules
@@ -168,14 +175,18 @@ function explainBasics2(socket) {
 	say(socket, '- someone already connected has this nickname')
 	say(socket, '- a user whith an account has protected this nickname by password')
 	say(socket, '- this nickname cannot be used.')
+	sendImage(socket,'/img/chg_nickname.gif')
 	say(socket, 'If you have an account, you can login by clicking on the corresponding menu.')
+	sendImage(socket,'/img/login.gif')
 }
 
 function explainAdvanced(socket) {
 	say(socket,'You, and the other users can generate a key pair.')
 	say(socket,'To do so, click on the button "Generate key".')
+	sendImage(socket,'/img/gen_key.gif')
 	say(socket,'Once you have a key pair, the public key will be sent to the server.')
 	say(socket,'Any message sent directly to you will now be ecrypted.')
+	sendImage(socket,'/img/send_secure.gif')
 	say(socket,'When you select someone on the "Connected users" list,')
 	say(socket,'you will automatically get their public key from the server,')
 	say(socket,'and any message you will send them will be encrypted.')
@@ -184,6 +195,7 @@ function explainAdvanced(socket) {
 	say(socket,'If it is green, it is secure, if not it is not.')
 	say(socket,'After sending or receiving a message, if a lock appears on the left,')
 	say(socket,'it means it has been encrypted or decrypted.')
+	sendImage(socket,'/img/send_secure2.gif')
 }
 
 // admin commands, ban
@@ -196,6 +208,7 @@ function explainAdvanced2(socket) {
 	say(socket,'/ban Smith')
 	say(socket,'If you are not OP, you will send "/ban Smith" in plain text to everyone.')
 	say(socket,'If you are OP, Smith will be banned.')
+	sendImage(socket,'/img/ban_demo.gif')
 }
 
 function followTutorial(socket, message) {
@@ -355,7 +368,9 @@ function receive(event,data) {
 			delete tutorialPhase[nickname]
 			break
 		case 'new_client':
+			var socket = data
 			loadMessages()
+			greet(socket)
 			break
 		case 'message':
 			var socket = data.socket
@@ -390,6 +405,7 @@ exports.answer = answer
 exports.greet = greet
 exports.say = say
 exports.sayAll = sayAll
+exports.sendImage = sendImage
 
 exports.sns = setSNS
 exports.notify = receive

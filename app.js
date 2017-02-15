@@ -235,8 +235,7 @@ io.sockets.on('connection', function (socket, nickname) {
 		socket.broadcast.emit('new_client', nickname)
 		sendConnectedList(socket)
 		allClients.push(socket)
-		ttm.greet(socket)
-		ttm.notify('new_client',nickname)
+		ttm.notify('new_client',socket)
 	})
 
 	// upon message reception, the sender's nickname is captured and retransmitted to other clients

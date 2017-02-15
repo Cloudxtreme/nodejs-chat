@@ -63,7 +63,11 @@ socket.on('set_nickname', function(new_nickname){
 // insert message in page upon reception
 function displayMessage(data) {
 	document.title = data.nickname + ': new message!'
-	insertMessage(data.nickname, data.message, data.time, false, data.secured)
+	if (data.image) {
+		insertImage(data.nickname, data.image, data.time, false)
+	} else {
+		insertMessage(data.nickname, data.message, data.time, false, data.secured)
+	}
 	nmsound.play()
 }
 
@@ -73,6 +77,10 @@ socket.on('message', function(data) {
 	} else {
 		displayMessage(data)
 	}
+})
+
+socket.on('image', function(data) {
+	displayMessage(data)
 })
 
 // display info when a new client joins
@@ -237,6 +245,27 @@ function insertMessage(nickname, message, time, toself, secured, to) {
 		message = escapeHtml(message)
 	}
 	$('#chat_zone').prepend('<p class="'+cl+'">'+time+' <img src="'+secimg+'" class="keyarea"> <strong>' + nickname + '</strong> ' + message + totag +'</p>').linkify()
+}
+
+function insertImage(nickname, image, time, toself) {
+	var cl = 'from_server'
+	var secimg = '/img/blanksecure.jpg'
+	var totag = ''
+	var needEscape = false
+	if (toself) {
+		cl = 'toself'
+		if (to&&to!='all') {
+			totag = ' <em>(to '+dest.name+')</em>'	
+		}
+		needEscape = true
+	}
+	if (usesecure) {
+		secimg = '/img/unsecure.jpg'
+	}
+	if (needEscape) {
+		image = escapeHtml(image)
+	}
+	$('#chat_zone').prepend('<p class="'+cl+'">'+time+' <img src="'+secimg+'" class="keyarea"> <strong>' + nickname + '</strong> <a target="_blank" href="'+image+'"><img style="max-width: 75%;vertical-align:middle;" border="1" src="'+image+'"></a> '+totag +'</p>').linkify()
 }
 
 function messageFromServer(message) {
