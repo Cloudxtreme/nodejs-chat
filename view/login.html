@@ -6,11 +6,18 @@
   <script src="/script_login.js"></script>
   <link rel="stylesheet" href="/style_login.css">
 </head>
-<body>
+<body onload="load()">
+  <p>Chose your nickname (or login)</p>
   <section id="login_form">
     <label for="nickname">nickname</label><input id="nickname" type="text" autofocus><br>
-    <label for="password">password</label><input id="password" type="password" onkeydown="pressKey(event)"><br>
-    <button onclick="login()">login</button>
+	<label id="use_pass" class="link" onmouseover="explain('exp_pass')" onmouseleave="hideExplain('exp_pass')" onclick="showPassword()">I have a password.</label>
+    <label for="password" class="password" hidden>password</label><input id="password" class="password" type="password" onkeydown="pressKey(event)" hidden><br>
+	<label class="link" onmouseover="explain('exp_advanced')" onmouseleave="hideExplain('exp_advanced')"><input type="checkbox" id="advanced" value="checkbox1">Use advanced features.</label><br>
+    <button onclick="login()">Go to chat</button>
+  </section>
+  <section id="explainations">
+    <p id="exp_pass" hidden>Click here if you have an account on nodechat.</p>
+    <p id="exp_advanced" hidden>Advanced features include key generation, encrypted messages, and server commands.</p>
   </section>
 </body>
 </html>

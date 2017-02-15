@@ -1,0 +1,13 @@
+#explainations {
+	color: #00008B
+}
+
+.link {
+	color: darkblue
+}
+
+.link:hover {
+	text-decoration: underline;
+	cursor: pointer;
+	color: blue
+}

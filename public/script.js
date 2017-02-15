@@ -24,17 +24,15 @@ cmd.push('')
 var lc = 0
 
 if (!nickname) {
-	nickname = prompt('Enter your nickname.','')
-	sessionStorage.nickname = nickname
+	window.location = '/login'
 } else if (sessionStorage.password) {
 	password = sessionStorage.password
-	document.querySelector('#login_button').setAttribute('hidden','')
 }
 socket.emit('new_client', {nickname:nickname,password:password})
 var title=document.title
 setNickname()
 
-if (password) {
+if (sessionStorage.advanced) {
 	usesecure = true
 	$('.keyarea').show()
 }
@@ -109,6 +107,36 @@ socket.on('refresh', function() {
 })
 
 // receive public key
+socket.on('pubkey', function(pubkey) {
+	if (pubkey.startsWith('-----BEGIN PGP PUBLIC KEY BLOCK-----')) {
+		dest.pubkey = pubkey
+		$('#send_secured').attr('src','/img/secured.png')
+	} else {
+		delete dest.pubkey
+	}
+})
+
+socket.on('new_pubkey', function(data) {
+	var key_nickname = data.nickname
+	if (key_nickname == dest.name) {
+		var pubkey = data.pubkey
+		if (pubkey.startsWith('-----BEGIN PGP PUBLIC KEY BLOCK-----')) {
+			dest.pubkey = pubkey
+			$('#send_secured').attr('src','/img/secured.png')
+		} else {
+			delete dest.pubkey
+			$('#send_secured').attr('src','/img/unsecured.png')
+		}
+	}
+})
+
+socket.on('del_pubkey', function(key_nickname) {
+	if (key_nickname == dest.name) {
+		delete dest.pubkey
+		$('#send_secured').attr('src','/img/unsecured.png')
+	}
+})
+
 socket.on('pubkey', function(pubkey) {
 	if (pubkey.startsWith('-----BEGIN PGP PUBLIC KEY BLOCK-----')) {
 		dest.pubkey = pubkey
@@ -398,6 +426,14 @@ function genKeyNode() {
 			$('#gen_error').show()
 		}
 	})
+}
+
+function deleteKey() {
+	localStorage.clear()
+	$('#key').attr('src','/img/keyko.png')
+	socket.emit('del_pubkey')
+	pubkey = ''
+	privkey = ''
 }
 
 function encrypt(message) {

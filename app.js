@@ -285,6 +285,7 @@ io.sockets.on('connection', function (socket, nickname) {
 	// client sends public key
 	socket.on('pubkey', function(pubkey) {
 		socket.pubkey = pubkey
+		socket.broadcast.emit('new_pubkey',{nickname:socket.nickname,pubkey:pubkey})
 	})
 
 	socket.on('get_pubkey', function(nickname) {
@@ -298,6 +299,11 @@ io.sockets.on('connection', function (socket, nickname) {
 		} else {
 			socket.emit('pubkey','')
 		}
+	})
+	
+	socket.on('del_pubkey', function() {
+		delete socket.pubkey
+		socket.broadcast.emit('del_pubkey',socket.nickname)
 	})
 
 	socket.on('help', function () {
