@@ -50,8 +50,6 @@ socket.on('set_nickname', function(new_nickname){
 	messageFromServer('your nickname has been changed to <b>' + nickname + '</b> by server.')
 	sessionStorage.nickname = nickname
 	sessionStorage.password = ''
-	$('.keyarea').hide()
-	usesecure = false
 })
 
 // insert message in page upon reception

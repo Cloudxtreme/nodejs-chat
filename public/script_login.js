@@ -21,9 +21,12 @@ function hideExplain(id) {
 
 function showPassword() {
 	document.querySelector('#use_pass').setAttribute('hidden','')
-	document.querySelectorAll('.password').forEach(function(el) {
+	var showpassword = document.querySelectorAll('.password')
+	for (var i in showpassword) {
+		el = showpassword[i]
 		el.removeAttribute('hidden')
-	})
+	}
+	document.querySelector('#password').focus()
 }
 
 function login() {
@@ -44,5 +47,13 @@ function login() {
 function pressKey(e) {
 	if (e.key=='Enter') {
 		login()
+	}
+}
+
+function input(e) {
+	if (document.querySelector('#nickname').value) {
+		document.querySelector('#login_btn').removeAttribute('disabled')
+	} else {
+		document.querySelector('#login_btn').setAttribute('disabled','')
 	}
 }
