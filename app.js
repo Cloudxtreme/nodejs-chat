@@ -8,10 +8,11 @@ var io = require('socket.io').listen(server)
 var ent = require('ent') // block HTML entities
 var fs = require('fs')
 var moment = require('moment-timezone')
+var bodyParser = require('body-parser')
 var ttm = require('./ttm')
 
 var allClients = []
-const specialNicknames = [{name:'levg34',password:'meuh'},{name:'madblade',password:'cuicui'},{name:'BorisG7',password:'petitbourgeois'},{name:'Remy',password:'bloup'},{name:'admin',password:'meuh'},{name:'all',locked:true},{name:'server',locked:true},{name:'talktome',locked:true}]
+const specialNicknames = [{name:'levg34',password:'meuh'},{name:'madblade',password:'cuicui'},{name:'BorisG7',password:'petitbourgeois'},{name:'Remy',password:'bloup'},{name:'admin',password:'meuh'},{name:'all',locked:true},{name:'server',locked:true},{name:'talktome',locked:true},{name:'undefined',locked:true},{name:'null',locked:true}]
 var sns = specialNicknames.map(function (d) {
 	return d.name
 })
@@ -20,6 +21,7 @@ var admins = ['admin','levg34']
 var ops = []
 
 app.use(express.static(__dirname + '/public'))
+app.use(bodyParser.json())
 
 // load index.html on get /
 app.get('/', function (req, res) {
@@ -29,6 +31,50 @@ app.get('/', function (req, res) {
 // load login.html on get /login
 app.get('/login', function (req, res) {
 	res.sendFile(__dirname + '/view/login.html')
+})
+
+app.post('/login', function (req, res) {
+	var resObject = {}
+	var body = req.body
+	var nickname = body.nickname
+	var password = body.password
+	var logOK = true
+	resObject.reason = ''
+	var old_nickname = nickname
+	if (!nickname) {
+		nickname=''
+	}
+	if (nickname != ent.encode(nickname)) {
+		nickname = ent.encode(nickname)
+		resObject.reason += 'Nickname contains HTML entities.'
+	}
+	if (nickname.indexOf(' ')!=-1) {
+		nickname=nickname.split(' ')[nickname.split(' ').length-1]
+		resObject.reason += 'Nickname contains whitespaces.'
+	}
+	//nickname=nickname.replace(/[^A-Za-z0-9\u00C0-\u017F]/g, '')
+	if (nickname.length>15) {
+		nickname = nickname.substr(nickname.length-15)
+		resObject.reason += 'Nickname too long.'
+	}
+	if (password) {
+		var index = sns.indexOf(nickname)
+		logOK = !(index==-1||(specialNicknames[index].locked||specialNicknames[index].password!=password))
+		if (!logOK) {
+			nickname = 'client-'+allClients.length
+			resObject.reason = 'Wrong password.'
+		}
+	}
+	if (alreadyUsed(nickname)) {
+		nickname=nickname+'-'+allClients.length
+		resObject.reason += 'Nickname already used.'
+	}
+	if (old_nickname!=nickname) {
+		logOK=false
+		resObject.nickname = nickname
+	}
+	resObject.logOK = logOK
+	res.json(resObject)
 })
 
 // load config variables on get /conf
@@ -222,7 +268,8 @@ io.sockets.on('connection', function (socket, nickname) {
 			nickname = nickname.substr(nickname.length-15)
 		}
 		var index = sns.indexOf(nickname)
-		if (nickname==''||nickname=='undefined'||index!=-1&&specialNicknames[index].locked||(index!=-1&&specialNicknames[index].password!=password)) {
+		var logOK = !(nickname==''||index!=-1&&(specialNicknames[index].locked||specialNicknames[index].password!=password))
+		if (!logOK) {
 			nickname = 'client-'+allClients.length
 		}
 		if (alreadyUsed(nickname)) {

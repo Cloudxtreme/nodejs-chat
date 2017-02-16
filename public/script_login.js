@@ -5,6 +5,7 @@ sessionStorage.clear()
 function load() {
 	if (old_nickname) {
 		document.querySelector('#nickname').value = old_nickname
+		document.querySelector('#login_btn').removeAttribute('disabled')
 	}
 	if (old_advanced) {
 		document.querySelector('#advanced').checked = true
@@ -24,7 +25,9 @@ function showPassword() {
 	var showpassword = document.querySelectorAll('.password')
 	for (var i in showpassword) {
 		el = showpassword[i]
-		el.removeAttribute('hidden')
+		if (typeof el.removeAttribute === "function") { 
+			el.removeAttribute('hidden')
+		}
 	}
 	document.querySelector('#password').focus()
 }
@@ -33,15 +36,33 @@ function login() {
 	var nickname = document.querySelector('#nickname').value
 	var password = document.querySelector('#password').value
 	sessionStorage.nickname = nickname
+	var logObj = {nickname:nickname}
 	if (password) {
 		sessionStorage.password = password
+		logObj.password = password
 	}
 	if (document.querySelector('#advanced').checked) {
 		sessionStorage.advanced = true
 	} else if (sessionStorage.advanced) {
 		delete sessionStorage.advanced
 	}
-	window.location = '/'
+	var xhr = new XMLHttpRequest()
+	xhr.onreadystatechange = function() {
+		if (this.readyState == 4 && this.status == 200) {
+			var response = JSON.parse(this.responseText)
+			console.log(response)
+			if (response.logOK) {
+				window.location = '/'
+			} else {
+				alert('Server rejected your request: '+response.reason)
+				document.querySelector('#nickname').value = response.nickname
+				document.querySelector('#password').value = ''
+			}
+		}
+	}
+	xhr.open('POST', '/login', true)
+	xhr.setRequestHeader('Content-Type', 'application/json; charset=UTF-8')
+	xhr.send(JSON.stringify(logObj))
 }
 
 function pressKey(e) {
