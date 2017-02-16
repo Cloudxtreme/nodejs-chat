@@ -35,6 +35,10 @@ setNickname()
 if (sessionStorage.advanced) {
 	usesecure = true
 	$('.keyarea').show()
+	if (privkey&&pubkey&&privkey.startsWith('-----BEGIN PGP PRIVATE KEY BLOCK-----')&&pubkey.startsWith('-----BEGIN PGP PUBLIC KEY BLOCK-----')) {
+		$('#key').attr('src','/img/keyok.png')
+		socket.emit('pubkey',pubkey)
+	}
 }
 
 var list = []
@@ -392,9 +396,6 @@ function httpGetAsync(url, callback) {
     xmlHttp.onreadystatechange = function() { 
         if (xmlHttp.readyState == 4 && xmlHttp.status == 200) {
 			callback(xmlHttp.responseText)
-		} else {
-			$('#wait_please').hide()
-			$('#gen_error').show()
 		}
     }
     xmlHttp.open("GET", url, true)
