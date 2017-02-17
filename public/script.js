@@ -160,7 +160,7 @@ socket.on('connect', function(){
 		disco = false
 		socket.emit('new_client', {nickname:nickname,password:password})
 		messageFromServer('reconnected to server.')
-		if (localStorage.advanced&&privkey&&pubkey&&privkey.startsWith('-----BEGIN PGP PRIVATE KEY BLOCK-----')&&pubkey.startsWith('-----BEGIN PGP PUBLIC KEY BLOCK-----')) {
+		if (sessionStorage.advanced&&privkey&&pubkey&&privkey.startsWith('-----BEGIN PGP PRIVATE KEY BLOCK-----')&&pubkey.startsWith('-----BEGIN PGP PUBLIC KEY BLOCK-----')) {
 			$('#key').attr('src','/img/keyok.png')
 			socket.emit('pubkey',pubkey)
 		}
