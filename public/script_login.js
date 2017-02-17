@@ -54,8 +54,10 @@ function login() {
 			if (response.logOK) {
 				window.location = '/'
 			} else {
-				alert('Server rejected your request: '+response.reason)
-				document.querySelector('#nickname').value = response.nickname
+				document.querySelector('#login_err').innerHTML = 'Server rejected your request: '+response.reason
+				if (response.nickname) {
+					document.querySelector('#nickname').value = response.nickname
+				}
 				document.querySelector('#password').value = ''
 			}
 		}

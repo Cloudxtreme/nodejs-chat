@@ -348,6 +348,11 @@ function selectConnected(nickname) {
 	}
 }
 
+function clickLogin() {
+	socket.disconnect()
+	window.location = '/login'
+}
+
 function genKey() {
 	var isChrome = navigator.userAgent.toLowerCase().indexOf('chrome')
 	if (isChrome) {

@@ -46,28 +46,32 @@ app.post('/login', function (req, res) {
 	}
 	if (nickname != ent.encode(nickname)) {
 		nickname = ent.encode(nickname)
-		resObject.reason += 'Nickname contains HTML entities.'
+		resObject.reason += 'Nickname contains HTML entities. '
 	}
 	if (nickname.indexOf(' ')!=-1) {
 		nickname=nickname.split(' ')[nickname.split(' ').length-1]
-		resObject.reason += 'Nickname contains whitespaces.'
+		resObject.reason += 'Nickname contains whitespaces. '
 	}
 	//nickname=nickname.replace(/[^A-Za-z0-9\u00C0-\u017F]/g, '')
 	if (nickname.length>15) {
 		nickname = nickname.substr(nickname.length-15)
-		resObject.reason += 'Nickname too long.'
+		resObject.reason += 'Nickname too long. '
 	}
 	if (password) {
 		var index = sns.indexOf(nickname)
 		logOK = !(index==-1||(specialNicknames[index].locked||specialNicknames[index].password!=password))
 		if (!logOK) {
-			nickname = 'client-'+allClients.length
-			resObject.reason = 'Wrong password.'
+			//nickname = 'client-'+allClients.length
+			resObject.reason = 'Wrong password. '
 		}
+	} else if (sns.indexOf(nickname)!=-1) {
+		logOK = false
+		//nickname = 'client-'+allClients.length
+		resObject.reason = 'Need password. '
 	}
 	if (alreadyUsed(nickname)) {
 		nickname=nickname+'-'+allClients.length
-		resObject.reason += 'Nickname already used.'
+		resObject.reason += 'Nickname already used. '
 	}
 	if (old_nickname!=nickname) {
 		logOK=false

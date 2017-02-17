@@ -14,8 +14,8 @@
   <body onfocus="focus()">
 
     <h1>nodejs-chat <img src="/img/keyko.png" id="key" class="keyarea" hidden onclick="showkey()"></h1>
-    <p>You are <b><span id="nickname">client-x</span></b>.<br>
-    <a href="/login">Change nickname, login, or activate advanced features</a>.</p>
+    <p>You are <b><span id="nickname">client-x</span></b>.</p>
+    <p class="link" onclick="clickLogin()">Change nickname, login, or activate advanced features.</p>
     <p class="keyarea" hidden>
       <button id="genkey" onclick="genKey()">Generate key</button>
       <button onclick="genKeyNode()">Get key from local server</button>
