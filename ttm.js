@@ -1,5 +1,11 @@
 var moment = require('moment-timezone')
 var fs = require('fs')
+// secure ttm
+var openpgp = require('openpgp') // use as CommonJS, AMD, ES6 module or via window.openpgp
+openpgp.initWorker({ path:'openpgp.worker.js' }) // set the relative web worker path
+openpgp.config.aead_protect = true // activate fast AES-GCM mode (not yet OpenPGP standard)
+var privkey
+var pubkey
 
 var specialNicknames = []
 var knownNicknames = []
@@ -23,6 +29,45 @@ function shuffle(array) {
 	}
 
 	return array
+}
+
+function genKey() {
+	var nickname = 'talktome'
+	var options = {
+		userIds: [{ name:nickname, email:nickname+'@example.com' }],
+		numBits: 2048
+	}
+
+	openpgp.generateKey(options).then(function(key) {
+		var privkey = key.privateKeyArmored
+		var pubkey = key.publicKeyArmored
+	})
+}
+
+function encryptSay(socket,message) {
+	var options = {
+		data: message,
+		publicKeys: openpgp.key.readArmored(dest.pubkey).keys  // for encryption
+		//privateKeys: openpgp.key.readArmored(privkey).keys // for signing (optional)
+	}
+
+	openpgp.encrypt(options).then(function(ciphertext) {
+		var encrypted = ciphertext.data
+		say(socket,encrypted)
+	})
+}
+
+function decrypt(data) {
+	var encrypted = data.message
+	options = {
+		message: openpgp.message.readArmored(encrypted),     // parse armored message
+		//publicKeys: openpgp.key.readArmored(dest.pubkey).keys,    // for verification (optional)
+		privateKey: openpgp.key.readArmored(privkey).keys[0] // for decryption
+	}
+
+	openpgp.decrypt(options).then(function(plaintext) {
+		data.message = plaintext.data
+	})
 }
 
 function logMessage(nickname,message,time) {
@@ -82,7 +127,7 @@ function genAnswer(socket,message) {
 		loadMessages()
 	}
 	if (/(.)\1\1\1/.test(message)) {
-		say(socket,genHh())
+		saySecure(socket,genHh())
 	} else {
 		var used = []
 		var nbMess = randMessNb()
@@ -90,7 +135,7 @@ function genAnswer(socket,message) {
 			var from = fromMess.from
 			var message = fromMess.message
 			if (from!=socket.nickname) {
-				say(socket,message)
+				saySecure(socket,message)
 				used.push(fromMess)
 				--nbMess
 			}
@@ -125,13 +170,22 @@ function genHh() {
 }
 
 function greet(socket) {
-	say(socket,'Hi '+socket.nickname+'!')
-	say(socket,'I am talktome.')
-	say(socket,'Do you need any help?')
+	saySecure(socket,'Hi '+socket.nickname+'!')
+	saySecure(socket,'I am talktome.')
+	saySecure(socket,'Do you need any help?')
 }
 
 function sendImage(socket,image) {
 	socket.emit('image', {nickname: 'talktome', image: image, time: moment().tz("Europe/Paris").format('HH:mm')})
+}
+
+function saySecure(socket,message) {
+	var pubkey = socket.pubkey
+	if (pubkey&&pubkey.startsWith('-----BEGIN PGP PUBLIC KEY BLOCK-----')) {
+		encryptSay(socket,message)
+	} else {
+		say(socket,message)
+	}
 }
 
 function say(socket,message) {
@@ -153,61 +207,61 @@ function finishTutorial(nickname) {
 
 function didntGetAnswer(socket) {
 	var didntGetIt = shuffle(['I did not understand your request.', 'I only speak English.', 'Could you be clearer?', 'I am sorry, could you rephrase that?'])
-	say(socket, didntGetIt[0])
+	saySecure(socket, didntGetIt[0])
 }
 
 // send, change dest
 function explainBasics(socket) {
-	say(socket, 'If you send a message, it will be sent to everyone connected to the chat,')
-	say(socket, 'including myself!')
+	saySecure(socket, 'If you send a message, it will be sent to everyone connected to the chat,')
+	saySecure(socket, 'including myself!')
 	sendImage(socket,'/img/send_all.gif')
-	say(socket, 'To talk to someone privately, click on his/her nickname on the "Connected users" list.')
+	saySecure(socket, 'To talk to someone privately, click on his/her nickname on the "Connected users" list.')
 	sendImage(socket,'/img/send_one.gif')
-	say(socket, 'To talk to someone else, just click on his/her nickname on the "Connected users" list.')
-	say(socket, 'To talk to everyone again, click on the [to X].')
+	saySecure(socket, 'To talk to someone else, just click on his/her nickname on the "Connected users" list.')
+	saySecure(socket, 'To talk to everyone again, click on the [to X].')
 	sendImage(socket,'/img/one_toall.gif')
 }
 
 // change nickname, login, nickname rules
 function explainBasics2(socket) {
-	say(socket, 'To change nickname, click on change nickname on the corresponding menu.')
-	say(socket, 'Your nickname may be changed by server if:')
-	say(socket, '- someone already connected has this nickname')
-	say(socket, '- a user whith an account has protected this nickname by password')
-	say(socket, '- this nickname cannot be used.')
+	saySecure(socket, 'To change nickname, click on change nickname on the corresponding menu.')
+	saySecure(socket, 'Your nickname may be changed by server if:')
+	saySecure(socket, '- someone already connected has this nickname')
+	saySecure(socket, '- a user whith an account has protected this nickname by password')
+	saySecure(socket, '- this nickname cannot be used.')
 	sendImage(socket,'/img/chg_nickname.gif')
-	say(socket, 'If you have an account, you can login by clicking on the corresponding menu.')
+	saySecure(socket, 'If you have an account, you can login by clicking on the corresponding menu.')
 	sendImage(socket,'/img/login.gif')
 }
 
 function explainAdvanced(socket) {
-	say(socket,'You, and the other users can generate a key pair.')
-	say(socket,'To do so, click on the button "Generate key".')
+	saySecure(socket,'You, and the other users can generate a key pair.')
+	saySecure(socket,'To do so, click on the button "Generate key".')
 	sendImage(socket,'/img/gen_key.gif')
-	say(socket,'Once you have a key pair, the public key will be sent to the server.')
-	say(socket,'Any message sent directly to you will now be ecrypted.')
+	saySecure(socket,'Once you have a key pair, the public key will be sent to the server.')
+	saySecure(socket,'Any message sent directly to you will now be ecrypted.')
 	sendImage(socket,'/img/send_secure.gif')
-	say(socket,'When you select someone on the "Connected users" list,')
-	say(socket,'you will automatically get their public key from the server,')
-	say(socket,'and any message you will send them will be encrypted.')
-	say(socket,'You can check before sending a message if it will be encrypted or not')
-	say(socket,'by looking at the shield next to the "Send" button.')
-	say(socket,'If it is green, it is secure, if not it is not.')
-	say(socket,'After sending or receiving a message, if a lock appears on the left,')
-	say(socket,'it means it has been encrypted or decrypted.')
+	saySecure(socket,'When you select someone on the "Connected users" list,')
+	saySecure(socket,'you will automatically get their public key from the server,')
+	saySecure(socket,'and any message you will send them will be encrypted.')
+	saySecure(socket,'You can check before sending a message if it will be encrypted or not')
+	saySecure(socket,'by looking at the shield next to the "Send" button.')
+	saySecure(socket,'If it is green, it is secure, if not it is not.')
+	saySecure(socket,'After sending or receiving a message, if a lock appears on the left,')
+	saySecure(socket,'it means it has been encrypted or decrypted.')
 	sendImage(socket,'/img/send_secure2.gif')
 }
 
 // admin commands, ban
 function explainAdvanced2(socket) {
-	say(socket,'Admin commands may be executed by admin only.')
-	say(socket,'admin may "op" any user.')
-	say(socket,'If you are OP, you can ban any user, except admin.')
-	say(socket,'You can send /ban username to server.')
-	say(socket,'For exemple, to ban an user named Smith, send:')
-	say(socket,'/ban Smith')
-	say(socket,'If you are not OP, you will send "/ban Smith" in plain text to everyone.')
-	say(socket,'If you are OP, Smith will be banned.')
+	saySecure(socket,'Admin commands may be executed by admin only.')
+	saySecure(socket,'admin may "op" any user.')
+	saySecure(socket,'If you are OP, you can ban any user, except admin.')
+	saySecure(socket,'You can send /ban username to server.')
+	saySecure(socket,'For exemple, to ban an user named Smith, send:')
+	saySecure(socket,'/ban Smith')
+	saySecure(socket,'If you are not OP, you will send "/ban Smith" in plain text to everyone.')
+	saySecure(socket,'If you are OP, Smith will be banned.')
 	sendImage(socket,'/img/ban_demo.gif')
 }
 
@@ -219,35 +273,35 @@ function followTutorial(socket, message) {
 		case 'start':
 			if (message.indexOf('message')!=-1||message.indexOf('send')!=-1||message.indexOf('send to')!=-1) {
 				explainBasics(socket)
-				say(socket,'Does this answer your question?')
+				saySecure(socket,'Does this answer your question?')
 				tutorialPhase[nickname] = 'finish'
 			} else if (message.indexOf('nickname')!=-1||message.indexOf('login')!=-1||message.indexOf('change')!=-1) {
 				explainBasics2(socket)
-				say(socket,'Does this answer your question?')
+				saySecure(socket,'Does this answer your question?')
 				tutorialPhase[nickname] = 'finish'
 			} else if (message.indexOf('key')!=-1||message.indexOf('generate')!=-1||message.indexOf('crypt')!=-1||message.indexOf('private')!=-1) {
 				explainAdvanced(socket)
-				say(socket,'Does this answer your question?')
+				saySecure(socket,'Does this answer your question?')
 				tutorialPhase[nickname] = 'finish'
 			} else if (message.indexOf('admin')!=-1||message.indexOf('command')!=-1||message.indexOf('ban')!=-1||message.indexOf('operator')!=-1) {
 				explainAdvanced2(socket)
-				say(socket,'Does this answer your question?')
+				saySecure(socket,'Does this answer your question?')
 				tutorialPhase[nickname] = 'finish'
 			} else {
 				didntGetAnswer(socket)
-				say(socket,'Would you like to try again reformulating your question?')
+				saySecure(socket,'Would you like to try again reformulating your question?')
 				tutorialPhase[nickname] = 'rephrase'
 			}
 			break
 		case 'continue':
 			if (message.indexOf('yes')!=-1) {
-				say(socket,'Ok! Let\'s continue.')
+				saySecure(socket,'Ok! Let\'s continue.')
 				explainAdvanced(socket)
-				say(socket,'Did you understand everything?')
+				saySecure(socket,'Did you understand everything?')
 				tutorialPhase[nickname] = 'finish'
 			} else if (message.indexOf('no')!=-1) {
-				say(socket,'Great.')
-				say(socket,'Talk to me anytime!')
+				saySecure(socket,'Great.')
+				saySecure(socket,'Talk to me anytime!')
 				socket.emit('help_end')
 				finishTutorial(nickname)
 			} else {
@@ -256,11 +310,11 @@ function followTutorial(socket, message) {
 			break
 		case 'rephrase':
 			if (message.indexOf('no')!=-1) {
-				say(socket,'Would you like me to explain in detail how to use the chat,')
-				say(socket,'or only the basics?')
+				saySecure(socket,'Would you like me to explain in detail how to use the chat,')
+				saySecure(socket,'or only the basics?')
 				tutorialPhase[nickname] = 'tutorial'
 			} else if (message.indexOf('yes')!=-1) {
-				say(socket, 'What is your question?')
+				saySecure(socket, 'What is your question?')
 				tutorialPhase[socket.nickname] = 'start'
 			} else {
 				didntGetAnswer(socket)
@@ -268,12 +322,12 @@ function followTutorial(socket, message) {
 			break
 		case 'finish':
 			if (message.indexOf('yes')!=-1) {
-				say(socket,'Great!')
-				say(socket,'Talk to me anytime!')
+				saySecure(socket,'Great!')
+				saySecure(socket,'Talk to me anytime!')
 				socket.emit('help_end')
 				finishTutorial(nickname)
 			} else if (message.indexOf('no')!=-1) {
-				say(socket, 'What is your question?')
+				saySecure(socket, 'What is your question?')
 				tutorialPhase[socket.nickname] = 'start'
 			} else {
 				didntGetAnswer(socket)
@@ -281,7 +335,7 @@ function followTutorial(socket, message) {
 			break
 		case 'tutorial':
 			if (message.indexOf('yes')!=-1||message.indexOf('detail')!=-1||message.indexOf('everything')!=-1||message.indexOf('all')!=-1) {
-				say(socket,'Ok! Let\'s start.')
+				saySecure(socket,'Ok! Let\'s start.')
 				// send, change dest
 				explainBasics(socket)
 				// change nickname, login, nickname rules
@@ -291,13 +345,13 @@ function followTutorial(socket, message) {
 				// admin commands, ban
 				explainAdvanced2(socket)
 				// finish
-				say(socket,'Did you understand everything?')
+				saySecure(socket,'Did you understand everything?')
 				tutorialPhase[nickname] = 'finish'
 			} else {
-				say(socket,'Let\'s go over the basics together.')
+				saySecure(socket,'Let\'s go over the basics together.')
 				explainBasics(socket)
 				explainBasics2(socket)
-				say(socket,'Do you need information about more advanced features?')
+				saySecure(socket,'Do you need information about more advanced features?')
 				tutorialPhase[nickname] = 'continue'
 			}
 			break
@@ -309,9 +363,9 @@ function followTutorial(socket, message) {
 
 function launchTutorial(socket) {
 	tutorialPhase[socket.nickname] = 'start'
-	say(socket, 'So '+socket.nickname+', I heard you need help!')
-	say(socket, 'Do not panic, I am here.')
-	say(socket, 'What is your question?')
+	saySecure(socket, 'So '+socket.nickname+', I heard you need help!')
+	saySecure(socket, 'Do not panic, I am here.')
+	saySecure(socket, 'What is your question?')
 	socket.emit('help_start')
 }
 
@@ -324,11 +378,11 @@ function answer(socket,message) {
 		if (message.toLowerCase().indexOf('yes')!=-1) {
 			launchTutorial(socket)
 		} else if (message.toLowerCase().indexOf('no')!=-1) {
-			say(socket,'Great.')
-			say(socket,'Talk to me anytime!')
+			saySecure(socket,'Great.')
+			saySecure(socket,'Talk to me anytime!')
 		} else {
-			say(socket, 'I am learning to talk.')
-			say(socket, 'The more you talk to me, the better I will be.')
+			saySecure(socket, 'I am learning to talk.')
+			saySecure(socket, 'The more you talk to me, the better I will be.')
 		}
 		knownNicknames.push(nickname)
 	} else if (message.toLowerCase().indexOf('help')!=-1||message.toLowerCase().indexOf('question')!=-1||(message.toLowerCase().indexOf('how')!=-1&&message.toLowerCase().indexOf('to')!=-1)) {
@@ -380,10 +434,10 @@ function receive(event,data) {
 				if (message.toLowerCase().indexOf('yes')!=-1) {
 					launchTutorial(socket)
 				} else if (message.toLowerCase().indexOf('no')!=-1) {
-					say(socket,'Great.')
-					say(socket,'Talk to me anytime!')
+					saySecure(socket,'Great.')
+					saySecure(socket,'Talk to me anytime!')
 				} else {
-					say(socket,'To talk to me, select my name in the "Connected users" list.')
+					saySecure(socket,'To talk to me, select my name in the "Connected users" list.')
 					infoNicknames.push(nickname)
 				}
 			} else {
@@ -404,6 +458,7 @@ function receive(event,data) {
 exports.answer = answer
 exports.greet = greet
 exports.say = say
+exports.saySecure = saySecure
 exports.sayAll = sayAll
 exports.sendImage = sendImage
 
