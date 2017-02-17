@@ -369,7 +369,7 @@ io.sockets.on('connection', function (socket, nickname) {
 		if (client_socket) {
 			pubkey = client_socket.pubkey
 		} else if (nickname == ttm.name()) {
-			pubkey = ttm.pubkey
+			pubkey = ttm.pubkey()
 		}
 		if (pubkey&&pubkey.startsWith('-----BEGIN PGP PUBLIC KEY BLOCK-----')) {
 			socket.emit('pubkey',pubkey)
