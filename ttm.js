@@ -47,7 +47,7 @@ function genKey() {
 function encryptSay(socket,message) {
 	var options = {
 		data: message,
-		publicKeys: openpgp.key.readArmored(dest.pubkey).keys  // for encryption
+		publicKeys: openpgp.key.readArmored(socket.pubkey).keys  // for encryption
 		//privateKeys: openpgp.key.readArmored(privkey).keys // for signing (optional)
 	}
 
