@@ -218,15 +218,19 @@ function printTtmMessages(socket,params) {
 }
 
 function img(params,socket) {
-	var to = params[1]
+	var to = params[1]!='view'?params[1]:''
 	var image = params[0]
-	//socket.emit('image', {nickname: socket.nickname, image: image, time: moment().tz("Europe/Paris").format('HH:mm')})
+	if (params[1]=='view'||params[2]=='view') {
+		socket.emit('image', {nickname: socket.nickname, image: image, time: moment().tz("Europe/Paris").format('HH:mm')})
+	}
 	if (!to) {
 		socket.broadcast.emit('image', {nickname: socket.nickname, image: image, time: moment().tz("Europe/Paris").format('HH:mm')})
+		return 'image sent to all.'
 	} else if (!findSocket(to)) {
 		return 'no socket corresponding to '+to+' found.'
 	} else {
 		findSocket(to).emit('image', {nickname: socket.nickname, image: image, time: moment().tz("Europe/Paris").format('HH:mm')})
+		return 'image sent to '+to+'.'
 	}
 }
 
