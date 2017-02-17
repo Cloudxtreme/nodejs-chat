@@ -7,6 +7,7 @@ openpgp.config.aead_protect = true // activate fast AES-GCM mode (not yet OpenPG
 var privkey
 var pubkey
 
+var ttm_nickname = 'talktome'
 var specialNicknames = []
 var knownNicknames = []
 var infoNicknames = []
@@ -56,6 +57,8 @@ function encryptSay(socket,message) {
 		say(socket,encrypted)
 	})
 }
+
+genKey()
 
 function decrypt(data) {
 	var encrypted = data.message
@@ -466,3 +469,9 @@ exports.sns = setSNS
 exports.notify = receive
 exports.getMessages = getMessages
 exports.loadMessages = loadMessages
+exports.pubkey = function() {
+	return pubkey
+}
+exports.name = function() {
+	return ttm_nickname
+}
