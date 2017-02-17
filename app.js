@@ -217,6 +217,19 @@ function printTtmMessages(socket,params) {
 	}
 }
 
+function img(params,socket) {
+	var to = params[1]
+	var image = params[0]
+	//socket.emit('image', {nickname: socket.nickname, image: image, time: moment().tz("Europe/Paris").format('HH:mm')})
+	if (!to) {
+		socket.broadcast.emit('image', {nickname: socket.nickname, image: image, time: moment().tz("Europe/Paris").format('HH:mm')})
+	} else if (!findSocket(to)) {
+		return 'no socket corresponding to '+to+' found.'
+	} else {
+		findSocket(to).emit('image', {nickname: socket.nickname, image: image, time: moment().tz("Europe/Paris").format('HH:mm')})
+	}
+}
+
 function execCommand(command,params,socket) {
 	var res = ''
 	switch (command) {
@@ -249,6 +262,13 @@ function execCommand(command,params,socket) {
 			break
 		case 'ttm':
 			printTtmMessages(socket,params)
+			break
+		case 'img':
+			if (params.length<1) {
+				res = 'not enough parameters.'
+			} else {
+				res = img(params,socket)
+			}
 			break
 		default:
 			res = 'command not found.'
