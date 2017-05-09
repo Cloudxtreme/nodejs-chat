@@ -2,7 +2,7 @@
 <html lang="en">
   <head>
     <meta charset="utf-8">
-    <title>Chat</title>
+    <title>ChatNoir</title>
     <link rel="stylesheet" href="/style.css">
     <script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
     <script src="/lib/linkify.min.js"></script>
@@ -13,14 +13,16 @@
   </head>
   <body onfocus="focus()">
 
-    <h1>nodejs-chat <img src="/img/keyko.png" id="key" class="keyarea" hidden onclick="showkey()"></h1>
+    <h1>chatosaurus <img src="/img/keyko.png" id="key" class="keyarea" hidden onclick="showkey()"></h1>
     <p>You are <b><span id="nickname">client-x</span></b>.</p>
     <p class="link" onclick="clickLogin()">Change nickname, login, or activate advanced features.</p>
     <p class="keyarea" hidden>
       <button id="genkey" onclick="genKey()">Generate key</button>
       <button onclick="genKeyNode()">Get key from local server</button>
       <button onclick="deleteKey()">Delete key</button> <span id="wait_please" hidden>Request sent; please wait while your key is being generated...</span><span id="gen_error" hidden>An error occurred during key generation!</span>
+	  <button onclick="$('#chat_zone').empty()">Clear messages</button>
     </p>
+	
     <aside id="help">
       <h3 onclick="help()">Need help?</h3>
     </aside>
@@ -28,6 +30,8 @@
       <input type="text" name="message" id="message" placeholder="Type your message here..." size="50" autofocus onkeydown="pressKey(event)" oninput="inputChange()" onfocus="inputChange()"/>
         <b> [to <span id="dest" onclick="selectConnected('all')">all</span>] </b>
         <img id="send_secured" class="keyarea" hidden src="/img/unsecured.png">
+		<input id="checkbox_img" type="checkbox" onclick="toggleImg()"> img.
+		<button id="upload_img" onclick="alert('not yet')" hidden>Upload image</button>
       <button onclick="send()">Send</button>
     </section>
 

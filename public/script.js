@@ -177,6 +177,13 @@ socket.on('help_start',function () {
 	$('#help').hide()
 })
 
+function sendImage(image) {
+	// send message to others
+	socket.emit('image', {image: image, to: dest.name})
+	// empty chat zone, and set focus on it again
+	$('#message').val('').focus()
+}
+
 function sendMessage(message) {
 	// send message to others
 	socket.emit('message', {message: message, to: dest.name})
@@ -192,7 +199,27 @@ function sendMessage(message) {
 // submit form, send message and diplay it on the page
 function send() {
 	var message = $('#message').val()
-	if (message!='') {
+	var sendImg = $('#checkbox_img').is(':checked')
+	if (sendImg) {
+		if (message!='') {
+			// TODO: check link img
+			sendImage(message)
+			// display message in our page as well
+			var date = new Date()
+			var hours = date.getHours()
+			if (hours<10) {
+				hours = '0'+hours
+			}
+			var minutes = date.getMinutes()
+			if (minutes<10) {
+				minutes = '0'+minutes
+			}
+			time = hours + ':' + minutes
+			insertImage(nickname, message, time, true)
+		} else {
+			// TODO: send uploaded image
+		}
+	} else if (message!='') {
 		var secured = false
 		if (dest&&dest.pubkey) {
 			encrypt(message)
@@ -240,6 +267,10 @@ function inputChange() {
 	} else if (old_dest) {
 		selectConnected(old_dest)
 		old_dest = ''
+	}
+	if (!$('#message').val()) {
+		$('#checkbox_img').prop("checked", false)
+		$('#upload_img').hide()
 	}
 }
 
@@ -483,4 +514,14 @@ if (!String.prototype.startsWith) {
 // tutorial
 function help() {
 	socket.emit('help')
+}
+
+// send image
+function toggleImg() {
+	var checked = $('#checkbox_img').is(':checked')
+	if (checked && $('#message').val()==='') {
+		$('#upload_img').show()
+	} else {
+		$('#upload_img').hide()
+	}
 }

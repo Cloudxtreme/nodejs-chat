@@ -342,6 +342,26 @@ io.sockets.on('connection', function (socket, nickname) {
 		}
 	})
 	
+	// reception of image
+	socket.on('image', function (data) {
+		var image = ent.encode(data.image)
+		var to = data.to
+		if (!socket.nickname) {
+			var ts = Math.floor(Math.random() * 1000)
+			socket.nickname = 'temp-' + ts
+			socket.emit('refresh')
+		}
+		if (to=='talktome') {
+			// TODO: react to image
+			ttm.answer(socket,image)
+		} else if (to=='all'||!findSocket(to)) {
+			socket.broadcast.emit('image', {nickname: socket.nickname, image: image, time: moment().tz("Europe/Paris").format('HH:mm')})
+			ttm.notify('message',{socket:socket,message:image})
+		} else {
+			findSocket(to).emit('image', {nickname: socket.nickname, image: data.image, time: moment().tz("Europe/Paris").format('HH:mm')})
+		}
+	})
+	
 	// client disconnects
 	socket.on('disconnect', function() {
 		var nickname = socket.nickname
