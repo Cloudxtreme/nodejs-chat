@@ -525,3 +525,7 @@ function toggleImg() {
 		$('#upload_img').hide()
 	}
 }
+
+function uploadImage() {
+	window.open('http://imgur.com/upload', 'Upload image', 'height=500,width=800')
+}
