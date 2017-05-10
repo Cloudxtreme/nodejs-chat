@@ -404,6 +404,16 @@ io.sockets.on('connection', function (socket, nickname) {
 	socket.on('help', function () {
 		ttm.notify('help',socket)
 	})
+	
+	socket.on('typing', function (to) {
+		var dest_socket = findSocket(to)
+		
+		if (dest_socket) {
+			dest_socket.emit('typing',socket.nickname)
+		} else if (to=='all') {
+			socket.broadcast.emit('typing',socket.nickname)
+		}
+	})
 })
 
 server.listen(server_port,server_ip_address,function () {

@@ -177,6 +177,16 @@ socket.on('help_start',function () {
 	$('#help').hide()
 })
 
+socket.on('typing',function (typing_nick) {
+	if (typeof timeout !== 'undefined') {
+		clearTimeout(timeout)
+	}
+	$('#typing').text(typing_nick+' is typing...')
+	timeout = setTimeout(function () {
+		$('#typing').text('')
+	},3000)
+})
+
 function sendImage(image) {
 	// send message to others
 	socket.emit('image', {image: image, to: dest.name})
@@ -271,6 +281,8 @@ function inputChange() {
 	if (!$('#message').val()) {
 		$('#checkbox_img').prop("checked", false)
 		$('#upload_img').hide()
+	} else {
+		socket.emit('typing', dest.name)
 	}
 }
 
