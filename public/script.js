@@ -225,7 +225,7 @@ function send() {
 				minutes = '0'+minutes
 			}
 			time = hours + ':' + minutes
-			insertImage(nickname, message, time, true)
+			insertImage(nickname, message, time, true, dest.name)
 		} else {
 			// TODO: send uploaded image
 		}
@@ -320,7 +320,7 @@ function insertMessage(nickname, message, time, toself, secured, to) {
 	$('#chat_zone').prepend('<p class="'+cl+'">'+time+' <img src="'+secimg+'" class="keyarea"> <strong>' + nickname + '</strong> ' + message + totag +'</p>').linkify()
 }
 
-function insertImage(nickname, image, time, toself) {
+function insertImage(nickname, image, time, toself, to) {
 	var cl = 'from_server'
 	var secimg = '/img/blanksecure.jpg'
 	var totag = ''
@@ -536,4 +536,8 @@ function toggleImg() {
 	} else {
 		$('#upload_img').hide()
 	}
+}
+
+function uploadImage() {
+	window.open('http://imgur.com/upload', 'Upload image', 'height=500,width=800')
 }
