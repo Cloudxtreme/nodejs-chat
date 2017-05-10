@@ -184,7 +184,7 @@ socket.on('typing',function (typing_nick) {
 	$('#typing').text(typing_nick+' is typing...')
 	timeout = setTimeout(function () {
 		$('#typing').text('')
-	},3000)
+	},2000)
 })
 
 function sendImage(image) {
