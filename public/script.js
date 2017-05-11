@@ -539,5 +539,5 @@ function toggleImg() {
 }
 
 function uploadImage() {
-	window.open('http://imgur.com/upload', 'Upload image', 'height=500,width=800')
+	window.open('http://uploader-levg34.rhcloud.com/upload', 'Upload image', 'height=500,width=800')
 }
