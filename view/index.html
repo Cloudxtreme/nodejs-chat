@@ -13,14 +13,13 @@
   </head>
   <body onfocus="focus()">
 
-    <h1>chatosaurus <img src="/img/keyko.png" id="key" class="keyarea" hidden onclick="showkey()"></h1>
-    <p>You are <b><span id="nickname">client-x</span></b>.</p>
+    <h1>chatosaurus</h1>
+    <p>You are <b><span id="nickname">client-x</span></b>. <img src="/img/online.png" id="afk" onclick="toggleAFK()"> <img src="/img/keyko.png" id="key" class="keyarea" hidden onclick="showkey()"> </p>
     <p class="link" onclick="clickLogin()">Change nickname, login, or activate advanced features.</p>
     <p class="keyarea" hidden>
       <button id="genkey" onclick="genKey()">Generate key</button>
       <button onclick="genKeyNode()">Get key from local server</button>
-      <button onclick="deleteKey()">Delete key</button> <span id="wait_please" hidden>Request sent; please wait while your key is being generated...</span><span id="gen_error" hidden>An error occurred during key generation!</span>
-	  <button onclick="$('#chat_zone').empty()">Clear messages</button>
+      <button onclick="deleteKey()">Delete key</button> <button onclick="$('#chat_zone').empty()">Clear messages</button> <span id="wait_please" hidden>Request sent; please wait while your key is being generated...</span><span id="gen_error" hidden>An error occurred during key generation!</span>
     </p>
 	
     <aside id="help">

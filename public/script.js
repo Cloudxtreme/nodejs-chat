@@ -22,6 +22,7 @@ var disco = false
 var cmd = []
 cmd.push('')
 var lc = 0
+var afk = false
 
 if (!nickname) {
 	window.location = '/login'
@@ -541,3 +542,25 @@ function toggleImg() {
 function uploadImage() {
 	window.open('http://uploader-levg34.rhcloud.com/upload', 'Upload image', 'height=500,width=800')
 }
+
+// AFK
+function toggleAFK() {
+	afk=!afk
+	afkImg = $('#afk')
+	if (afk) {
+		$('#afk').attr('src','/img/afk.png')
+	} else {
+		$('#afk').attr('src','/img/online.png')
+	}
+	socket.emit('afk',afk)
+}
+
+socket.on(socket.on('afk', function(data){
+	var who = data.who
+	if (data.afk) {
+		console.log(who+' is afk.')
+	} else {
+		console.log(who+' is back online.')
+	}
+	
+}))
