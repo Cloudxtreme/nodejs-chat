@@ -19,6 +19,8 @@ var sns = specialNicknames.map(function (d) {
 ttm.sns(sns)
 var admins = ['admin','levg34']
 var ops = []
+var tokens = []
+var adminTokens = []
 
 app.use(express.static(__dirname + '/public'))
 app.use(bodyParser.json())
@@ -87,17 +89,25 @@ app.get('/conf', function (req, res) {
 	res.end(JSON.stringify({server_port:server_port,server_ip_address:server_ip_address}))
 })
 
-app.post('/notify', function (req, res) {
+app.post('/emit', function (req, res) {
 	var resObject = {ok:false}
 	var body = req.body
 	var nickname = body.nickname
 	var event = body.event
 	var params = body.params
+	var token = req.get('X-Auth-Token')
 	var socket = findSocket(nickname)
-	if (allClients.length<=0) {
+	var indexToken = tokens.map(function(t) { return t.token }).indexOf(token)
+	if (!token||(adminTokens.indexOf(token)==-1&&indexToken==-1)) {
+		resObject.error = 'Unauthorized.'
+	} else if (adminTokens.indexOf(token)==-1&&tokens[indexToken].nickname!=nickname) {
+		resObject.error = 'Unauthorized: identity theft.'
+	} else if (allClients.length<=0) {
 		resObject.error = 'No connected client.'
 	} else if (!event) {
 		resObject.error = 'Need event.'
+	} else if (adminTokens.indexOf(token)==-1&&event!='send_url') {
+		resObject.error = 'Unauthorized.'
 	} else if (socket) {
 		socket.emit(event, params)
 		resObject.ok = true
@@ -109,6 +119,7 @@ app.post('/notify', function (req, res) {
 	} else {
 		resObject.error = 'No client with nickname '+nickname+' connected.'
 	}
+	// TODO: delete token if exists
 	res.json(resObject)
 })
 
@@ -136,6 +147,13 @@ function findSocket(nickname) {
 		return socket.nickname
 	}).indexOf(nickname)
 	return allClients[index]
+}
+
+function generateToken() {
+	function rand() {
+		return Math.random().toString(36).substr(2) // remove `0.`
+	}
+    return rand() + rand()
 }
 
 function ban(user) {
@@ -259,6 +277,12 @@ function img(params,socket) {
 	}
 }
 
+function getAdminToken(socket) {
+	var token = generateToken()
+	adminTokens.push(token)
+	return token
+}
+
 function execCommand(command,params,socket) {
 	var res = ''
 	switch (command) {
@@ -298,6 +322,9 @@ function execCommand(command,params,socket) {
 			} else {
 				res = img(params,socket)
 			}
+			break
+		case 'token':
+			res = getAdminToken(socket)
 			break
 		default:
 			res = 'command not found.'
@@ -442,6 +469,12 @@ io.sockets.on('connection', function (socket, nickname) {
 	
 	socket.on('afk', function (is_afk) {
 		socket.broadcast.emit('afk',{who: socket.nickname,afk: is_afk})
+	})
+	
+	socket.on('token', function() {
+		var token = generateToken()
+		tokens.push({nickname:socket.nickname,token:token})
+		socket.emit('token',token)
 	})
 })
 

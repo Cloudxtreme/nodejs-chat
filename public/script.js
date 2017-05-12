@@ -543,11 +543,20 @@ function toggleImg() {
 }
 
 function uploadImage() {
-	window.open('http://uploader-levg34.rhcloud.com/upload', 'Upload image', 'height=500,width=800')
+	socket.emit('token')
 }
 
+socket.on('token',function(token) {
+	uploaderWindow = window.open('http://uploader-levg34.rhcloud.com/upload?token='+token, 'Upload image', 'height=500,width=800')
+})
+
+socket.on('send_url',function(url) {
+	uploaderWindow.close()
+	$('#message').val(url)
+})
+
 // AFK
-socket.on(socket.on('afk', function(data){
+socket.on('afk', function(data){
 	var who = data.who
 	if (data.afk) {
 		for (var i=0; i<$('#connected li').length; ++i) {
@@ -565,7 +574,7 @@ socket.on(socket.on('afk', function(data){
 		}
 	}
 	
-}))
+})
 
 function checkAFK() {
 	afk=!document.hasFocus()
