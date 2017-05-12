@@ -32,6 +32,7 @@ if (!nickname) {
 socket.emit('new_client', {nickname:nickname,password:password})
 var title=document.title
 setNickname()
+startAFKChecker()
 
 if (sessionStorage.advanced) {
 	usesecure = true
@@ -376,6 +377,8 @@ function displayList() {
 
 function focus() {
 	document.title = nickname + ' - ' + title
+	$('#afk').attr('src','/img/online.png')
+	socket.emit('afk',false)
 }
 
 function setNickname() {
@@ -574,3 +577,18 @@ socket.on(socket.on('afk', function(data){
 	}
 	
 }))
+
+function checkAFK() {
+	afk=!document.hasFocus()
+	afkImg = $('#afk')
+	if (afk) {
+		$('#afk').attr('src','/img/afk.png')
+	} else {
+		$('#afk').attr('src','/img/online.png')
+	}
+	socket.emit('afk',afk)
+}
+
+function startAFKChecker() {
+	setInterval(checkAFK,2000)
+}
