@@ -104,6 +104,7 @@ app.post('/notify', function (req, res) {
 	} else if (nickname=='all') {
 		socket = allClients[0]
 		socket.emit(event, params)
+		socket.broadcast.emit(event, params)
 		resObject.ok = true
 	} else {
 		resObject.error = 'No client with nickname '+nickname+' connected.'
