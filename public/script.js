@@ -547,17 +547,6 @@ function uploadImage() {
 }
 
 // AFK
-function toggleAFK() {
-	afk=!afk
-	afkImg = $('#afk')
-	if (afk) {
-		$('#afk').attr('src','/img/afk.png')
-	} else {
-		$('#afk').attr('src','/img/online.png')
-	}
-	socket.emit('afk',afk)
-}
-
 socket.on(socket.on('afk', function(data){
 	var who = data.who
 	if (data.afk) {

@@ -87,6 +87,30 @@ app.get('/conf', function (req, res) {
 	res.end(JSON.stringify({server_port:server_port,server_ip_address:server_ip_address}))
 })
 
+app.post('/notify', function (req, res) {
+	var resObject = {ok:false}
+	var body = req.body
+	var nickname = body.nickname
+	var event = body.event
+	var params = body.params
+	var socket = findSocket(nickname)
+	if (allClients.length<=0) {
+		resObject.error = 'No connected client.'
+	} else if (!event) {
+		resObject.error = 'Need event.'
+	} else if (socket) {
+		socket.emit(event, params)
+		resObject.ok = true
+	} else if (nickname=='all') {
+		socket
+		socket.emit(event, params)
+		resObject.ok = true
+	} else {
+		resObject.error = 'No client with nickname '+nickname+' connected.'
+	}
+	res.json(resObject)
+})
+
 function alreadyUsed(nickname) {
 	var res = false
 	allClients.forEach(function(socket) {
