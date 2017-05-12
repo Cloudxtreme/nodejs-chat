@@ -98,15 +98,16 @@ app.post('/emit', function (req, res) {
 	var token = req.get('X-Auth-Token')
 	var socket = findSocket(nickname)
 	var indexToken = tokens.map(function(t) { return t.token }).indexOf(token)
-	if (!token||(adminTokens.indexOf(token)==-1&&indexToken==-1)) {
+	var indexAdminToken = adminTokens.indexOf(token)
+	if (!token||(indexAdminToken==-1&&indexToken==-1)) {
 		resObject.error = 'Unauthorized.'
-	} else if (adminTokens.indexOf(token)==-1&&tokens[indexToken].nickname!=nickname) {
+	} else if (indexAdminToken==-1&&tokens[indexToken].nickname!=nickname) {
 		resObject.error = 'Unauthorized: identity theft.'
 	} else if (allClients.length<=0) {
 		resObject.error = 'No connected client.'
 	} else if (!event) {
 		resObject.error = 'Need event.'
-	} else if (adminTokens.indexOf(token)==-1&&event!='send_url') {
+	} else if (indexAdminToken==-1&&event!='send_url') {
 		resObject.error = 'Unauthorized.'
 	} else if (socket) {
 		socket.emit(event, params)
@@ -120,6 +121,17 @@ app.post('/emit', function (req, res) {
 		resObject.error = 'No client with nickname '+nickname+' connected.'
 	}
 	// TODO: delete token if exists
+	if (resObject.ok) {
+		if (indexToken!=-1) {
+			resObject.token = {token:tokens[indexToken].token,bearer:tokens[indexToken].nickname}
+			tokens.splice(indexToken, 1)
+		} else if (indexAdminToken!=-1) {
+			resObject.token = {token:adminTokens[indexAdminToken],bearer:'admin'}
+			adminTokens.splice(indexAdminToken, 1)
+		} else {
+			resObject.error = 'Could not invalidate token'
+		}
+	}
 	res.json(resObject)
 })
 
