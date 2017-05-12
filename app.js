@@ -102,7 +102,7 @@ app.post('/notify', function (req, res) {
 		socket.emit(event, params)
 		resObject.ok = true
 	} else if (nickname=='all') {
-		socket
+		socket = allClients[0]
 		socket.emit(event, params)
 		resObject.ok = true
 	} else {
