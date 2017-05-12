@@ -414,6 +414,10 @@ io.sockets.on('connection', function (socket, nickname) {
 			socket.broadcast.emit('typing',socket.nickname)
 		}
 	})
+	
+	socket.on('afk', function (is_afk) {
+		socket.broadcast.emit('afk',{who: socket.nickname,afk: is_afk})
+	})
 })
 
 server.listen(server_port,server_ip_address,function () {

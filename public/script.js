@@ -558,9 +558,19 @@ function toggleAFK() {
 socket.on(socket.on('afk', function(data){
 	var who = data.who
 	if (data.afk) {
-		console.log(who+' is afk.')
+		for (var i=0; i<$('#connected li').length; ++i) {
+			li = $('#connected li')[i]
+			if($(li).text()==who) {
+				$(li).addClass('afk')
+			}
+		}
 	} else {
-		console.log(who+' is back online.')
+		for (var i=0; i<$('#connected li').length; ++i) {
+			li = $('#connected li')[i]
+			if($(li).text()==who) {
+				$(li).removeClass('afk')
+			}
+		}
 	}
 	
 }))

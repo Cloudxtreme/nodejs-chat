@@ -35,6 +35,10 @@ aside {
 	color: green
 }
 
+#connected li.afk {
+	color: orange
+}
+
 #connected li:hover {
 	text-decoration: underline;
 	cursor: pointer;
