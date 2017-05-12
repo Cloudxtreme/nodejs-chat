@@ -25,6 +25,15 @@ var adminTokens = []
 app.use(express.static(__dirname + '/public'))
 app.use(bodyParser.json())
 
+app.use(function (req, res, next) {
+    //res.setHeader('Access-Control-Allow-Origin', 'http://localhost:9000')
+    res.setHeader('Access-Control-Allow-Origin', 'uploader-levg34.rhcloud.com')
+    res.setHeader('Access-Control-Allow-Methods', 'GET, POST')
+    res.setHeader('Access-Control-Allow-Headers', 'X-Auth-Token,content-type')
+    //res.setHeader('Access-Control-Allow-Credentials', true);
+    next()
+})
+
 // load index.html on get /
 app.get('/', function (req, res) {
 	res.sendFile(__dirname + '/view/index.html')
@@ -120,7 +129,7 @@ app.post('/emit', function (req, res) {
 	} else {
 		resObject.error = 'No client with nickname '+nickname+' connected.'
 	}
-	// TODO: delete token if exists
+	// delete token if exists
 	if (resObject.ok) {
 		if (indexToken!=-1) {
 			resObject.token = {token:tokens[indexToken].token,bearer:tokens[indexToken].nickname}
@@ -132,6 +141,7 @@ app.post('/emit', function (req, res) {
 			resObject.error = 'Could not invalidate token'
 		}
 	}
+	res.setHeader('Content-Type', 'text/json')
 	res.json(resObject)
 })
 
