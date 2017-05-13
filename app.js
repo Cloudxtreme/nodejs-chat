@@ -346,7 +346,12 @@ function execCommand(command,params,socket) {
 			}
 			break
 		case 'token':
-			res = getAdminToken(socket)
+			if (params.length==1&&params[0]=='reset') {
+				adminTokens = []
+				res = 'admin tokens deleted.'
+			} else {
+				res = getAdminToken(socket)
+			}
 			break
 		default:
 			res = 'command not found.'
@@ -442,6 +447,13 @@ io.sockets.on('connection', function (socket, nickname) {
 		var j = ops.indexOf(nickname)
 		if (j!=-1) {
 			ops.splice(j, 1)
+		}
+		for (var i=0;i<tokens.length;) {
+			if (tokens[i].nickname==nickname) {
+				tokens.splice(i, 1)
+			} else {
+				++i
+			}
 		}
 		var i = allClients.indexOf(socket)
 		if (allClients[i]) {
