@@ -27,7 +27,7 @@ app.use(bodyParser.json())
 
 app.use(function (req, res, next) {
     //res.setHeader('Access-Control-Allow-Origin', 'http://localhost:9000')
-    res.setHeader('Access-Control-Allow-Origin', 'uploader-levg34.rhcloud.com')
+    res.setHeader('Access-Control-Allow-Origin', 'http://uploader-levg34.rhcloud.com')
     res.setHeader('Access-Control-Allow-Methods', 'GET, POST')
     res.setHeader('Access-Control-Allow-Headers', 'X-Auth-Token,content-type')
     //res.setHeader('Access-Control-Allow-Credentials', true);
