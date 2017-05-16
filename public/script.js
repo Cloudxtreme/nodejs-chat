@@ -23,6 +23,7 @@ var cmd = []
 cmd.push('')
 var lc = 0
 var afk = false
+var token=''
 
 if (!nickname) {
 	window.location = '/login'
@@ -33,6 +34,7 @@ socket.emit('new_client', {nickname:nickname,password:password})
 var title=document.title
 setNickname()
 startAFKChecker()
+socket.emit('token')
 
 if (sessionStorage.advanced) {
 	usesecure = true
@@ -543,12 +545,13 @@ function toggleImg() {
 }
 
 function uploadImage() {
+	uploaderWindow = window.open('http://uploader-levg34.rhcloud.com/upload/'+nickname+'?token='+token, 'Upload image', 'height=500,width=800')
+	//uploaderWindow = window.open('http://localhost:9000/test/'+nickname+'?token='+token, 'Upload image', 'height=500,width=800')
 	socket.emit('token')
 }
 
-socket.on('token',function(token) {
-	uploaderWindow = window.open('http://uploader-levg34.rhcloud.com/upload/'+nickname+'?token='+token, 'Upload image', 'height=500,width=800')
-	//uploaderWindow = window.open('http://localhost:9000/test/'+nickname+'?token='+token, 'Upload image', 'height=500,width=800')
+socket.on('token',function(_token) {
+	token=_token
 })
 
 socket.on('send_url',function(url) {
