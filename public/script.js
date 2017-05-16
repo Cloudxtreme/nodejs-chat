@@ -547,12 +547,13 @@ function uploadImage() {
 }
 
 socket.on('token',function(token) {
-	uploaderWindow = window.open('http://uploader-levg34.rhcloud.com/upload/'+nickname+'?token='+token, 'Upload image', 'height=500,width=800')
+	uploaderWindow = window.open('http://uploader-levg34.rhcloud.com/upload, 'Upload image', 'height=500,width=800')
+	//uploaderWindow = window.open('http://uploader-levg34.rhcloud.com/upload/'+nickname+'?token='+token, 'Upload image', 'height=500,width=800')
 	//uploaderWindow = window.open('http://localhost:9000/test/'+nickname+'?token='+token, 'Upload image', 'height=500,width=800')
 })
 
 socket.on('send_url',function(url) {
-	//uploaderWindow.close()
+	uploaderWindow.close()
 	$('#message').val(url)
 	toggleImg()
 })
