@@ -546,7 +546,7 @@ function toggleImg() {
 
 function uploadImage() {
 	uploaderWindow = window.open('http://uploader-levg34.rhcloud.com/upload/'+nickname+'?token='+token, 'Upload image', 'height=500,width=800')
-	//uploaderWindow = window.open('http://localhost:9000/test/'+nickname+'?token='+token, 'Upload image', 'height=500,width=800')
+	//uploaderWindow = window.open('http://localhost:9000/upload/'+nickname+'?token='+token, 'Upload image', 'height=500,width=800')
 	socket.emit('token')
 }
 
