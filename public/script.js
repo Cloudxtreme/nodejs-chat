@@ -552,7 +552,7 @@ socket.on('token',function(token) {
 })
 
 socket.on('send_url',function(url) {
-	uploaderWindow.close()
+	//uploaderWindow.close()
 	$('#message').val(url)
 	toggleImg()
 })
