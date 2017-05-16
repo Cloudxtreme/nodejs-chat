@@ -1,3 +1,10 @@
 modal:
+
 <!-- Latest compiled and minified CSS --> <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous"> <!-- Optional theme --> <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous"> <!-- Latest compiled and minified JavaScript --> <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
 http://jsfiddle.net/4TQvY/
+
+ensuite, copier à la fin du html
+<div id="modal-upload" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true"> <div class="modal-header"> <div class="modal-header"> <h3>Upload File</h3> </div> <div class="modal-body"> <div id="page-upload-1"> <form> <label>File:</label> <input type="file"></input> <label>Comment:</label> <input type="text" class="pageselector" placeholder="Describe your file" ></input> </form> </div> <div id="page-upload-2" class="hide"> <h4>Uploading...</h4> <div class="progress progress-striped active"> <div class="bar" style="width: 0%;"></div> </div> </div> </div> <div class="modal-footer"> <a href="#" class="btn">Cancel</a> <a href="#" class="btn btn-primary">Upload</a> </div> </div>
+
+ensuite, dans le script.js, à l'endroit où tu fais window.open
+$('#modal-upload').modal('show');
