@@ -17,7 +17,7 @@ var sns = specialNicknames.map(function (d) {
 	return d.name
 })
 ttm.sns(sns)
-var admins = ['admin','levg34']
+var admins = ['admin','levg34','madblade']
 var ops = []
 var tokens = []
 var adminTokens = []
