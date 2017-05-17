@@ -558,6 +558,7 @@ socket.on('send_url',function(url) {
 	uploaderWindow.close()
 	$('#message').val(url)
 	toggleImg()
+	send()
 })
 
 // AFK
