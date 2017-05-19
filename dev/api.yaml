@@ -1,0 +1,77 @@
+swagger: '2.0'
+info:
+  description: nodejs-chat API
+  version: 1.0.0
+  title: API ChatNoir
+host: nodechat-levg34.rhcloud.com
+basePath: /
+tags:
+  - name: uploader-sync
+    description: Used to sync with uploader
+schemes:
+  - http
+paths:
+  /emit:
+    post:
+      tags:
+        - uploader-sync
+      summary: Send event to user nickname
+      description: ''
+      operationId: emit
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: body
+          description: Event object that will be sent
+          required: true
+          schema:
+            $ref: '#/definitions/Event'
+        - in: header
+          name: X-Auth-Token
+          type: string
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/Response'
+        '401':
+          description: Need token
+        '403':
+          description: Cannot do that with that token
+        '405':
+          description: Invalid input
+definitions:
+  Event:
+    type: object
+    required:
+      - event
+      - nickname
+      - param
+    properties:
+      event:
+        type: string
+      nickname:
+        type: string
+      param:
+        type: string
+  Response:
+    type: object
+    required:
+      - ok
+    properties:
+      ok:
+        type: boolean
+      error:
+        type: string
+      token:
+        $ref: '#/definitions/Token'
+  Token:
+    type: object
+    properties:
+      token:
+        type: string
+      bearer:
+        type: string
