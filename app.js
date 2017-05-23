@@ -108,16 +108,22 @@ app.post('/emit', function (req, res) {
 	var socket = findSocket(nickname)
 	var indexToken = tokens.map(function(t) { return t.token }).indexOf(token)
 	var indexAdminToken = adminTokens.indexOf(token)
+	var status = 0
 	if (!token||(indexAdminToken==-1&&indexToken==-1)) {
-		resObject.error = 'Unauthorized.'
+		resObject.error = 'Unauthorized: need token.'
+		status = 401
 	} else if (indexAdminToken==-1&&tokens[indexToken].nickname!=nickname) {
-		resObject.error = 'Unauthorized: identity theft.'
+		resObject.error = 'Forbidden: identity theft.'
+		status = 403
 	} else if (allClients.length<=0) {
 		resObject.error = 'No connected client.'
+		status = 412
 	} else if (!event) {
 		resObject.error = 'Need event.'
+		status = 400
 	} else if (indexAdminToken==-1&&event!='send_url') {
-		resObject.error = 'Unauthorized.'
+		resObject.error = 'Forbidden.'
+		status = 403
 	} else if (socket) {
 		socket.emit(event, params)
 		resObject.ok = true
@@ -128,9 +134,11 @@ app.post('/emit', function (req, res) {
 		resObject.ok = true
 	} else {
 		resObject.error = 'No client with nickname '+nickname+' connected.'
+		status = 412
 	}
 	// delete token if exists
 	if (resObject.ok) {
+		status = 200
 		if (indexToken!=-1) {
 			resObject.token = {token:tokens[indexToken].token,bearer:tokens[indexToken].nickname}
 			tokens.splice(indexToken, 1)
@@ -139,10 +147,11 @@ app.post('/emit', function (req, res) {
 			adminTokens.splice(indexAdminToken, 1)
 		} else {
 			resObject.error = 'Could not invalidate token'
+			status = 500
 		}
 	}
 	res.setHeader('Content-Type', 'text/json')
-	res.json(resObject)
+	res.status(status).json(resObject)
 })
 
 function alreadyUsed(nickname) {
