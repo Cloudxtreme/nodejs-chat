@@ -422,6 +422,7 @@ io.sockets.on('connection', function (socket, nickname) {
 			}
 		} else if (to=='talktome') {
 			ttm.answer(socket,message)
+			socket.emit('read','talktome')
 		} else if (to=='all'||!findSocket(to)) {
 			socket.broadcast.emit('message', {nickname: socket.nickname, message: message, time: moment().tz("Europe/Paris").format('HH:mm')})
 			ttm.notify('message',{socket:socket,message:message})
@@ -442,6 +443,7 @@ io.sockets.on('connection', function (socket, nickname) {
 		if (to=='talktome') {
 			// TODO: react to image
 			ttm.answer(socket,image)
+			socket.emit('read','talktome')
 		} else if (to=='all'||!findSocket(to)) {
 			socket.broadcast.emit('image', {nickname: socket.nickname, image: image, time: moment().tz("Europe/Paris").format('HH:mm')})
 			ttm.notify('message',{socket:socket,message:image})
