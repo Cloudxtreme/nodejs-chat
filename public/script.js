@@ -46,6 +46,7 @@ if (sessionStorage.advanced) {
 }
 
 var list = []
+var toRead = []
 
 var nmsound = new Audio('./audio/new_message.mp3')
 var loginsound = new Audio('./audio/signin.mp3')
@@ -69,6 +70,12 @@ function displayMessage(data) {
 		insertMessage(data.nickname, data.message, data.time, false, data.secured)
 	}
 	nmsound.play()
+	// read
+	if (document.hasFocus()) {
+		socket.emit('read',data.nickname)
+	} else {
+		toRead.push(data.nickname)
+	}
 }
 
 socket.on('message', function(data) {
@@ -310,6 +317,7 @@ function insertMessage(nickname, message, time, toself, secured, to) {
 		if (to&&to!='all') {
 			totag = ' <em>(to '+dest.name+')</em>'	
 		}
+		totag += '<span class="'+dest.name+'"></span>'
 		needEscape = true
 	}
 	if (secured) {
@@ -381,6 +389,10 @@ function focus() {
 	document.title = nickname + ' - ' + title
 	$('#afk').attr('src','/img/online.png')
 	socket.emit('afk',false)
+	toRead.forEach(function (_nickname) {
+		socket.emit('read',_nickname)
+	})
+	toRead = []
 }
 
 function setNickname() {
@@ -579,7 +591,6 @@ socket.on('afk', function(data){
 			}
 		}
 	}
-	
 })
 
 function checkAFK() {
@@ -596,3 +607,9 @@ function checkAFK() {
 function startAFKChecker() {
 	setInterval(checkAFK,2000)
 }
+
+// read
+socket.on('read', function(nickname) {
+	$('.'+nickname).text(' - read')
+	console.log(nickname+' - read')
+})

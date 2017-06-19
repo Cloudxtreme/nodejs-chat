@@ -519,6 +519,14 @@ io.sockets.on('connection', function (socket, nickname) {
 		tokens.push({nickname:socket.nickname,token:token})
 		socket.emit('token',token)
 	})
+	
+	socket.on('read', function (to) {
+		var dest_socket = findSocket(to)
+		
+		if (dest_socket) {
+			dest_socket.emit('read',socket.nickname)
+		}
+	})
 })
 
 server.listen(server_port,server_ip_address,function () {
