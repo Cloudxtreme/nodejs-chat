@@ -4,44 +4,40 @@ sessionStorage.clear()
 
 function load() {
 	if (old_nickname) {
-		document.querySelector('#nickname').value = old_nickname
-		document.querySelector('#login_btn').removeAttribute('disabled')
+		$('#nickname').val(old_nickname)
+		$('#login_btn').prop('disabled',false)
 	}
 	if (old_advanced) {
-		document.querySelector('#advanced').checked = true
+		$('#advanced').checked = true
 	}
 }
 
 function explain(id) {
-	document.querySelector('#'+id).removeAttribute('hidden')
+	$('#'+id).show()
 }
 
 function hideExplain(id) {
-	document.querySelector('#'+id).setAttribute('hidden','')
+	$('#'+id).hide()
 }
 
 function showPassword() {
-	document.querySelector('#use_pass').setAttribute('hidden','')
-	var showpassword = document.querySelectorAll('.password')
-	for (var i in showpassword) {
-		el = showpassword[i]
-		if (typeof el.removeAttribute === "function") { 
-			el.removeAttribute('hidden')
-		}
-	}
-	document.querySelector('#password').focus()
+	$('#use_pass').hide()
+	$('.password').each(function() {
+		$(this).show()
+	})
+	$('#password').focus()
 }
 
 function login() {
-	var nickname = document.querySelector('#nickname').value
-	var password = document.querySelector('#password').value
+	var nickname = $('#nickname').val()
+	var password = $('#password').val()
 	sessionStorage.nickname = nickname
 	var logObj = {nickname:nickname}
 	if (password) {
 		sessionStorage.password = password
 		logObj.password = password
 	}
-	if (document.querySelector('#advanced').checked) {
+	if ($('#advanced').checked) {
 		sessionStorage.advanced = true
 	} else if (sessionStorage.advanced) {
 		delete sessionStorage.advanced
@@ -54,11 +50,11 @@ function login() {
 			if (response.logOK) {
 				window.location = '/'
 			} else {
-				document.querySelector('#login_err').innerHTML = 'Server rejected your request: '+response.reason
+				$('#login_err').text('Server rejected your request: '+response.reason)
 				if (response.nickname) {
-					document.querySelector('#nickname').value = response.nickname
+					$('#nickname').val(response.nickname)
 				}
-				document.querySelector('#password').value = ''
+				$('#password').val('')
 			}
 		}
 	}
@@ -74,9 +70,9 @@ function pressKey(e) {
 }
 
 function input(e) {
-	if (document.querySelector('#nickname').value) {
-		document.querySelector('#login_btn').removeAttribute('disabled')
+	if ($('#nickname').val()) {
+		$('#login_btn').prop('disabled',false)
 	} else {
-		document.querySelector('#login_btn').setAttribute('disabled','')
+		$('#login_btn').prop('disabled',true)
 	}
 }

@@ -1,21 +1,27 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" name="viewport" content="width=device-width, initial-scale=1">
   <title>Login to Chat</title>
+  <script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
   <script src="/script_login.js"></script>
+  <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
   <link rel="stylesheet" href="/style_login.css">
   <link href="/img/favicon.ico" rel="icon" type="image/x-icon"/>
 </head>
 <body onload="load()">
-  <p>Chose your nickname (or login)</p>
-  <section id="login_form">
-    <label for="nickname">nickname</label><input id="nickname" type="text" onkeydown="pressKey(event)" oninput="input(event)" autofocus><br>
-	<label id="use_pass" class="link" onmouseover="explain('exp_pass')" onmouseleave="hideExplain('exp_pass')" onclick="showPassword()">I have a password.</label>
-    <label for="password" class="password" hidden>password</label><input id="password" class="password" type="password" onkeydown="pressKey(event)" hidden><br>
-	<label class="link" onmouseover="explain('exp_advanced')" onmouseleave="hideExplain('exp_advanced')"><input type="checkbox" id="advanced" value="checkbox1">Use advanced features.</label><br>
-    <button id="login_btn" onclick="login()" disabled>Go to chat</button>
+  <header class="w3-container w3-teal">
+    <h2>Chose your nickname (or login)</h2>
+  </header>
+<div class="w3-container w3-half w3-margin-top">
+  <section id="login_form" class="w3-container w3-card">
+    <p><label for="nickname">Nickname</label><input id="nickname" class="w3-input" type="text" onkeydown="pressKey(event)" oninput="input(event)" autofocus></p>
+	<p><label id="use_pass" class="link" onmouseover="explain('exp_pass')" onmouseleave="hideExplain('exp_pass')" onclick="showPassword()">I have a password.</label>
+    <label for="password" class="password" hidden>Password</label><input id="password" class="password w3-input" type="password" onkeydown="pressKey(event)" style="display: none"></p>
+	<p><label class="link" onmouseover="explain('exp_advanced')" onmouseleave="hideExplain('exp_advanced')"><input type="checkbox" class="w3-check" id="advanced" value="checkbox1"> Use advanced features.</label></p>
+    <button id="login_btn" onclick="login()" class="w3-button w3-section w3-teal w3-ripple" disabled>Go to chat</button>
   </section>
+</div>
   <section id="explainations">
     <p id="exp_pass" hidden>Click here if you have an account on nodechat.</p>
     <p id="exp_advanced" hidden>Advanced features include key generation, encrypted messages, and server commands.</p>
