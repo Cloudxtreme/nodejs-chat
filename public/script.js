@@ -315,9 +315,9 @@ function insertMessage(nickname, message, time, toself, secured, to) {
 	if (toself) {
 		cl = 'toself'
 		if (to&&to!='all') {
-			totag = ' <em>(to '+dest.name+')</em>'	
+			totag = ' <em>(to '+dest.name+')</em>'
+			totag += '<span class="'+dest.name+'"></span>'
 		}
-		totag += '<span class="'+dest.name+'"></span>'
 		needEscape = true
 	}
 	if (secured) {
@@ -340,7 +340,7 @@ function insertImage(nickname, image, time, toself, to) {
 	if (toself) {
 		cl = 'toself'
 		if (to&&to!='all') {
-			totag = ' <em>(to '+dest.name+')</em>'	
+			totag = ' <em>(to '+dest.name+')</em>'
 		}
 		needEscape = true
 	}
@@ -462,14 +462,14 @@ function showkey() {
 }
 
 function httpGetAsync(url, callback) {
-    var xmlHttp = new XMLHttpRequest()
-    xmlHttp.onreadystatechange = function() { 
-        if (xmlHttp.readyState == 4 && xmlHttp.status == 200) {
+	var xmlHttp = new XMLHttpRequest()
+	xmlHttp.onreadystatechange = function() {
+		if (xmlHttp.readyState == 4 && xmlHttp.status == 200) {
 			callback(xmlHttp.responseText)
 		}
-    }
-    xmlHttp.open("GET", url, true)
-    xmlHttp.send(null)
+	}
+	xmlHttp.open("GET", url, true)
+	xmlHttp.send(null)
 }
 
 function genKeyNode() {
@@ -507,7 +507,7 @@ function deleteKey() {
 
 function encrypt(message) {
 	var options = {
-		data: message,                             // input as String
+		data: message,							   // input as String
 		publicKeys: openpgp.key.readArmored(dest.pubkey).keys  // for encryption
 		//privateKeys: openpgp.key.readArmored(privkey).keys // for signing (optional)
 	}
@@ -521,8 +521,8 @@ function encrypt(message) {
 function decrypt(data) {
 	var encrypted = data.message
 	options = {
-		message: openpgp.message.readArmored(encrypted),     // parse armored message
-		//publicKeys: openpgp.key.readArmored(dest.pubkey).keys,    // for verification (optional)
+		message: openpgp.message.readArmored(encrypted),	 // parse armored message
+		//publicKeys: openpgp.key.readArmored(dest.pubkey).keys,	// for verification (optional)
 		privateKey: openpgp.key.readArmored(privkey).keys[0] // for decryption
 	}
 
