@@ -8,7 +8,7 @@ function load() {
 		$('#login_btn').prop('disabled',false)
 	}
 	if (old_advanced) {
-		$('#advanced').checked = true
+		$('#advanced').prop('checked',true)
 	}
 }
 
@@ -37,7 +37,7 @@ function login() {
 		sessionStorage.password = password
 		logObj.password = password
 	}
-	if ($('#advanced').checked) {
+	if ($('#advanced').prop('checked')) {
 		sessionStorage.advanced = true
 	} else if (sessionStorage.advanced) {
 		delete sessionStorage.advanced
