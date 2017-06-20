@@ -507,7 +507,7 @@ function deleteKey() {
 
 function encrypt(message) {
 	var options = {
-		data: message,							   // input as String
+		data: message,  // input as String
 		publicKeys: openpgp.key.readArmored(dest.pubkey).keys  // for encryption
 		//privateKeys: openpgp.key.readArmored(privkey).keys // for signing (optional)
 	}
@@ -521,8 +521,8 @@ function encrypt(message) {
 function decrypt(data) {
 	var encrypted = data.message
 	options = {
-		message: openpgp.message.readArmored(encrypted),	 // parse armored message
-		//publicKeys: openpgp.key.readArmored(dest.pubkey).keys,	// for verification (optional)
+		message: openpgp.message.readArmored(encrypted),  // parse armored message
+		//publicKeys: openpgp.key.readArmored(dest.pubkey).keys,  // for verification (optional)
 		privateKey: openpgp.key.readArmored(privkey).keys[0] // for decryption
 	}
 
