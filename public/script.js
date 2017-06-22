@@ -307,6 +307,11 @@ function escapeHtml(unsafe) {
 }
 
 // add a message in the page
+function scrollDown() {
+	var n = $(document).height()
+	$('html, body').animate({ scrollTop: n }, 50)
+}
+
 function insertMessage(nickname, message, time, toself, secured, to) {
 	var cl = 'from_server'
 	var secimg = '/img/blanksecure.jpg'
@@ -330,6 +335,7 @@ function insertMessage(nickname, message, time, toself, secured, to) {
 		message = escapeHtml(message)
 	}
 	$('#chat_zone').append('<p class="'+cl+'">'+time+' <img src="'+secimg+'" class="keyarea"> <strong>' + nickname + '</strong> ' + message + totag +'</p>').linkify()
+	scrollDown()
 }
 
 function insertImage(nickname, image, time, toself, to) {
@@ -351,10 +357,12 @@ function insertImage(nickname, image, time, toself, to) {
 		image = escapeHtml(image)
 	}
 	$('#chat_zone').append('<p class="'+cl+'">'+time+' <img src="'+secimg+'" class="keyarea"> <strong>' + nickname + '</strong> <a target="_blank" href="'+image+'"><img style="max-width: 75%;vertical-align:middle;" border="1" src="'+image+'"></a> '+totag +'</p>').linkify()
+	scrollDown()
 }
 
 function messageFromServer(message) {
 	$('#chat_zone').append('<p class="from_server"><em>'+message+'</em></p>')
+	scrollDown()
 }
 
 function setupList(new_list) {
