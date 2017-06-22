@@ -34,24 +34,23 @@
       <span id="wait_please" hidden>Request sent; please wait while your key is being generated...</span><span id="gen_error" hidden>An error occurred during key generation!</span>
     </p>
     
-   
-    <aside id="connected">
+    <aside id="connected" class="w3-card w3-margin-top w3-border">
 
     </aside>
 
-    <section id="chat_zone">
+    <section id="chat_zone" class="w3-container w3-margin-top">
 
     </section>
     
     <footer id="chat_form" class="w3-bar w3-bottom w3-border w3-light-gray">
-      <input class="w3-bar-item w3-input" type="text" name="message" id="message" placeholder="Type your message here..." size="50" autofocus onkeydown="pressKey(event)" oninput="inputChange()" onfocus="inputChange()"/>
-      <div class="w3-bar-item"><b>[to <span id="dest" onclick="selectConnected('all')">all</span>]</b></div>
-      <div class="w3-bar-item"><img id="send_secured" class="keyarea" hidden src="/img/unsecured.png"></div>
-      <div class="w3-bar-item"><input id="checkbox_img" type="checkbox" onclick="toggleImg()"> img.</div>
-      <button id="upload_img" class="w3-bar-item w3-button w3-teal w3-ripple" onclick="uploadImage()" hidden>Upload image</button>
-      <button class="w3-bar-item w3-button w3-teal w3-ripple" onclick="send()">Send</button>
-	  <button class="w3-bar-item w3-button w3-teal w3-ripple" onclick="$('#chat_zone').empty()">Clear messages</button>
-      <div id="typing"></div>
+      <input class="w3-bar-item w3-input" type="text" name="message" id="message" placeholder="Type your message here..." style="width: 100%" autofocus onkeydown="pressKey(event)" oninput="inputChange()" onfocus="inputChange()"/>
+      <button class="w3-bar-item w3-button w3-teal w3-ripple w3-right" onclick="send()">Send</button>
+      <button id="upload_img" class="w3-bar-item w3-button w3-teal w3-ripple w3-right" onclick="uploadImage()" hidden>Upload image</button>
+      <div class="w3-bar-item w3-right"><input id="checkbox_img" type="checkbox" onclick="toggleImg()"> img.</div>
+      <div class="w3-bar-item w3-right"><img id="send_secured" class="keyarea" height="20" width="20" hidden src="/img/unsecured.png"></div>
+      <div class="w3-bar-item w3-right"><b>[to <span id="dest" onclick="selectConnected('all')">all</span>]</b></div>
+      <button class="w3-bar-item w3-button w3-teal w3-ripple w3-right" onclick="$('#chat_zone').empty()">Clear messages</button>
+      <div class="w3-bar-item w3-right" id="typing"></div>
     </footer>
     
     <script src="/script.js"></script>

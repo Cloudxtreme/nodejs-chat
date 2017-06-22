@@ -28,14 +28,14 @@ aside {
 	cursor: pointer;
 }
 
+#chat_zone {
+	float:left
+}
+
 #chat_zone strong {
 	color: white;
 	background-color: black;
 	padding: 2px;
-}
-
-#key {
-	//
 }
 
 #wait_please {

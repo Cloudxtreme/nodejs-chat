@@ -350,11 +350,11 @@ function insertImage(nickname, image, time, toself, to) {
 	if (needEscape) {
 		image = escapeHtml(image)
 	}
-	$('#chat_zone').prepend('<p class="'+cl+'">'+time+' <img src="'+secimg+'" class="keyarea"> <strong>' + nickname + '</strong> <a target="_blank" href="'+image+'"><img style="max-width: 75%;vertical-align:middle;" border="1" src="'+image+'"></a> '+totag +'</p>').linkify()
+	$('#chat_zone').append('<p class="'+cl+'">'+time+' <img src="'+secimg+'" class="keyarea"> <strong>' + nickname + '</strong> <a target="_blank" href="'+image+'"><img style="max-width: 75%;vertical-align:middle;" border="1" src="'+image+'"></a> '+totag +'</p>').linkify()
 }
 
 function messageFromServer(message) {
-	$('#chat_zone').prepend('<p class="from_server"><em>'+message+'</em></p>')
+	$('#chat_zone').append('<p class="from_server"><em>'+message+'</em></p>')
 }
 
 function setupList(new_list) {
