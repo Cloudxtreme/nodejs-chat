@@ -16,18 +16,17 @@
     <div class="w3-bar w3-top w3-border w3-light-gray">
       <div class="w3-bar-item w3-black"><b>ChatNoir</b></div>
       <div id="help" class="w3-bar-item w3-button w3-teal" onclick="help()">Need help?</div>
-      <div class="w3-dropdown-hover">
-        <button class="w3-button w3-teal keyarea" hidden>Key Actions</button>
-        <div class="w3-dropdown-content w3-bar-block w3-card-4">
+      <button class="w3-bar-item w3-button w3-right w3-teal w3-ripple" onclick="clickLogin()">Logout</button>
+      <div class="w3-bar-item w3-right">You are <b><span id="nickname">client-x</span></b>.</div>
+      <div class="w3-bar-item w3-right"><img src="/img/online.png" id="afk" height="20" width="20"></div>
+	  <div class="w3-dropdown-hover w3-right">
+        <div class="w3-bar-item w3-button"><img src="/img/keyko.png" id="key" class="keyarea" height="20" width="20" hidden onclick="showkey()"></div>
+		<div class="w3-dropdown-content w3-bar-block w3-card-4">
           <button id="genkey" class="w3-bar-item w3-button" onclick="genKey()">Generate key</button>
           <button class="w3-bar-item w3-button" onclick="genKeyNode()">Get key from local server</button>
           <button class="w3-bar-item w3-button" onclick="deleteKey()">Delete key</button> 
         </div>
       </div>
-      <button class="w3-bar-item w3-button w3-right w3-teal w3-ripple" onclick="clickLogin()">Logout</button>
-      <div class="w3-bar-item w3-right">You are <b><span id="nickname">client-x</span></b>.</div>
-      <div class="w3-bar-item w3-right"><img src="/img/online.png" id="afk" height="20" width="20"></div>
-      <div class="w3-bar-item w3-right"><img src="/img/keyko.png" id="key" class="keyarea" height="20" width="20" hidden onclick="showkey()"></div>
     </div>
     
     <p class="keyarea" hidden>
