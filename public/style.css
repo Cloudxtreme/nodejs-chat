@@ -1,5 +1,7 @@
 aside {
-	float: right
+	float: right;
+	margin-top: 30px;
+	margin-right: 5px;
 }
 
 .toself {
@@ -29,7 +31,9 @@ aside {
 }
 
 #chat_zone {
-	float:left
+	float:left;
+	margin-top: 25px;
+	margin-bottom: 75px;
 }
 
 #chat_zone strong {
