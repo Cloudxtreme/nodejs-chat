@@ -10,27 +10,6 @@ aside {
 	color: #00008B
 }
 
-.link {
-	color: darkblue
-}
-
-.link:hover {
-	text-decoration: underline;
-	cursor: pointer;
-	color: blue
-}
-
-#help {
-	float: none;
-	color: darkblue;
-}
-
-#help h3:hover {
-	color: blue;
-	text-decoration: underline;
-	cursor: pointer;
-}
-
 #connected {
 	color: green
 }
@@ -56,8 +35,7 @@ aside {
 }
 
 #key {
-	height: 50px;
-	width: 50px
+	//
 }
 
 #wait_please {

@@ -1,8 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <meta charset="utf-8">
+    <meta charset="utf-8" name="viewport" content="width=device-width, initial-scale=1">
     <title>ChatNoir</title>
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
     <link rel="stylesheet" href="/style.css">
     <script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
     <script src="/lib/linkify.min.js"></script>
@@ -12,28 +13,28 @@
     <link href="/img/favicon.ico" rel="icon" type="image/x-icon"/>
   </head>
   <body onfocus="focus()">
-    <img src="/img/online.png" id="afk" height="50" width="50"> <img src="/img/keyko.png" id="key" class="keyarea" hidden onclick="showkey()">
-    <p>You are <b><span id="nickname">client-x</span></b>.</p>
-    <p class="link" onclick="clickLogin()">Change nickname, login, or activate advanced features.</p>
+    <div class="w3-bar w3-top w3-border w3-light-gray">
+      <div class="w3-bar-item w3-black"><b>ChatNoir</b></div>
+      <div id="help" class="w3-bar-item w3-button w3-teal" onclick="help()">Need help?</div>
+      <div class="w3-dropdown-hover">
+        <button class="w3-button w3-teal keyarea" hidden>Key Actions</button>
+        <div class="w3-dropdown-content w3-bar-block w3-card-4">
+          <button id="genkey" class="w3-bar-item w3-button" onclick="genKey()">Generate key</button>
+          <button class="w3-bar-item w3-button" onclick="genKeyNode()">Get key from local server</button>
+          <button class="w3-bar-item w3-button" onclick="deleteKey()">Delete key</button> 
+        </div>
+      </div>
+      <button class="w3-bar-item w3-button w3-right w3-teal w3-ripple" onclick="clickLogin()">Logout</button>
+      <div class="w3-bar-item w3-right">You are <b><span id="nickname">client-x</span></b>.</div>
+      <div class="w3-bar-item w3-right"><img src="/img/online.png" id="afk" height="20" width="20"></div>
+      <div class="w3-bar-item w3-right"><img src="/img/keyko.png" id="key" class="keyarea" height="20" width="20" hidden onclick="showkey()"></div>
+    </div>
+    
     <p class="keyarea" hidden>
-      <button id="genkey" onclick="genKey()">Generate key</button>
-      <button onclick="genKeyNode()">Get key from local server</button>
-      <button onclick="deleteKey()">Delete key</button> <button onclick="$('#chat_zone').empty()">Clear messages</button> <span id="wait_please" hidden>Request sent; please wait while your key is being generated...</span><span id="gen_error" hidden>An error occurred during key generation!</span>
+      <span id="wait_please" hidden>Request sent; please wait while your key is being generated...</span><span id="gen_error" hidden>An error occurred during key generation!</span>
     </p>
-	
-    <aside id="help">
-      <h3 onclick="help()">Need help?</h3>
-    </aside>
-    <section id="chat_form">
-      <input type="text" name="message" id="message" placeholder="Type your message here..." size="50" autofocus onkeydown="pressKey(event)" oninput="inputChange()" onfocus="inputChange()"/>
-        <b> [to <span id="dest" onclick="selectConnected('all')">all</span>] </b>
-        <img id="send_secured" class="keyarea" hidden src="/img/unsecured.png">
-		<input id="checkbox_img" type="checkbox" onclick="toggleImg()"> img.
-		<button id="upload_img" onclick="uploadImage()" hidden>Upload image</button>
-      <button onclick="send()">Send</button>
-	  <div id="typing"></div>
-    </section>
-
+    
+   
     <aside id="connected">
 
     </aside>
@@ -41,6 +42,18 @@
     <section id="chat_zone">
 
     </section>
+    
+    <footer id="chat_form" class="w3-bar w3-bottom w3-border w3-light-gray">
+      <input class="w3-bar-item w3-input" type="text" name="message" id="message" placeholder="Type your message here..." size="50" autofocus onkeydown="pressKey(event)" oninput="inputChange()" onfocus="inputChange()"/>
+      <div class="w3-bar-item"><b>[to <span id="dest" onclick="selectConnected('all')">all</span>]</b></div>
+      <div class="w3-bar-item"><img id="send_secured" class="keyarea" hidden src="/img/unsecured.png"></div>
+      <div class="w3-bar-item"><input id="checkbox_img" type="checkbox" onclick="toggleImg()"> img.</div>
+      <button id="upload_img" class="w3-bar-item w3-button w3-teal w3-ripple" onclick="uploadImage()" hidden>Upload image</button>
+      <button class="w3-bar-item w3-button w3-teal w3-ripple" onclick="send()">Send</button>
+	  <button class="w3-bar-item w3-button w3-teal w3-ripple" onclick="$('#chat_zone').empty()">Clear messages</button>
+      <div id="typing"></div>
+    </footer>
+    
     <script src="/script.js"></script>
   </body>
 </html>

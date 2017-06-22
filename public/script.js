@@ -329,7 +329,7 @@ function insertMessage(nickname, message, time, toself, secured, to) {
 	if (needEscape) {
 		message = escapeHtml(message)
 	}
-	$('#chat_zone').prepend('<p class="'+cl+'">'+time+' <img src="'+secimg+'" class="keyarea"> <strong>' + nickname + '</strong> ' + message + totag +'</p>').linkify()
+	$('#chat_zone').append('<p class="'+cl+'">'+time+' <img src="'+secimg+'" class="keyarea"> <strong>' + nickname + '</strong> ' + message + totag +'</p>').linkify()
 }
 
 function insertImage(nickname, image, time, toself, to) {
