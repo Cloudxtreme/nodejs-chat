@@ -10,9 +10,10 @@
   <link href="/img/favicon.ico" rel="icon" type="image/x-icon"/>
 </head>
 <body onload="load()">
-  <header class="w3-container w3-teal">
+  <header class="w3-container w3-teal w3-center">
     <h2>Chose your nickname (or login)</h2>
   </header>
+<div class="w3-container w3-quarter"></div>
 <div class="w3-container w3-half w3-margin-top">
   <section id="login_form" class="w3-container w3-card">
     <p><label for="nickname">Nickname</label><input id="nickname" class="w3-input" type="text" onkeydown="pressKey(event)" oninput="input(event)" autofocus></p>
@@ -22,7 +23,8 @@
     <button id="login_btn" onclick="login()" class="w3-button w3-section w3-teal w3-ripple" disabled>Go to chat</button>
   </section>
 </div>
-  <section id="explainations">
+
+  <section id="explainations" class="w3-container w3-margin-top w3-center">
     <p id="exp_pass" hidden>Click here if you have an account on nodechat.</p>
     <p id="exp_advanced" hidden>Advanced features include key generation, encrypted messages, and server commands.</p>
   </section>
