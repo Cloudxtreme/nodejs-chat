@@ -427,13 +427,8 @@ function clickLogin() {
 }
 
 function genKey() {
-	var isChrome = navigator.userAgent.toLowerCase().indexOf('chrome')
-	if (isChrome) {
-		$('#gen_error').show()
-	} else {
-		$('#gen_error').hide()
-		$('#wait_please').show()
-	}
+	//var isChrome = navigator.userAgent.toLowerCase().indexOf('chrome')
+	$('#wait_please').show()
 	//var pass = prompt('Enter your passphrase.','')
 	var pass = password
 	var options = {
