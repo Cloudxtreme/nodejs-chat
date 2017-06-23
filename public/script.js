@@ -621,8 +621,3 @@ socket.on('read', function(nickname) {
 	$('.'+nickname).text(' - read')
 	console.log(nickname+' - read')
 })
-
-//
-function toggleConnected() {
-	$('#connected').toggle()
-}
