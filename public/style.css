@@ -51,3 +51,7 @@
 #typing {
 	color: #8fa5c6
 }
+
+#afk:hover {
+	cursor: pointer;
+}

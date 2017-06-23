@@ -621,3 +621,12 @@ socket.on('read', function(nickname) {
 	$('.'+nickname).text(' - read')
 	console.log(nickname+' - read')
 })
+
+//
+function toggleConnected() {
+	if ($('#connected').is(":visible")) {
+		$('#connected').hide()
+	} else {
+		$('#connected').show()
+	}
+}
