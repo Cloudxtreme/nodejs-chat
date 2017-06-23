@@ -22,8 +22,8 @@
       <div class="w3-bar-item w3-right"><span class="w3-hide-small">You are </span><b><span id="nickname">client-x</span></b><span class="w3-hide-small">.</span></div>
       <div class="w3-bar-item w3-right"><img src="/img/online.png" id="afk" height="20" width="20" onclick="$('#connected').toggle()"></div>
 	  <div class="w3-dropdown-hover w3-right">
-	    <div class="w3-bar-item"><img src="/img/keyko.png" id="key" class="keyarea" height="20" width="20" hidden onclick="showkey()"></div>
-		<div class="w3-dropdown-content w3-bar-block w3-card-4">
+	    <div class="w3-bar-item w3-hover-gray"><img src="/img/keyko.png" id="key" class="keyarea" height="20" width="20" hidden onclick="showkey()"></div>
+		<div class="w3-dropdown-content w3-bar-block w3-card-4 w3-light-gray" style="margin-top: 35px">
           <button id="genkey" class="w3-bar-item w3-button" onclick="genKey()">Generate key</button>
           <button class="w3-bar-item w3-button" onclick="genKeyNode()">Get key from local server</button>
           <button class="w3-bar-item w3-button" onclick="deleteKey()">Delete key</button> 
@@ -31,12 +31,12 @@
       </div>
     </div>
     
-	<div id="wait_please" class="w3-modal">
+	<div id="key_modal" class="w3-modal">
       <div class="w3-modal-content">
         <div class="w3-container">
-          <span onclick="$('#wait_please').hide()" class="w3-button w3-display-topright">&times;</span>
-          <p><i class="fa fa-spinner w3-spin" aria-hidden="true"></i> Request sent; please wait while your key is being generated...</p>
-	      <p id="gen_error" hidden>An error occurred during key generation!</p>
+          <span onclick="$('#key_modal').hide()" class="w3-button w3-display-topright">&times;</span>
+          <p id="wait_please"><i class="fa fa-spinner w3-spin" aria-hidden="true"></i> Request sent; please wait while your key is being generated...</p>
+	      <p id="gen_error" hidden><i class="fa fa-exclamation-circle" aria-hidden="true"></i> An error occurred during key generation!</p>
         </div>
       </div>
     </div>

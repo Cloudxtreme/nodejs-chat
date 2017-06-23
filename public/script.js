@@ -428,28 +428,28 @@ function clickLogin() {
 
 function genKey() {
 	//var isChrome = navigator.userAgent.toLowerCase().indexOf('chrome')
+	$('#gen_error').hide()
 	$('#wait_please').show()
+	$('#key_modal').show()
 	//var pass = prompt('Enter your passphrase.','')
 	var pass = password
 	var options = {
 		userIds: [{ name:nickname, email:nickname+'@example.com' }],
 		numBits: 2048
 	}
-	openpgp.generateKey(options).then(function (key) {
-		try {
-			$('#wait_please').hide()
-			$('#gen_error').hide()
-			privkey = key.privateKeyArmored
-			pubkey = key.publicKeyArmored
-			localStorage.privkey = privkey
-			localStorage.pubkey = pubkey
-			if (privkey.startsWith('-----BEGIN PGP PRIVATE KEY BLOCK-----')&&pubkey.startsWith('-----BEGIN PGP PUBLIC KEY BLOCK-----')) {
-				$('#key').attr('src','/img/keyok.png')
-				socket.emit('pubkey',pubkey)
-			} else {
-				$('#gen_error').show()
-			}
-		} catch (e) {
+	openpgp.generateKey(options).catch(function(e) {
+		$('#wait_please').hide()
+		$('#gen_error').show()
+	}).then(function (key) {
+		privkey = key.privateKeyArmored
+		pubkey = key.publicKeyArmored
+		localStorage.privkey = privkey
+		localStorage.pubkey = pubkey
+		if (privkey.startsWith('-----BEGIN PGP PRIVATE KEY BLOCK-----')&&pubkey.startsWith('-----BEGIN PGP PUBLIC KEY BLOCK-----')) {
+			$('#key').attr('src','/img/keyok.png')
+			socket.emit('pubkey',pubkey)
+			$('#key_modal').hide()
+		} else {
 			$('#wait_please').hide()
 			$('#gen_error').show()
 		}
@@ -464,25 +464,13 @@ function showkey() {
 	}
 }
 
-function httpGetAsync(url, callback) {
-	var xmlHttp = new XMLHttpRequest()
-	xmlHttp.onreadystatechange = function() {
-		if (xmlHttp.readyState == 4 && xmlHttp.status == 200) {
-			callback(xmlHttp.responseText)
-		}
-	}
-	xmlHttp.open("GET", url, true)
-	xmlHttp.send(null)
-}
-
 function genKeyNode() {
 	$('#gen_error').hide()
 	$('#wait_please').show()
-	httpGetAsync('http://localhost:8888/keys/'+nickname, function(response){
+	$('#key_modal').show()
+	$.get('http://localhost:8888/keys/'+nickname, function(data){
 		try {
-			$('#wait_please').hide()
-			$('#gen_error').hide()
-			var keys = JSON.parse(response)
+			var keys = JSON.parse(data)
 			privkey = keys.privkey
 			pubkey = keys.pubkey
 			localStorage.privkey = privkey
@@ -490,13 +478,18 @@ function genKeyNode() {
 			if (privkey.startsWith('-----BEGIN PGP PRIVATE KEY BLOCK-----')&&pubkey.startsWith('-----BEGIN PGP PUBLIC KEY BLOCK-----')) {
 				$('#key').attr('src','/img/keyok.png')
 				socket.emit('pubkey',pubkey)
+				$('#key_modal').hide()
 			} else {
+				$('#wait_please').hide()
 				$('#gen_error').show()
 			}
 		} catch (e) {
 			$('#wait_please').hide()
 			$('#gen_error').show()
 		}
+	}).fail(function() {
+		$('#wait_please').hide()
+		$('#gen_error').show()
 	})
 }
 
