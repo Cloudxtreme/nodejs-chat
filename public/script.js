@@ -622,12 +622,7 @@ socket.on('read', function(nickname) {
 	console.log(nickname+' - read')
 })
 
-/*
+//
 function toggleConnected() {
-	if ($('#connected').is(":visible")) {
-		$('#connected').hide()
-	} else {
-		$('#connected').show()
-	}
+	$('#connected').toggle()
 }
-*/
