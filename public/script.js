@@ -355,6 +355,7 @@ function insertImage(nickname, image, time, toself, to) {
 		cl = 'toself'
 		if (to&&to!='all') {
 			totag = ' <em>(to '+dest.name+')</em>'
+			totag += '<span class="'+dest.name+'" style="display: none;"> <i style="color: green" class="fa fa-check" aria-hidden="true"></i></span>'
 		}
 		needEscape = true
 	}
@@ -403,7 +404,7 @@ function displayList() {
 
 function focus() {
 	document.title = nickname + ' - ' + title
-	$('#afk').attr('src','/img/online.png')
+	$('#afk').css('color', 'green')
 	socket.emit('afk',false)
 	toRead.forEach(function (_nickname) {
 		socket.emit('read',_nickname)
@@ -593,9 +594,9 @@ function checkAFK() {
 	afk=!document.hasFocus()
 	afkImg = $('#afk')
 	if (afk) {
-		$('#afk').attr('src','/img/afk.png')
+		$('#afk').css('color', 'orange')
 	} else {
-		$('#afk').attr('src','/img/online.png')
+		$('#afk').css('color', 'green')
 	}
 	socket.emit('afk',afk)
 }
