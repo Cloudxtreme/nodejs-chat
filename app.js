@@ -167,9 +167,14 @@ function alreadyUsed(nickname) {
 function sendConnectedList(socket) {
 	var list = []
 	allClients.forEach(function (socket) {
-		list.push(socket.nickname)
+		var pubkey = socket.pubkey
+		if (pubkey&&pubkey.startsWith('-----BEGIN PGP PUBLIC KEY BLOCK-----')) {
+			list.push({nickname: socket.nickname, pubkey: pubkey})
+		} else {
+			list.push({nickname: socket.nickname})
+		}
 	})
-	list.push('talktome')
+	list.push({nickname: 'talktome'})
 	socket.emit('list', list)
 }
 

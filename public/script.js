@@ -102,7 +102,7 @@ socket.on('image', function(data) {
 socket.on('new_client', function(nickname) {
 	document.title = nickname + ': joined in.'
 	messageFromServer(nickname + ' joined in.')
-	addToList(nickname)
+	addToList({nickname: nickname})
 	loginsound.play()
 })
 
@@ -139,12 +139,17 @@ socket.on('pubkey', function(pubkey) {
 
 socket.on('new_pubkey', function(data) {
 	var key_nickname = data.nickname
-	if (key_nickname == dest.name) {
-		var pubkey = data.pubkey
-		if (pubkey.startsWith('-----BEGIN PGP PUBLIC KEY BLOCK-----')) {
+	var pubkey = data.pubkey
+	
+	if (pubkey.startsWith('-----BEGIN PGP PUBLIC KEY BLOCK-----')) {
+		updateList({nickname: key_nickname, pubkey: pubkey})
+		if (key_nickname == dest.name) {
 			dest.pubkey = pubkey
 			$('#send_secured').attr('src','/img/secured.png')
-		} else {
+		}
+	} else {
+		updateList({nickname: key_nickname})
+		if (key_nickname == dest.name) {
 			delete dest.pubkey
 			$('#send_secured').attr('src','/img/unsecured.png')
 		}
@@ -152,6 +157,7 @@ socket.on('new_pubkey', function(data) {
 })
 
 socket.on('del_pubkey', function(key_nickname) {
+	updateList({nickname: key_nickname})
 	if (key_nickname == dest.name) {
 		delete dest.pubkey
 		$('#send_secured').attr('src','/img/unsecured.png')
@@ -380,15 +386,32 @@ function setupList(new_list) {
 	displayList()
 }
 
-function addToList(nickname) {
-	list.push(nickname)
+function addToList(listElement) {
+	list.push(listElement)
 	displayList()
 }
 
 function removeFromList(nickname) {
-	var index = list.indexOf(nickname)
+	var index = list.map(function(data) {
+		return data.nickname
+	}).indexOf(nickname)
 	if (index > -1) {
 		list.splice(index, 1)
+	}
+	displayList()
+}
+
+function updateList(listElement) {
+	var nickname = listElement.nickname
+	var pubkey = listElement.pubkey
+	var index = list.map(function(data) {
+		return data.nickname
+	}).indexOf(nickname)
+	console.log(index)
+	if (pubkey) {
+		list[index].pubkey = pubkey
+	} else {
+		delete list[index].pubkey
 	}
 	displayList()
 }
@@ -397,11 +420,17 @@ function displayList() {
 	//res = '<h3>Connected users:</h3>'
 	res = ''
 	res += '<ul class="w3-ul w3-card-4">'
-	list.forEach(function (nickname) {
+	list.forEach(function (data) {
+		var nickname = data.nickname
+		var pubkey = data.pubkey
 		res += '<li id="li_'+nickname+'" class="w3-padding-16" onclick="toggleConnected(\''+nickname+'\')">'
 		res += '  <i class="fa fa-circle" aria-hidden="true"></i> '
 		res += '  <span class="w3-large">'+nickname+'</span> '
-		res += '  <i class="fa fa-key keyarea" aria-hidden="true" style="display: none"></i> '
+		if (pubkey&&pubkey.startsWith('-----BEGIN PGP PUBLIC KEY BLOCK-----')) {
+			res += '  <i class="fa fa-key keyarea" aria-hidden="true"></i> '
+		} else {
+			res += '  <i class="fa fa-key keyarea" aria-hidden="true" style="display: none"></i> '
+		}
 		res += '  <i class="fa fa-arrow-right" aria-hidden="true" style="display: none"></i> '
 		res += '  <i class="fa fa-keyboard-o" aria-hidden="true" style="display: none"></i> '
 		res += '</li>'
