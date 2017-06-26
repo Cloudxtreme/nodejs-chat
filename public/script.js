@@ -592,13 +592,12 @@ socket.on('afk', function(data){
 	if (data.afk) {
 		$('#li_'+who).addClass('afk')
 	} else {
-		$('.li_'+who).removeClass('afk')
+		$('#li_'+who).removeClass('afk')
 	}
 })
 
 function checkAFK() {
 	afk=!document.hasFocus()
-	afkImg = $('#afk')
 	if (afk) {
 		$('#afk').css('color', 'orange')
 	} else {
