@@ -397,7 +397,7 @@ function displayList() {
 	res = ''
 	res += '<ul class="w3-ul w3-card-4">'
 	list.forEach(function (nickname) {
-		res += '<li id="li_'+nickname+'" class="w3-padding-16" onclick="selectConnected(\''+nickname+'\')">'
+		res += '<li id="li_'+nickname+'" class="w3-padding-16" onclick="toggleConnected(\''+nickname+'\')">'
 		res += '  <i class="fa fa-circle" aria-hidden="true"></i> '
 		res += '  <span class="w3-large">'+nickname+'</span> '
 		res += '  <i class="fa fa-arrow-right" aria-hidden="true" style="display: none"></i> '
@@ -421,6 +421,14 @@ function focus() {
 function setNickname() {
 	document.title = nickname + ' - ' + title
 	document.querySelector('#nickname').innerHTML = nickname
+}
+
+function toggleConnected(nickname) {
+	if (dest.name!=nickname) {
+		selectConnected(nickname)
+	} else {
+		selectConnected('all')
+	}
 }
 
 function selectConnected(nickname) {
@@ -582,19 +590,9 @@ socket.on('send_url',function(url) {
 socket.on('afk', function(data){
 	var who = data.who
 	if (data.afk) {
-		for (var i=0; i<$('#connected li').length; ++i) {
-			li = $('#connected li')[i]
-			if($(li).text()==who) {
-				$(li).addClass('afk')
-			}
-		}
+		$('#li_'+who).addClass('afk')
 	} else {
-		for (var i=0; i<$('#connected li').length; ++i) {
-			li = $('#connected li')[i]
-			if($(li).text()==who) {
-				$(li).removeClass('afk')
-			}
-		}
+		$('.li_'+who).removeClass('afk')
 	}
 })
 
