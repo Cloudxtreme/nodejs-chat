@@ -329,7 +329,7 @@ function insertMessage(nickname, message, time, toself, secured, to) {
 		cl = 'toself'
 		if (to&&to!='all') {
 			totag = ' <em>(to '+dest.name+')</em>'
-			totag += '<span class="'+dest.name+'" style="display: none;"> <i style="color: green" class="fa fa-check" aria-hidden="true"></i></span>'
+			totag += '<span class="to_'+dest.name+'" style="display: none;"> <i style="color: green" class="fa fa-check" aria-hidden="true"></i></span>'
 		}
 		needEscape = true
 	}
@@ -355,7 +355,7 @@ function insertImage(nickname, image, time, toself, to) {
 		cl = 'toself'
 		if (to&&to!='all') {
 			totag = ' <em>(to '+dest.name+')</em>'
-			totag += '<span class="'+dest.name+'" style="display: none;"> <i style="color: green" class="fa fa-check" aria-hidden="true"></i></span>'
+			totag += '<span class="to_'+dest.name+'" style="display: none;"> <i style="color: green" class="fa fa-check" aria-hidden="true"></i></span>'
 		}
 		needEscape = true
 	}
@@ -393,10 +393,16 @@ function removeFromList(nickname) {
 }
 
 function displayList() {
-	res = '<h3>Connected users:</h3>'
-	res += '<ul>'
+	//res = '<h3>Connected users:</h3>'
+	res = ''
+	res += '<ul class="w3-ul w3-card-4">'
 	list.forEach(function (nickname) {
-		res += '<li onclick="selectConnected(\''+nickname+'\')">'+nickname+'</li>'
+		res += '<li id="li_'+nickname+'" class="w3-padding-16" onclick="selectConnected(\''+nickname+'\')">'
+		res += '  <i class="fa fa-circle" aria-hidden="true"></i> '
+		res += '  <span class="w3-large">'+nickname+'</span> '
+		res += '  <i class="fa fa-arrow-right" aria-hidden="true" style="display: none"></i> '
+		res += '  <i class="fa fa-keyboard-o" aria-hidden="true" style="display: none"></i> '
+		res += '</li>'
 	})
 	res += '</ul>'
 	$('#connected').html(res)
@@ -421,6 +427,8 @@ function selectConnected(nickname) {
 	dest = {}
 	dest.name = nickname
 	$('#dest').html(dest.name)
+	$('#connected .fa-arrow-right').hide()
+	$('#li_'+nickname+' .fa-arrow-right').show()
 	$('#send_secured').attr('src','/img/unsecured.png')
 	if (dest.name!='all') {
 		socket.emit('get_pubkey',dest.name)
@@ -607,6 +615,6 @@ function startAFKChecker() {
 
 // read
 socket.on('read', function(nickname) {
-	$('.'+nickname).show()
-	$('.'+nickname+':visible').removeClass(nickname)
+	$('.to_'+nickname).show()
+	$('.to_'+nickname+':visible').removeClass(nickname)
 })
