@@ -9,6 +9,14 @@ if (location.hostname=='localhost') {
 // connect to socket.io
 var socket = io.connect('http://'+location.hostname+port)
 
+// IE
+if (!String.prototype.startsWith) {
+	String.prototype.startsWith = function(searchString, position) {
+		position = position || 0
+		return this.indexOf(searchString, position) === position
+	}
+}
+
 // ask for nickname, send to server and display in the title
 var nickname = sessionStorage.nickname
 var password = ''
@@ -527,14 +535,6 @@ function decrypt(data) {
 		data.secured = true
 		displayMessage(data)
 	})
-}
-
-// IE
-if (!String.prototype.startsWith) {
-	String.prototype.startsWith = function(searchString, position) {
-		position = position || 0
-		return this.indexOf(searchString, position) === position
-	}
 }
 
 // tutorial
