@@ -1,0 +1,9 @@
+- remove all w3-bar-items
+- in footer w3-bar add class w3-row
+- for every w3-bar-item, add w3-col instead
+- for input message add m6 class
+- m1 for the others, excepr
+- m2 for [ to xyz ] OR clear messages (sum of m must be 12)
+- then for vertical alignment of [to], img and (shield), add w3-padding to the div element
+
+- or, sum of m = 11, and last element w3-rest

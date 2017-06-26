@@ -329,7 +329,7 @@ function insertMessage(nickname, message, time, toself, secured, to) {
 		cl = 'toself'
 		if (to&&to!='all') {
 			totag = ' <em>(to '+dest.name+')</em>'
-			totag += '<span class="'+dest.name+'" hidden> <i style="color: green" class="fa fa-check" aria-hidden="true"></i></span>'
+			totag += '<span class="'+dest.name+'" style="display: none;"> <i style="color: green" class="fa fa-check" aria-hidden="true"></i></span>'
 		}
 		needEscape = true
 	}
@@ -607,4 +607,5 @@ function startAFKChecker() {
 // read
 socket.on('read', function(nickname) {
 	$('.'+nickname).show()
+	$('.'+nickname+':visible').removeClass(nickname)
 })
