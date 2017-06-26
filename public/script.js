@@ -200,9 +200,9 @@ socket.on('typing',function (typing_nick) {
 	if (typeof timeout !== 'undefined') {
 		clearTimeout(timeout)
 	}
-	$('#typing').text(typing_nick+' is typing...')
+	$('#li_'+typing_nick+' .fa-keyboard-o').show()
 	timeout = setTimeout(function () {
-		$('#typing').text('')
+		$('#li_'+typing_nick+' .fa-keyboard-o').hide()
 	},1500)
 })
 
