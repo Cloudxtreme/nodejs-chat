@@ -198,6 +198,7 @@ socket.on('help_start',function () {
 
 socket.on('typing',function (typing_nick) {
 	if (typeof timeout !== 'undefined') {
+		// TODO: if typing_nick = old typing_nick, ...
 		clearTimeout(timeout)
 	}
 	$('#li_'+typing_nick+' .fa-keyboard-o').show()
@@ -400,6 +401,7 @@ function displayList() {
 		res += '<li id="li_'+nickname+'" class="w3-padding-16" onclick="toggleConnected(\''+nickname+'\')">'
 		res += '  <i class="fa fa-circle" aria-hidden="true"></i> '
 		res += '  <span class="w3-large">'+nickname+'</span> '
+		res += '  <i class="fa fa-key keyarea" aria-hidden="true" style="display: none"></i> '
 		res += '  <i class="fa fa-arrow-right" aria-hidden="true" style="display: none"></i> '
 		res += '  <i class="fa fa-keyboard-o" aria-hidden="true" style="display: none"></i> '
 		res += '</li>'

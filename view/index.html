@@ -20,7 +20,7 @@
       <button class="w3-bar-item w3-button w3-right w3-teal w3-ripple w3-hide-small" onclick="clickLogin()">Logout</button>
       <button class="w3-bar-item w3-button w3-right w3-teal w3-ripple w3-hide-medium w3-hide-large" onclick="clickLogin()"><i class="fa fa-sign-out" aria-hidden="true"></i></button>
       <div class="w3-bar-item w3-right"><span class="w3-hide-small">You are </span><b><span id="nickname">client-x</span></b><span class="w3-hide-small">.</span></div>
-      <div id="afk" class="w3-bar-item w3-right" style="color: green" onclick="$('#connected').toggle()"><i class="fa fa-circle" aria-hidden="true"></i></div>
+      <div id="afk" class="w3-bar-item w3-right" style="color: green" onclick="$('#connected').toggle()"><i class="fa fa-circle" aria-hidden="true"><span class="w3-hide-small"> Connected users</span></i></div>
 	  <div class="w3-dropdown-hover w3-right">
 	    <div class="w3-bar-item w3-hover-gray"><img src="/img/keyko.png" id="key" class="keyarea" height="20" width="20" hidden onclick="showkey()"></div>
 		<div class="w3-dropdown-content w3-bar-block w3-card-4 w3-light-gray" style="margin-top: 35px">
@@ -55,7 +55,7 @@
       <button id="upload_img" class="w3-bar-item w3-button w3-teal w3-ripple w3-right w3-hide-small" onclick="uploadImage()" hidden>Upload image</button>
       <div class="w3-bar-item w3-right w3-hide-small"><input id="checkbox_img" type="checkbox" onclick="toggleImg()"> img.</div>
       <div class="w3-bar-item w3-right w3-hide-small"><img id="send_secured" class="keyarea" height="20" width="20" hidden src="/img/unsecured.png"></div>
-      <div class="w3-bar-item w3-right w3-hide-small"><b>[to <span id="dest" onclick="selectConnected('all')">all</span>]</b></div>
+      <div class="w3-bar-item w3-right w3-hide-small w3-hide-medium"><b>[to <span id="dest" onclick="selectConnected('all')">all</span>]</b></div>
       <button class="w3-bar-item w3-button w3-teal w3-ripple w3-right w3-hide-small" onclick="$('#chat_zone').empty()">Clear messages</button>
     </footer>
     
