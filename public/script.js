@@ -407,7 +407,6 @@ function updateList(listElement) {
 	var index = list.map(function(data) {
 		return data.nickname
 	}).indexOf(nickname)
-	console.log(index)
 	if (pubkey) {
 		list[index].pubkey = pubkey
 	} else {
