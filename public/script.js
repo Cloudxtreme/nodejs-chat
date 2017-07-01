@@ -599,9 +599,20 @@ function toggleImg() {
 	}
 }
 
-function uploadImage() {
-	uploaderWindow = window.open('http://uploader-levg34.rhcloud.com/upload/'+nickname+'?token='+token, 'Upload image', 'height=500,width=800')
-	//uploaderWindow = window.open('http://localhost:9000/upload/'+nickname+'?token='+token, 'Upload image', 'height=500,width=800')
+function sendImgMobile() {
+	$('#checkbox_img').prop('checked', true)
+	send()
+}
+
+function uploadImage(mobile) {
+	var url = 'http://uploader-levg34.rhcloud.com/upload/'+nickname+'?token='+token
+	if (mobile) {
+		$('#upload_image_modal_iframe').attr('src', url)
+		$('#upload_image_modal').show()
+	} else {
+		uploaderWindow = window.open(url, 'Upload image', 'height=500,width=800')
+		//uploaderWindow = window.open('http://localhost:9000/upload/'+nickname+'?token='+token, 'Upload image', 'height=500,width=800')
+	}
 	socket.emit('token')
 }
 
@@ -610,7 +621,11 @@ socket.on('token',function(_token) {
 })
 
 socket.on('send_url',function(url) {
-	uploaderWindow.close()
+	try {
+		uploaderWindow.close()
+	} catch (e) {
+		$('#upload_image_modal').hide()
+	}
 	$('#message').val(url)
 	toggleImg()
 	send()

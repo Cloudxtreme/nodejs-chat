@@ -59,3 +59,8 @@
 #key:hover {
 	cursor: pointer;
 }
+
+#upload_image_modal_iframe {
+	width: 100%;
+	height: 100%;
+}
