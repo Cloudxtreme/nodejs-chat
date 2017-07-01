@@ -661,3 +661,12 @@ socket.on('read', function(nickname) {
 	$('.to_'+nickname).show()
 	$('.to_'+nickname+':visible').removeClass(nickname)
 })
+
+// mobile
+function toggleMobileMenu() {
+	if ($('#mobile_menu .w3-dropdown-content').is(':visible')) {
+		$('#mobile_menu .w3-dropdown-content').hide()
+	} else {
+		$('#mobile_menu .w3-dropdown-content').show()
+	}
+}
