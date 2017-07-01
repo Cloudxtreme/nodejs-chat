@@ -19,7 +19,7 @@
 	    <button class="w3-bar-item w3-button w3-teal w3-ripple w3-hide-medium w3-hide-large" aria-haspopup="true" onclick="toggleMobileMenu()"><i class="fa fa-bars" aria-hidden="true"></i></button>
 		<div class="w3-dropdown-content w3-bar-block w3-card-4 w3-light-gray" style="margin-top: 35px">
 		  <button class="w3-bar-item w3-button" onclick="uploadImage(true);$('#mobile_menu .w3-dropdown-content').hide()">Upload image</button>
-          <div id="mobile_checkbox_img" class="w3-bar-item w3-button" onclick="sendImgMobile();$('#mobile_menu .w3-dropdown-content').hide()">Send as image</div>
+          <button id="mobile_checkbox_img" class="w3-bar-item w3-button" onclick="sendImgMobile();$('#mobile_menu .w3-dropdown-content').hide()">Send as image</button>
           <button class="w3-bar-item w3-button" onclick="$('#chat_zone').empty();$('#mobile_menu .w3-dropdown-content').hide()">Clear messages</button>
         </div>
       </div>
