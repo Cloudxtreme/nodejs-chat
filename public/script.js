@@ -609,6 +609,7 @@ function uploadImage(mobile) {
 	if (mobile) {
 		$('#upload_image_modal_iframe').attr('src', url)
 		$('#upload_image_modal').show()
+		$('#checkbox_img').prop('checked', true)
 	} else {
 		uploaderWindow = window.open(url, 'Upload image', 'height=500,width=800')
 		//uploaderWindow = window.open('http://localhost:9000/upload/'+nickname+'?token='+token, 'Upload image', 'height=500,width=800')
