@@ -52,7 +52,7 @@
 	<div id="upload_image_modal" class="w3-modal">
       <div class="w3-modal-content">
         <div class="w3-container">
-          <span onclick="$('#upload_image_modal').hide()" class="w3-button w3-text-teal w3-display-topright"><i class="fa fa-window-close" aria-hidden="true"></i></span>
+          <span onclick="$('#upload_image_modal').hide();$('#checkbox_img').prop('checked', false)" class="w3-button w3-text-teal w3-display-topright"><i class="fa fa-window-close" aria-hidden="true"></i></span>
           <iframe id="upload_image_modal_iframe" src="">
             <p>Your browser does not support iframes.</p>
           </iframe>
