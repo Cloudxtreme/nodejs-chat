@@ -29,9 +29,9 @@
       <button class="w3-bar-item w3-button w3-right w3-teal w3-ripple w3-hide-medium w3-hide-large" onclick="clickLogin()"><i class="fa fa-sign-out" aria-hidden="true"></i></button>
       <div class="w3-bar-item w3-right"><span class="w3-hide-small">You are </span><b><span id="nickname">client-x</span></b><span class="w3-hide-small">.</span></div>
       <div id="afk" class="w3-bar-item w3-right" style="color: green" onclick="$('#connected').toggle()"><i class="fa fa-circle" aria-hidden="true"><span class="w3-hide-small"> Connected users</span></i></div>
-	  <div class="w3-dropdown-hover w3-right" aria-haspopup="true">
+	  <div class="w3-dropdown-hover w3-right">
 	    <div class="w3-bar-item w3-hover-gray"><img src="/img/keyko.png" id="key" class="keyarea" height="20" width="20" hidden onclick="showkey()"></div>
-		<div class="w3-dropdown-content w3-bar-block w3-card-4 w3-light-gray" style="margin-top: 35px">
+		<div class="w3-dropdown-content w3-bar-block w3-card-4 w3-light-gray" style="margin-top: 35px" aria-haspopup="true">
           <button id="genkey" class="w3-bar-item w3-button" onclick="genKey()">Generate key</button>
           <button class="w3-bar-item w3-button" onclick="genKeyNode()">Get key from local server</button>
           <button class="w3-bar-item w3-button" onclick="deleteKey()">Delete key</button> 
