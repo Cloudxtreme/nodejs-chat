@@ -430,7 +430,7 @@ function displayList() {
 		} else {
 			res += '  <i class="fa fa-key keyarea" aria-hidden="true" style="display: none"></i> '
 		}
-		if (dest&&dest.name=='nickname') {
+		if (dest&&dest.name==nickname) {
 			res += '  <i class="fa fa-arrow-right" aria-hidden="true"></i> '
 		} else {
 			res += '  <i class="fa fa-arrow-right" aria-hidden="true" style="display: none"></i> '
