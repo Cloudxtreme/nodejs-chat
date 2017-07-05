@@ -674,3 +674,23 @@ function toggleMobileMenu() {
 		$('#mobile_menu .w3-dropdown-content').show()
 	}
 }
+
+// resize message bar
+function resizeMessageBar() {
+	if ($(document).width()>600) {
+		var othersWidth = 0
+		$('#chat_form').children(':visible').not('#message').each(function(){
+			othersWidth += $(this).width()
+		})
+		console.log($(document).width()+' - '+othersWidth)
+		$('#message').width($(document).width()-othersWidth-5)
+	}
+}
+
+$(document).ready(function() {
+	resizeMessageBar()
+})
+
+$(window).resize(function() {
+	resizeMessageBar()
+})
