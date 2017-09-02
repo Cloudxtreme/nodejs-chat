@@ -7,7 +7,7 @@ if (location.hostname=='localhost') {
 	port=':8000'
 }
 // connect to socket.io
-var socket = io.connect('http://'+location.hostname+port)
+var socket = io.connect('https://'+location.hostname+port)
 
 // IE
 if (!String.prototype.startsWith) {
@@ -609,7 +609,7 @@ function sendImgMobile() {
 }
 
 function uploadImage(mobile) {
-	var url = 'http://uploader-levg34.rhcloud.com/upload/'+nickname+'?token='+token
+	var url = 'https://uploader-levg34.rhcloud.com/upload/'+nickname+'?token='+token
 	if (mobile) {
 		$('#upload_image_modal_iframe').attr('src', url)
 		$('#upload_image_modal').show()
