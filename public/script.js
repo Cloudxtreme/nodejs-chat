@@ -609,7 +609,7 @@ function sendImgMobile() {
 }
 
 function uploadImage(mobile) {
-	var url = 'https://uploader-levg34.rhcloud.com/upload/'+nickname+'?token='+token
+	var url = 'https://uploader-levg34.herokuapp.com/upload/'+nickname+'?token='+token
 	if (mobile) {
 		$('#upload_image_modal_iframe').attr('src', url)
 		$('#upload_image_modal').show()
