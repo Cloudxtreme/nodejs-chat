@@ -1,5 +1,4 @@
-var server_port = process.env.OPENSHIFT_NODEJS_PORT || 8080
-var server_ip_address = process.env.OPENSHIFT_NODEJS_IP || '127.0.0.1'
+var server_port = process.env.PORT || 8080
 
 var express = require('express')
 var app = express()
@@ -95,7 +94,7 @@ app.post('/login', function (req, res) {
 // load config variables on get /conf
 app.get('/conf', function (req, res) {
 	res.setHeader('Content-Type', 'text/json')
-	res.end(JSON.stringify({server_port:server_port,server_ip_address:server_ip_address}))
+	res.end(JSON.stringify({server_port:server_port}))
 })
 
 app.post('/emit', function (req, res) {
@@ -536,6 +535,6 @@ io.sockets.on('connection', function (socket, nickname) {
 	})
 })
 
-server.listen(server_port,server_ip_address,function () {
-	console.log("Listening on " + server_ip_address + ", port " + server_port)
+server.listen(server_port,function () {
+	console.log("Listening on port " + server_port)
 })
