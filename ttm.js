@@ -5,7 +5,7 @@ var specialNicknames = []
 var knownNicknames = []
 var infoNicknames = []
 var tutorialPhase = []
-var filepath = './data/messages.log'
+var filepath = './data/SampleMessages.log'
 var messages = []
 
 function shuffle(array) {
