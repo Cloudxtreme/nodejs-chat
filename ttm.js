@@ -336,7 +336,7 @@ function answer(socket,message) {
 	} else {
 		genAnswer(socket,message)
 	}
-	//logMessage(socket.nickname,message,moment().tz("Europe/Paris").format('HH:mm'))
+	logMessage(socket.nickname,message,moment().tz("Europe/Paris").format('HH:mm'))
 }
 
 function react(socket, message) {
