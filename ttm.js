@@ -343,13 +343,18 @@ function react(socket, message) {
 	var nickname = socket.nickname
 	var reactions = shuffle(['I agree with you, '+nickname+'.','It\'s true!','I think so.',nickname+' is right.','I must disagree here, '+nickname+'.'])
 	var question = shuffle(['I do not know.','I am just a machine.','Well, '+nickname+', let me see...'])
+	var mentioned = shuffle(['My name is talktome, but you can call me ttm.','It\'s me, talktome!','Yes '+nickname+', it is my name','Yes, '+nickname+'?'])
 	if (message.indexOf('?')!=-1) {
 		sayAll(socket,question[0])
 		if (Math.random()>0.5) {
 			sayAll(socket,reactions[0])
 		}
 	} else {
-		sayAll(socket,reactions[0])
+		if (message.indexOf('ttm')!=-1 || message.indexOf('talktome')!=-1) {
+			sayAll(socket,mentioned[0])
+		} else {
+			sayAll(socket,reactions[0])
+		}
 	}
 }
 
@@ -387,7 +392,7 @@ function receive(event,data) {
 					infoNicknames.push(nickname)
 				}
 			} else {
-				if (Math.random()<0.05) {
+				if (Math.random()<0.05 || message.indexOf('ttm')!=-1 || message.indexOf('talktome')!=-1) {
 					react(socket,message)
 				}
 			}
