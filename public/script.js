@@ -3,10 +3,8 @@ if (location.hostname=='localhost') {
 	if (location.port!=''&&location.port!='80') {
 		port = ':' + location.port
 	}
-} else {
-	port=''
-	'https://'
 }
+
 // connect to socket.io
 var socket = io.connect(location.protocol+'//'+location.hostname+port)
 
