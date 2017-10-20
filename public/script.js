@@ -4,10 +4,11 @@ if (location.hostname=='localhost') {
 		port = ':' + location.port
 	}
 } else {
-	port=':8000'
+	port=''
+	'https://'
 }
 // connect to socket.io
-var socket = io.connect('http://'+location.hostname+port)
+var socket = io.connect(location.protocol+'//'+location.hostname+port)
 
 // IE
 if (!String.prototype.startsWith) {
