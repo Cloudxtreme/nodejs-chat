@@ -1,5 +1,30 @@
 var moment = require('moment-timezone')
 var fs = require('fs')
+// Firebase init
+var admin = require('firebase-admin')
+// Local init
+/*var serviceAccount = require('data/ttm-db-firebase-adminsdk.json')
+
+admin.initializeApp({
+	credential: admin.credential.cert(serviceAccount),
+	databaseURL: 'https://ttm-db.firebaseio.com'
+})*/
+// Server init
+admin.initializeApp({
+	credential: admin.credential.cert({
+		projectId: process.env.PROJECT_ID,
+		clientEmail: process.env.CLIENT_EMAIL,
+		privateKey: '-----BEGIN PRIVATE KEY-----\n'+process.env.PRIVATE_KEY+'\n-----END PRIVATE KEY-----\n'
+	}),
+	databaseURL: 'https://ttm-db.firebaseio.com'
+})
+// end of Firebase init
+// As an admin, the app has access to read and write all data, regardless of Security Rules
+var db = admin.database();
+var ref = db.ref("restricted_access/secret_document");
+ref.once("value", function(snapshot) {
+  console.log(snapshot.val());
+});
 
 var specialNicknames = []
 var knownNicknames = []
