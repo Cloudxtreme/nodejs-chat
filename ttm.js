@@ -424,3 +424,5 @@ exports.sns = setSNS
 exports.notify = receive
 exports.getMessages = getMessages
 exports.loadMessages = loadMessages
+
+exports.db = db

@@ -271,28 +271,16 @@ function logs(socket) {
 }
 
 function printTtmMessages(socket,params) {
-	var filepath = './data/messages.log';
-	if (params[0]=='reset') {
-		fs.writeFile(filepath, '', function(err) {
-			if(err) {
-				return console.log(err)
-			}
-			socket.emit('message', {nickname: 'server', message: 'ttm: ttm logs deleted.', time: moment().tz("Europe/Paris").format('HH:mm')})
+	var refMessages = ttm.db.ref("ttm/messages")
+	refMessages.once("value", function(snapshot) {
+		var messages = snapshot.val()
+		messages.forEach(function (fromMess) {
+			var from = fromMess.from
+			var message = fromMess.message
+			var time = fromMess.time
+			socket.emit('message', {nickname: from, message: message, time: time})
 		})
-	} else {
-		fs.readFile(filepath, 'utf-8', function (err, data) {
-			if (err) {
-				return console.log(err)
-			}
-			var messages = JSON.parse('[' + data.replace(/\n/g, ",").slice(0, -1) + ']')
-			messages.forEach(function (fromMess) {
-				var from = fromMess.from
-				var message = fromMess.message
-				var time = fromMess.time
-				socket.emit('message', {nickname: from, message: message, time: time})
-			})
-		})
-	}
+	})
 }
 
 function img(params,socket) {
