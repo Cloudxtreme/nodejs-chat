@@ -39,7 +39,8 @@ function shuffle(array) {
 }
 
 function logMessage(nickname,message,time) {
-	var messages_tmp = messages.slice().push({from:nickname,message:message,time:time})
+	var messages_tmp = messages.slice()
+	messages_tmp.push({from:nickname,message:message,time:time})
 	refMessages.set(messages_tmp)
 }
 
