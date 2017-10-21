@@ -2,14 +2,7 @@ var moment = require('moment-timezone')
 var fs = require('fs')
 // Firebase init
 var admin = require('firebase-admin')
-// Local init
-/*var serviceAccount = require('data/ttm-db-firebase-adminsdk.json')
 
-admin.initializeApp({
-	credential: admin.credential.cert(serviceAccount),
-	databaseURL: 'https://ttm-db.firebaseio.com'
-})*/
-// Server init
 admin.initializeApp({
 	credential: admin.credential.cert({
 		projectId: process.env.PROJECT_ID,
@@ -20,8 +13,8 @@ admin.initializeApp({
 })
 // end of Firebase init
 var db = admin.database()
-var ref = db.ref("ttm")
-ref.once("messages", function(snapshot) {
+var ref = db.ref("ttm/messages")
+ref.once("value", function(snapshot) {
   console.log(snapshot.val())
 })
 
