@@ -1,5 +1,4 @@
 var moment = require('moment-timezone')
-var fs = require('fs')
 // Firebase init
 var admin = require('firebase-admin')
 
@@ -13,10 +12,7 @@ admin.initializeApp({
 })
 // end of Firebase init
 var db = admin.database()
-var ref = db.ref("ttm/messages")
-ref.once("value", function(snapshot) {
-  console.log(snapshot.val())
-})
+var refMessages = db.ref("ttm/messages")
 
 var specialNicknames = []
 var knownNicknames = []
@@ -43,11 +39,8 @@ function shuffle(array) {
 }
 
 function logMessage(nickname,message,time) {
-	fs.appendFile(filepath, JSON.stringify({from:nickname,message:message,time:time})+'\n', function(err) {
-		if(err) {
-			return console.log(err)
-		}
-	})
+	var messages_tmp = messages.slice().push({from:nickname,message:message,time:time})
+	refMessages.set(messages_tmp)
 }
 
 function setSNS(sns) {
@@ -120,17 +113,12 @@ function genAnswer(socket,message) {
 function loadMessages() {
 	getMessages(function (_messages) {
 		messages = shuffle(_messages)
-		var ref = db.ref('ttm/messages')
-		ref.set(messages)
 	})
 }
 
 function getMessages(callback) {
-	fs.readFile(filepath, 'utf-8', function (err, data) {
-		if (err) {
-			return console.log(err)
-		}
-		callback(JSON.parse('[' + data.replace(/\n/g, ",").slice(0, -1) + ']'))
+	refMessages.once("value", function(snapshot) {
+		callback(snapshot.val())
 	})
 }
 
