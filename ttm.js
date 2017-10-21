@@ -12,14 +12,13 @@ admin.initializeApp({
 })
 // end of Firebase init
 var db = admin.database()
-var refMessages = db.ref("ttm/messages")
 
 var specialNicknames = []
 var knownNicknames = []
 var infoNicknames = []
 var tutorialPhase = []
-var filepath = './data/SampleMessages.log'
 var messages = []
+var allMessages = []
 
 function shuffle(array) {
 	var currentIndex = array.length, temporaryValue, randomIndex;
@@ -39,9 +38,9 @@ function shuffle(array) {
 }
 
 function logMessage(nickname,message,time) {
-	var messages_tmp = messages.slice()
-	messages_tmp.push({from:nickname,message:message,time:time})
-	refMessages.set(messages_tmp)
+	allMessages.push({from:nickname,message:message,time:time})
+	var refMessages = db.ref("ttm/messages")
+	refMessages.set(allMessages)
 }
 
 function setSNS(sns) {
@@ -118,7 +117,9 @@ function loadMessages() {
 }
 
 function getMessages(callback) {
+	var refMessages = db.ref("ttm/messages")
 	refMessages.once("value", function(snapshot) {
+		allMessages = snapshot.val()
 		callback(snapshot.val())
 	})
 }
@@ -335,8 +336,7 @@ function answer(socket,message) {
 			say(socket,'Great.')
 			say(socket,'Talk to me anytime!')
 		} else {
-			say(socket, 'I am learning to talk.')
-			say(socket, 'The more you talk to me, the better I will be.')
+			genAnswer(socket,message)
 		}
 		knownNicknames.push(nickname)
 	} else if (message.toLowerCase().indexOf('help')!=-1||message.toLowerCase().indexOf('question')!=-1||(message.toLowerCase().indexOf('how')!=-1&&message.toLowerCase().indexOf('to')!=-1)) {
