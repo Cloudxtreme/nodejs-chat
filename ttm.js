@@ -19,12 +19,11 @@ admin.initializeApp({
 	databaseURL: 'https://ttm-db.firebaseio.com'
 })
 // end of Firebase init
-// As an admin, the app has access to read and write all data, regardless of Security Rules
-var db = admin.database();
-var ref = db.ref("restricted_access/secret_document");
-ref.once("value", function(snapshot) {
-  console.log(snapshot.val());
-});
+var db = admin.database()
+var ref = db.ref("ttm")
+ref.once("messages", function(snapshot) {
+  console.log(snapshot.val())
+})
 
 var specialNicknames = []
 var knownNicknames = []
@@ -128,6 +127,8 @@ function genAnswer(socket,message) {
 function loadMessages() {
 	getMessages(function (_messages) {
 		messages = shuffle(_messages)
+		var ref = db.ref('ttm/messages')
+		ref.set(messages)
 	})
 }
 
