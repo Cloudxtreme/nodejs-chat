@@ -14,7 +14,7 @@ admin.initializeApp({
 	credential: admin.credential.cert({
 		projectId: process.env.PROJECT_ID,
 		clientEmail: process.env.CLIENT_EMAIL,
-		privateKey: '-----BEGIN PRIVATE KEY-----\n'+process.env.PRIVATE_KEY+'\n-----END PRIVATE KEY-----\n'
+		privateKey: process.env.PRIVATE_KEY
 	}),
 	databaseURL: 'https://ttm-db.firebaseio.com'
 })
