@@ -134,9 +134,14 @@ function genHh() {
 }
 
 function greet(socket) {
-	say(socket,'Hi '+socket.nickname+'!')
-	say(socket,'I am talktome.')
-	say(socket,'Do you need any help?')
+	var nickname = socket.nickname
+	if (specialNicknames.indexOf(nickname)==-1) {
+		say(socket,'Hi '+socket.nickname+', nice to meet you!')
+		say(socket,'I am talktome.')
+		say(socket,'Do you need any help?')
+	} else {
+		say(socket,'Welcome back '+nickname+'!')
+	}
 }
 
 function sendImage(socket,image) {
@@ -329,22 +334,23 @@ function answer(socket,message) {
 
 	if (tutorialPhase[nickname]) {
 		followTutorial(socket,message)
-	} else if (knownNicknames.indexOf(nickname)==-1) {
+	} else if (knownNicknames.indexOf(nickname)==-1&&specialNicknames.indexOf(nickname)==-1) {
 		if (message.toLowerCase().indexOf('yes')!=-1) {
 			launchTutorial(socket)
 		} else if (message.toLowerCase().indexOf('no')!=-1) {
 			say(socket,'Great.')
 			say(socket,'Talk to me anytime!')
 		} else {
-			genAnswer(socket,message)
+			say(socket,'I can only speak French.')
+			say(socket,'Parlez-moi en français.')
 		}
 		knownNicknames.push(nickname)
 	} else if (message.toLowerCase().indexOf('help')!=-1||message.toLowerCase().indexOf('question')!=-1||(message.toLowerCase().indexOf('how')!=-1&&message.toLowerCase().indexOf('to')!=-1)) {
 		launchTutorial(socket)
 	} else {
 		genAnswer(socket,message)
+		logMessage(socket.nickname,message,moment().tz("Europe/Paris").format('HH:mm'))
 	}
-	logMessage(socket.nickname,message,moment().tz("Europe/Paris").format('HH:mm'))
 }
 
 function react(socket, message) {

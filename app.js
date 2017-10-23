@@ -9,9 +9,10 @@ var fs = require('fs')
 var moment = require('moment-timezone')
 var bodyParser = require('body-parser')
 var ttm = require('./ttm')
+var db = ttm.db
 
 var allClients = []
-const specialNicknames = [{name:'levg34',password:'meuh'},{name:'madblade',password:'cuicui'},{name:'BorisG7',password:'petitbourgeois'},{name:'Remy',password:'bloup'},{name:'admin',password:'meuh'},{name:'all',locked:true},{name:'server',locked:true},{name:'talktome',locked:true},{name:'undefined',locked:true},{name:'null',locked:true}]
+const specialNicknames = [{name:'levg34',password:'7ed3e5c7d26ff0a023b2ce41de86d14b097e7474ce592d15eebbf5e955d3e889'},{name:'madblade',password:'318bcac3006722cdf32b1f13c1b0c57c97f8b399a6ed6af9c876e8d7041eda52'},{name:'BorisG7',password:'1afea2ea8c8b0418a7be27b90a4b08891039293edb749bb6c58dd4f4cd371afa'},{name:'Remy',password:'3983034f548c953fba1d793b24d3256e7beb19d8510c17365cc28112825189cb'},{name:'admin',password:'7ed3e5c7d26ff0a023b2ce41de86d14b097e7474ce592d15eebbf5e955d3e889'},{name:'all',locked:true},{name:'server',locked:true},{name:'talktome',locked:true},{name:'undefined',locked:true},{name:'null',locked:true}]
 var sns = specialNicknames.map(function (d) {
 	return d.name
 })
@@ -41,6 +42,38 @@ app.get('/', function (req, res) {
 // load login.html on get /login
 app.get('/login', function (req, res) {
 	res.sendFile(__dirname + '/view/login.html')
+})
+
+app.get('/signup', function (req, res) {
+	res.sendFile(__dirname + '/view/signup.html')
+})
+
+app.post('/signup', function (req, res) {
+	var resObject = {}
+	var body = req.body
+	var nickname = body.nickname
+	var password = body.password
+	var email = body.email
+	var admin = body.ask_admin
+	var check = true
+	if (!nickname) {
+		nickname=''
+		check = false
+	}
+	if (!password) {
+		password=''
+		check = false
+	}
+	if (check) {
+		if (email) {
+			db.ref("users").push({nickname: nickname,password: password,email: email,ask_admin: admin})
+		} else {
+			db.ref("users").push({nickname: nickname,password: password,ask_admin: admin})
+		}
+	}
+	resObject.signOK = check
+	res.json(resObject)
+	//res.redirect('/login')
 })
 
 app.post('/login', function (req, res) {

@@ -30,7 +30,7 @@ function showPassword() {
 
 function login() {
 	var nickname = $('#nickname').val()
-	var password = $('#password').val()
+	var password = sha256($('#password').val())
 	sessionStorage.nickname = nickname
 	var logObj = {nickname:nickname}
 	if (password) {
@@ -61,6 +61,13 @@ function login() {
 	xhr.open('POST', '/login', true)
 	xhr.setRequestHeader('Content-Type', 'application/json; charset=UTF-8')
 	xhr.send(JSON.stringify(logObj))
+}
+
+function signup() {
+	if ($('#nickname').val()) {
+		sessionStorage.nickname = $('#nickname').val()
+	}
+	window.location = '/signup'
 }
 
 function pressKey(e) {

@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" name="viewport" content="width=device-width, initial-scale=1">
+  <title>Sign Up to Chat</title>
+  <script src="https://code.jquery.com/jquery-1.10.1.min.js"></script>
+  <script src="/lib/sha256.min.js"></script>
+  <script src="/script_signup.js"></script>
+  <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+  <link rel="stylesheet" href="/style_login.css">
+  <link href="/img/favicon.ico" rel="icon" type="image/x-icon"/>
+</head>
+<body onload="load()">
+  <header class="w3-container w3-teal w3-center">
+    <h2>Create your account to be recognised next time !</h2>
+  </header>
+<div class="w3-container w3-quarter"></div>
+<div class="w3-container w3-half w3-margin-top">
+  <section id="login_form" class="w3-container w3-card">
+    <p><label for="nickname">Nickname</label><input id="nickname" class="w3-input" type="text" oninput="input(event)" autofocus></p>
+    <p><label for="password">Password</label><input id="password" class="w3-input" type="password" oninput="input(event)"></p>
+    <p><label for="email">Email</label><input id="email" class="w3-input" type="email" oninput="input(event)"></p>
+    <p><label for="admin"><input id="admin" class="w3-checkbox" type="checkbox"> Ask admin permissions</label></p>
+    <button id="signup_btn" onclick="signup()" class="w3-button w3-section w3-teal w3-ripple w3-green" disabled>Create account</button>
+  </section>
+</div>
+</body>
+</html>

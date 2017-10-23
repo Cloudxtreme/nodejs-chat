@@ -4,6 +4,7 @@
   <meta charset="UTF-8" name="viewport" content="width=device-width, initial-scale=1">
   <title>Login to Chat</title>
   <script src="https://code.jquery.com/jquery-1.10.1.min.js"></script>
+  <script src="/lib/sha256.min.js"></script>
   <script src="/script_login.js"></script>
   <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
   <link rel="stylesheet" href="/style_login.css">
@@ -21,6 +22,7 @@
     <label for="password" class="password" hidden>Password</label><input id="password" class="password w3-input" type="password" onkeydown="pressKey(event)" style="display: none"></p>
 	<p><label class="link" onmouseover="explain('exp_advanced')" onmouseleave="hideExplain('exp_advanced')"><input type="checkbox" class="w3-check" id="advanced" value="checkbox1"> Use advanced features.</label></p>
     <button id="login_btn" onclick="login()" class="w3-button w3-section w3-teal w3-ripple" disabled>Go to chat</button>
+    <button id="signup_btn" onclick="signup()" class="w3-button w3-section w3-green w3-ripple w3-right">Create account</button>
   </section>
 </div>
 
