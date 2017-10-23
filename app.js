@@ -59,10 +59,17 @@ app.post('/signup', function (req, res) {
 	if (!nickname) {
 		nickname=''
 		check = false
+		resObject.reason = 'Nickname required. '
 	}
 	if (!password) {
 		password=''
 		check = false
+		resObject.reason = 'Password required.'
+	}
+	if (sns.indexOf(nickname)!=-1) {
+		check = false
+		resObject.reason = 'Nickname '+nickname+' already exists, please choose another one. '
+		resObject.nickname = true
 	}
 	if (check) {
 		if (email) {

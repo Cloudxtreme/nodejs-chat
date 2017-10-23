@@ -22,11 +22,12 @@
     <label for="password" class="password" hidden>Password</label><input id="password" class="password w3-input" type="password" onkeydown="pressKey(event)" style="display: none"></p>
 	<p><label class="link" onmouseover="explain('exp_advanced')" onmouseleave="hideExplain('exp_advanced')"><input type="checkbox" class="w3-check" id="advanced" value="checkbox1"> Use advanced features.</label></p>
     <button id="login_btn" onclick="login()" class="w3-button w3-section w3-teal w3-ripple" disabled>Go to chat</button>
-    <button id="signup_btn" onclick="signup()" class="w3-button w3-section w3-green w3-ripple w3-right">Create account</button>
+    <button id="signup_btn" onclick="signup()" class="w3-button w3-section w3-green w3-ripple w3-right w3-hide-small">Create account</button>
   </section>
 </div>
 
   <section id="explainations" class="w3-container w3-margin-top w3-center">
+    <p>No account yet? <a href="#" onclick="signup()">Create one!</a></p>
     <p id="exp_pass" hidden>Click here if you have an account on nodechat.</p>
     <p id="exp_advanced" hidden>Advanced features include key generation, encrypted messages, and server commands.</p>
   </section>

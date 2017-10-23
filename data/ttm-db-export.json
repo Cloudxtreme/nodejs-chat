@@ -1360,6 +1360,102 @@
       "from" : "vulve",
       "message" : "Bien",
       "time" : "16:50"
+    }, {
+      "from" : "Orelman",
+      "message" : "Coucou",
+      "time" : "17:21"
+    }, {
+      "from" : "Orelman",
+      "message" : "On se sick ?",
+      "time" : "17:21"
+    }, {
+      "from" : "Orelman",
+      "message" : "Docking",
+      "time" : "17:21"
+    }, {
+      "from" : "Orelman",
+      "message" : "Hum &#231;a me fait fantasmer",
+      "time" : "17:21"
+    }, {
+      "from" : "cul",
+      "message" : "Je parle fran&#231;ais &#224; foison !",
+      "time" : "14:01"
+    }, {
+      "from" : "levg34",
+      "message" : "Pr&#233;sence inconnue",
+      "time" : "14:01"
+    }, {
+      "from" : "chiottes",
+      "message" : "D&#39;accord",
+      "time" : "20:23"
+    }, {
+      "from" : "chiottes",
+      "message" : "Ne t&#39;inqui&#232;tes pas",
+      "time" : "20:23"
+    }, {
+      "from" : "chiottes",
+      "message" : "Non mais oh !",
+      "time" : "20:23"
+    }, {
+      "from" : "chiottes",
+      "message" : "Je ne te permet pas",
+      "time" : "20:24"
+    }, {
+      "from" : "chiottes",
+      "message" : "Eh bien si",
+      "time" : "20:24"
+    }, {
+      "from" : "chiottes",
+      "message" : "Ah !",
+      "time" : "20:24"
+    }, {
+      "from" : "chiottes",
+      "message" : "Euh, d&#39;accord",
+      "time" : "20:24"
+    }, {
+      "from" : "chiottes",
+      "message" : "Sans doute",
+      "time" : "20:24"
+    }, {
+      "from" : "chiottes",
+      "message" : "C&#39;est dr&#244;le",
+      "time" : "20:24"
+    }, {
+      "from" : "chiottes",
+      "message" : "Oui",
+      "time" : "20:24"
     } ]
+  },
+  "users" : {
+    "-Kx8RkcOOEwBWLtPe-Q4" : {
+      "admin" : true,
+      "nickname" : "levg34",
+      "password" : "7ed3e5c7d26ff0a023b2ce41de86d14b097e7474ce592d15eebbf5e955d3e889"
+    },
+    "-Kx90HNuFc0JHeaRuTyT" : {
+      "admin" : true,
+      "nickname" : "admin",
+      "password" : "f7e74aa3c39839caff8e6dd53117938e09e0b68d07881b020d1c4be825db48df"
+    },
+    "-Kx9cJJmXhMz1m-sFqrf" : {
+      "locked" : true,
+      "nickname" : "all"
+    },
+    "-Kx9cL7A2mm8DCUCCaIY" : {
+      "locked" : true,
+      "nickname" : "server"
+    },
+    "-Kx9cirfIOORZBpVDNX6" : {
+      "locked" : true,
+      "nickname" : "talktome"
+    },
+    "-Kx9cp0_mtShYAE5Aem_" : {
+      "locked" : true,
+      "nickname" : "undefined"
+    },
+    "-Kx9cqhl2f96KnHaCZ90" : {
+      "locked" : true,
+      "nickname" : "null"
+    }
   }
 }

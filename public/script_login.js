@@ -1,6 +1,12 @@
 var old_nickname = sessionStorage.nickname
 var old_advanced = sessionStorage.advanced
+var hadpw = false
+if (sessionStorage.password) {
+	hadpw = true
+}
 sessionStorage.clear()
+
+var attempts = 3
 
 function load() {
 	if (old_nickname) {
@@ -9,6 +15,9 @@ function load() {
 	}
 	if (old_advanced) {
 		$('#advanced').prop('checked',true)
+	}
+	if (hadpw) {
+		$('#signup_btn').hide()
 	}
 }
 
@@ -22,6 +31,7 @@ function hideExplain(id) {
 
 function showPassword() {
 	$('#use_pass').hide()
+	$('#signup_btn').hide()
 	$('.password').each(function() {
 		$(this).show()
 	})
@@ -30,10 +40,11 @@ function showPassword() {
 
 function login() {
 	var nickname = $('#nickname').val()
-	var password = sha256($('#password').val())
+	var password = $('#password').val()
 	sessionStorage.nickname = nickname
 	var logObj = {nickname:nickname}
 	if (password) {
+		password = sha256(password)
 		sessionStorage.password = password
 		logObj.password = password
 	}
@@ -53,6 +64,11 @@ function login() {
 				$('#login_err').text('Server rejected your request: '+response.reason)
 				if (response.nickname) {
 					$('#nickname').val(response.nickname)
+				}
+				if (response.reason.toLowerCase().indexOf('password')!=-1) {
+					if(--attempts<=0) {
+						$('#signup_btn').show()
+					}
 				}
 				$('#password').val('')
 			}

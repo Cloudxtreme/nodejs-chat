@@ -30,9 +30,10 @@ function signup() {
 			if (response.signOK) {
 				window.location = '/login'
 			} else {
-				$('#login_err').text('Server rejected your request: '+response.reason)
+				$('#signup_err').text('Server rejected your request: '+response.reason)
 				if (response.nickname) {
-					$('#nickname').val(response.nickname)
+					$('#nickname').val('')
+					$('#signup_btn').prop('disabled',true)
 				}
 				$('#password').val('')
 			}
