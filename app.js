@@ -56,19 +56,20 @@ app.post('/signup', function (req, res) {
 	var email = body.email
 	var admin = body.ask_admin
 	var check = true
+	var reason = ''
 	if (!nickname) {
 		nickname=''
 		check = false
-		resObject.reason = 'Nickname required. '
+		reason += 'Nickname required. '
 	}
 	if (!password) {
 		password=''
 		check = false
-		resObject.reason = 'Password required.'
+		reason += 'Password required. '
 	}
 	if (sns.indexOf(nickname)!=-1) {
 		check = false
-		resObject.reason = 'Nickname '+nickname+' already exists, please choose another one. '
+		reason += 'Nickname '+nickname+' already exists, please choose another one. '
 		resObject.nickname = true
 	}
 	if (check) {
@@ -77,10 +78,11 @@ app.post('/signup', function (req, res) {
 		} else {
 			db.ref("users").push({nickname: nickname,password: password,ask_admin: admin})
 		}
+	} else {
+		resObject.reason = reason
 	}
 	resObject.signOK = check
 	res.json(resObject)
-	//res.redirect('/login')
 })
 
 app.post('/login', function (req, res) {
