@@ -12,7 +12,7 @@ var ttm = require('./ttm')
 var db = ttm.db
 
 var allClients = []
-const specialNicknames = [{name:'levg34',password:'7ed3e5c7d26ff0a023b2ce41de86d14b097e7474ce592d15eebbf5e955d3e889'},{name:'madblade',password:'318bcac3006722cdf32b1f13c1b0c57c97f8b399a6ed6af9c876e8d7041eda52'},{name:'BorisG7',password:'1afea2ea8c8b0418a7be27b90a4b08891039293edb749bb6c58dd4f4cd371afa'},{name:'Remy',password:'3983034f548c953fba1d793b24d3256e7beb19d8510c17365cc28112825189cb'},{name:'admin',password:'7ed3e5c7d26ff0a023b2ce41de86d14b097e7474ce592d15eebbf5e955d3e889'},{name:'all',locked:true},{name:'server',locked:true},{name:'talktome',locked:true},{name:'undefined',locked:true},{name:'null',locked:true}]
+var specialNicknames = [{name:'levg34',password:'7ed3e5c7d26ff0a023b2ce41de86d14b097e7474ce592d15eebbf5e955d3e889'},{name:'madblade',password:'318bcac3006722cdf32b1f13c1b0c57c97f8b399a6ed6af9c876e8d7041eda52'},{name:'BorisG7',password:'1afea2ea8c8b0418a7be27b90a4b08891039293edb749bb6c58dd4f4cd371afa'},{name:'Remy',password:'3983034f548c953fba1d793b24d3256e7beb19d8510c17365cc28112825189cb'},{name:'admin',password:'7ed3e5c7d26ff0a023b2ce41de86d14b097e7474ce592d15eebbf5e955d3e889'},{name:'all',locked:true},{name:'server',locked:true},{name:'talktome',locked:true},{name:'undefined',locked:true},{name:'null',locked:true}]
 var sns = specialNicknames.map(function (d) {
 	return d.name
 })
@@ -21,6 +21,29 @@ var admins = ['admin','levg34','madblade']
 var ops = []
 var tokens = []
 var adminTokens = []
+
+var ref = db.ref('users')
+ref.on("value", function(snapshot) {
+	var object = snapshot.val()
+	specialNicknames = []
+	admins = []
+	for (var property in object) {
+		if (object.hasOwnProperty(property)) {
+			specialNicknames.push(object[property])
+		}
+	}
+	sns = specialNicknames.map(function (d) {
+		return d.nickname
+	})
+	ttm.sns(sns)
+	specialNicknames.forEach(function(no) {
+		if (no.admin) {
+			admins.push(no.nickname)
+		}
+	})
+}, function (errorObject) {
+	console.log("The read failed: " + errorObject.code)
+})
 
 app.use(express.static(__dirname + '/public'))
 app.use(bodyParser.json())
