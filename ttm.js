@@ -20,6 +20,14 @@ var tutorialPhase = []
 var messages = []
 var allMessages = []
 
+var banned = []
+var ref = db.ref('ttm/banned')
+ref.on('value', function(snapshot) {
+	banned = snapshot.val()
+}, function (errorObject) {
+	console.log("The read failed: " + errorObject.code)
+})
+
 function shuffle(array) {
 	var currentIndex = array.length, temporaryValue, randomIndex;
 	// While there remain elements to shuffle...
@@ -348,8 +356,24 @@ function answer(socket,message) {
 	} else if (message.toLowerCase().indexOf('help')!=-1||message.toLowerCase().indexOf('question')!=-1||(message.toLowerCase().indexOf('how')!=-1&&message.toLowerCase().indexOf('to')!=-1)) {
 		launchTutorial(socket)
 	} else {
+		var log = true
+		var polisson = shuffle(['Petit polisson','Canaille','Fripouille','Chenapan','Galopin','Sacripan'])
+		var pp = 0
+		banned.forEach(function (word) {
+			if (message.indexOf(word)!=-1) {
+				say(socket, polisson[pp]+', on ne dit pas "'+word+'" !')
+				log = false
+				if (pp<polisson.length-1) {
+					pp++
+				} else {
+					pp=0
+				}
+			}
+		})
 		genAnswer(socket,message)
-		logMessage(socket.nickname,message,moment().tz("Europe/Paris").format('HH:mm'))
+		if (log) {
+			logMessage(socket.nickname,message,moment().tz("Europe/Paris").format('HH:mm'))
+		}
 	}
 }
 
