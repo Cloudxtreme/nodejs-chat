@@ -21,8 +21,8 @@ var messages = []
 var allMessages = []
 
 var banned = []
-var ref = db.ref('ttm/banned')
-ref.on('value', function(snapshot) {
+var refBanned = db.ref('ttm/banned')
+refBanned.on('value', function(snapshot) {
 	banned = snapshot.val()
 }, function (errorObject) {
 	console.log("The read failed: " + errorObject.code)
@@ -74,6 +74,11 @@ function randMessNb() {
 		++nbMess
 	}
 	return nbMess
+}
+
+function banWord(word) {
+	banned.push(word)
+	refBanned.set(banned)
 }
 
 /*function freqLetter(s) {
@@ -360,7 +365,7 @@ function answer(socket,message) {
 		var polisson = shuffle(['Petit polisson','Canaille','Fripouille','Chenapan','Galopin','Sacripan'])
 		var pp = 0
 		banned.forEach(function (word) {
-			if (message.indexOf(word)!=-1) {
+			if (message.toLowerCase().indexOf(word)!=-1) {
 				say(socket, polisson[pp]+', on ne dit pas "'+word+'" !')
 				log = false
 				if (pp<polisson.length-1) {
@@ -455,4 +460,5 @@ exports.notify = receive
 exports.getMessages = getMessages
 exports.loadMessages = loadMessages
 
+exports.banWord = banWord
 exports.db = db

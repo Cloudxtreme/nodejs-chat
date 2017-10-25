@@ -335,17 +335,35 @@ function logs(socket) {
 	})
 }
 
+function isNumber(n) {
+	return !isNaN(parseFloat(n)) && isFinite(n);
+}
+
 function printTtmMessages(socket,params) {
-	var refMessages = ttm.db.ref("ttm/messages")
-	refMessages.once("value", function(snapshot) {
-		var messages = snapshot.val()
-		messages.forEach(function (fromMess) {
-			var from = fromMess.from
-			var message = fromMess.message
-			var time = fromMess.time
-			socket.emit('message', {nickname: from, message: message, time: time})
+	if (params[0]=='reload') {
+		ttm.loadMessages()
+		return 'ttm messages reloaded.'
+	} else if (params[0]=='ban'&&params[1]) {
+		var banned = params[1]
+		ttm.banWord(banned)
+		return 'word '+banned+' banned.'
+	} else {
+		var refMessages = ttm.db.ref("ttm/messages")
+		refMessages.once("value", function(snapshot) {
+			var messages = snapshot.val()
+			if (isNumber(params[0])&&params[0]<messages.length) {
+				messages = messages.slice(Math.max(messages.length - params[0], 0))
+			} else if (!params[0]) {
+				messages = messages.slice(Math.max(messages.length - 20, 0))
+			}
+			messages.forEach(function (fromMess) {
+				var from = fromMess.from
+				var message = fromMess.message
+				var time = fromMess.time
+				socket.emit('message', {nickname: from, message: message, time: time})
+			})
 		})
-	})
+	}
 }
 
 function img(params,socket) {
@@ -402,7 +420,7 @@ function execCommand(command,params,socket) {
 			logs(socket)
 			break
 		case 'ttm':
-			printTtmMessages(socket,params)
+			res = printTtmMessages(socket,params)
 			break
 		case 'img':
 			if (params.length<1) {
