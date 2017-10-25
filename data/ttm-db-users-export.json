@@ -1,0 +1,50 @@
+{
+  "-Kx8RkcOOEwBWLtPe-Q4" : {
+    "admin" : true,
+    "nickname" : "levg34",
+    "password" : "7ed3e5c7d26ff0a023b2ce41de86d14b097e7474ce592d15eebbf5e955d3e889"
+  },
+  "-Kx90HNuFc0JHeaRuTyT" : {
+    "admin" : true,
+    "nickname" : "admin",
+    "password" : "f7e74aa3c39839caff8e6dd53117938e09e0b68d07881b020d1c4be825db48df"
+  },
+  "-Kx9cJJmXhMz1m-sFqrf" : {
+    "locked" : true,
+    "nickname" : "all"
+  },
+  "-Kx9cL7A2mm8DCUCCaIY" : {
+    "locked" : true,
+    "nickname" : "server"
+  },
+  "-Kx9cirfIOORZBpVDNX6" : {
+    "locked" : true,
+    "nickname" : "talktome"
+  },
+  "-Kx9cp0_mtShYAE5Aem_" : {
+    "locked" : true,
+    "nickname" : "undefined"
+  },
+  "-Kx9cqhl2f96KnHaCZ90" : {
+    "locked" : true,
+    "nickname" : "null"
+  },
+  "-KxDIU-TEVfw2Gq692bV" : {
+    "ask_admin" : false,
+    "email" : "aur-man@hotmail.fr",
+    "nickname" : "Orelman",
+    "password" : "92f20b975f1e34cb44fb26c57212a8d2d3415ea24da5dc6a0059e19f784d0cf2"
+  },
+  "-KxDRwetQcyfvAD3ZW9I" : {
+    "ask_admin" : false,
+    "email" : "test@levg34.fr",
+    "nickname" : "test",
+    "password" : "9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08"
+  },
+  "-KxEjyA0eRnQaMcLq8Ir" : {
+    "ask_admin" : true,
+    "email" : "remyalbert3800@gmail.com",
+    "nickname" : "Remy",
+    "password" : "c26c2c4bfc0f44cce5f4cdc2f2d5e0a0f6aa441b47134fc6545a9cffeca18495"
+  }
+}
