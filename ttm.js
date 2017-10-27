@@ -362,22 +362,27 @@ function answer(socket,message) {
 		launchTutorial(socket)
 	} else {
 		var log = true
-		var polisson = shuffle(['Petit polisson','Canaille','Fripouille','Chenapan','Galopin','Sacripan'])
-		var pp = 0
+		var polisson = shuffle(['Petit polisson','Canaille','Fripouille','Petit chenapan','Galopin','Sacripan'])
+		var sentence = polisson[0]+', on ne dit pas "'
+		var bw = 0
 		banned.forEach(function (word) {
 			if (message.toLowerCase().indexOf(word)!=-1) {
-				say(socket, polisson[pp]+', on ne dit pas "'+word+'" !')
-				log = false
-				if (pp<polisson.length-1) {
-					pp++
+				if (bw<=0) {
+					sentence += word
 				} else {
-					pp=0
+					sentence += '", ni "' + word
 				}
+				log = false
+				++bw
 			}
 		})
+		if (!log) {
+			sentence += '" !'
+			say(socket, sentence)
+		}
 		genAnswer(socket,message)
 		if (log) {
-			logMessage(socket.nickname,message,moment().tz("Europe/Paris").format('HH:mm'))
+			logMessage(socket.nickname,message.replace('Talktome', 'Monsieur').replace('talktome', 'monsieur').replace('ttm', 'mec'),moment().tz("Europe/Paris").format('HH:mm'))
 		}
 	}
 }
