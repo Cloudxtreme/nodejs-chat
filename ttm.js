@@ -63,20 +63,34 @@ function answerWikiWord(word,callback) {
 	var queryUrl = wikiQueryUrl+word
 
 	request(queryUrl, function(error, response, body){
-		console.log(body)
-		if (body&&body.query&&body.query.pages) {
-			var resPagesJSON = body.query.pages
-			var thetext = resPagesJSON[Object.keys(resPagesJSON)[0]].revisions[0]['*']
-			if (resPagesJSON["-1"]||thetext.indexOf('{{homonymie}}\n{{Autres projets')!=-1) {
+		var jbody = {}
+		try {
+			jbody = JSON.parse(body)
+		} catch (e) {
+			callback('Il y a une grosse couille dans le paté.')
+		}
+		if (jbody&&jbody.query&&jbody.query.pages) {
+			var resPagesJSON = jbody.query.pages
+			var thetext = ''
+			var ok = true
+			try {
+				thetext = resPagesJSON[Object.keys(resPagesJSON)[0]].revisions[0]['*']
+			} catch (e) {
+				//callback('Il y a une grosse couille dans le paté.')
+				ok = false
+			}
+			if (resPagesJSON["-1"]||!thetext||thetext.indexOf('{{homonymie}}\n{{Autres projets')!=-1) {
 				// get another word
 				callback('Je ne vois pas de quoi vous parlez, désolé.')
+				ok = false
 			}
 			if (thetext.indexOf('#REDIRECTION')!=-1) {
 				// follow redirection or get another word
 				callback('Je vois de quoi vous parlez, mais pouvez-vous être plus précis ?')
 				callback('Essayez par exemple de mettre le mot au singulier, ou d\'écrire le nom propre en entier.')
+				ok = false
 			}
-			callback(getSentence(thetext))
+			if (ok&&thetext) callback(getSentence(thetext))
 		} else {
 			callback('Il y a une couille dans le paté.')
 		}
