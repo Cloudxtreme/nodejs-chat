@@ -28,6 +28,7 @@
     "firebase-admin": "^5.4.2",
     "moment-timezone": "^0.5.11",
     "openpgp": "^2.3.6",
+    "request": "^2.83.0",
     "socket.io": "^1.7.2"
   }
 }

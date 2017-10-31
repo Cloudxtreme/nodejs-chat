@@ -28,6 +28,90 @@ refBanned.on('value', function(snapshot) {
 	console.log("The read failed: " + errorObject.code)
 })
 
+// wikipedia api
+var wikiQueryUrl = 'https://fr.wikipedia.org/w/api.php?action=query&prop=revisions&rvprop=content&rvsection=0&format=json&titles='
+var request = require('request')
+
+function extractText(text) {
+	var res = text
+	
+	res = res.replace(/\{(.*?)\}/g,'')
+	res = res.split('}').join('')
+	// take only the text
+	//res = res.split('}}')[res.split('}}').length-1]
+	// remove ]] and '''
+	res = res.split(']]').join('')
+	res = res.split('\'\'\'').join('')
+	// remove all text between [ and |
+	res = res.replace(/\[(.*?)\|/g,'')
+	// remove ]
+	res = res.split('[').join('')
+
+	return res
+}
+
+function getSentence(text) {
+	var etext = extractText(text).split('.')
+	var index = etext.length-2
+	while (index>=0 && etext[index].indexOf('|')!=-1) {
+		index--
+	}
+	return etext[index]
+}
+
+function answerWikiWord(word,callback) {
+	var queryUrl = wikiQueryUrl+word
+
+	request(queryUrl, function(error, response, body){
+		console.log(body)
+		if (body&&body.query&&body.query.pages) {
+			var resPagesJSON = body.query.pages
+			var thetext = resPagesJSON[Object.keys(resPagesJSON)[0]].revisions[0]['*']
+			if (resPagesJSON["-1"]||thetext.indexOf('{{homonymie}}\n{{Autres projets')!=-1) {
+				// get another word
+				callback('Je ne vois pas de quoi vous parlez, désolé.')
+			}
+			if (thetext.indexOf('#REDIRECTION')!=-1) {
+				// follow redirection or get another word
+				callback('Je vois de quoi vous parlez, mais pouvez-vous être plus précis ?')
+				callback('Essayez par exemple de mettre le mot au singulier, ou d\'écrire le nom propre en entier.')
+			}
+			callback(getSentence(thetext))
+		} else {
+			callback('Il y a une couille dans le paté.')
+		}
+	})
+}
+
+function getWordFromSentence(sentence) {
+	if (sentence.toLowerCase().indexOf('que pense')!=-1||(sentence.indexOf('pense')!=-1&&(sentence.indexOf('tu')!=-1)||sentence.indexOf('vous')!=-1)&&sentence.indexOf('?')!=-1) {
+		var splitter = ''
+		if (sentence.indexOf(' de la ')!=-1) {
+			splitter = ' de la '
+		} else if (sentence.indexOf(' des ')!=-1) {
+			splitter = ' des '
+		} else if (sentence.indexOf(' du ')!=-1) {
+			splitter = ' du '
+		} else if (sentence.indexOf(' de l\'')!=-1) {
+			splitter = ' de l\''
+		} else if (sentence.indexOf(' de ')!=-1) {
+			splitter = ' de '
+		} else {
+			return false
+		}
+		if (!splitter) {
+			return false
+		} else {
+			var tabres = sentence.split(splitter)
+			tabres.splice(0,1)
+			return tabres.join(splitter).split('?').join('').trim()
+		}
+	} else {
+		return false
+	}
+}
+// end of wikipedia api
+
 function shuffle(array) {
 	var currentIndex = array.length, temporaryValue, randomIndex;
 	// While there remain elements to shuffle...
@@ -380,7 +464,14 @@ function answer(socket,message) {
 			sentence += '" !'
 			say(socket, sentence)
 		}
-		genAnswer(socket,message)
+		if (getWordFromSentence(message)) {
+			answerWikiWord(getWordFromSentence(message),function(zeanswer) {
+				say(socket, zeanswer)
+			})
+		} else {
+			genAnswer(socket,message)
+		}
+		
 		if (log) {
 			logMessage(socket.nickname,message.replace('Talktome', 'Monsieur').replace('talktome', 'monsieur').replace('ttm', 'mec'),moment().tz("Europe/Paris").format('HH:mm'))
 		}
