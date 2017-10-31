@@ -63,9 +63,16 @@ function answerWikiWord(word,callback) {
 	var queryUrl = wikiQueryUrl+word
 
 	request(queryUrl, function(error, response, body){
-		console.log(body)
-		if (body&&body.query&&body.query.pages) {
-			var resPagesJSON = body.query.pages
+		var jbody = {}
+		
+		try {
+			jbody = JSON.parse(body)
+		} catch (e) {
+			callback('Il y a une grosse couille dans le paté.')
+		}
+		
+		if (jbody&&jbody.query&&jbody.query.pages) {
+			var resPagesJSON = jbody.query.pages
 			var thetext = resPagesJSON[Object.keys(resPagesJSON)[0]].revisions[0]['*']
 			if (resPagesJSON["-1"]||thetext.indexOf('{{homonymie}}\n{{Autres projets')!=-1) {
 				// get another word
