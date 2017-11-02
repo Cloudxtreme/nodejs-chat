@@ -87,12 +87,25 @@ function answerWikiWord(word,callback) {
 				ok = false
 			}
 			if (thetext.indexOf('#REDIRECTION')!=-1) {
-				// follow redirection or get another word
+				// get another word
 				callback('Je vois de quoi vous parlez, mais pouvez-vous être plus précis ?')
-				callback('Essayez par exemple de mettre le mot au singulier, ou d\'écrire le nom propre en entier.')
+				//callback('Essayez par exemple de mettre le mot au singulier, ou d\'écrire le nom propre en entier.')
+				
+				// follow redirection 
+				var redirect = thetext.split('#REDIRECTION [[')[1].split(']]')[0]
+				if (redirect) {
+					callback('Vous voulez peut-être parler de '+redirect)
+				}
+				
 				ok = false
 			}
-			if (ok&&thetext) callback(getSentence(thetext))
+			if (ok) {
+				if (!thetext||!getSentence(thetext)||getSentence(thetext)=='undefined') {
+					callback('Je n\'ai pas assez de connaissances sur le sujet pour me prononcer.')
+				} else {
+					callback(getSentence(thetext))
+				}
+			}
 		} else {
 			callback('Il y a une couille dans le paté.')
 		}
@@ -112,6 +125,8 @@ function getWordFromSentence(sentence) {
 			splitter = ' de l\''
 		} else if (sentence.indexOf(' de ')!=-1) {
 			splitter = ' de '
+		} else if (sentence.indexOf(' d\'')!=-1) {
+			splitter = ' d\''
 		} else {
 			return false
 		}
@@ -488,9 +503,9 @@ function answer(socket,message) {
 			genAnswer(socket,message)
 		}
 		
-		if (log) {
+		/*if (log) {
 			logMessage(socket.nickname,message.replace('Talktome', 'Monsieur').replace('talktome', 'monsieur').replace('ttm', 'mec'),moment().tz("Europe/Paris").format('HH:mm'))
-		}
+		}*/
 	}
 }
 
