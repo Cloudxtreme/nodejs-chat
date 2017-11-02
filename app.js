@@ -496,11 +496,11 @@ io.sockets.on('connection', function (socket, nickname) {
 				socket.emit('message', {nickname: 'server', message: res, time: moment().tz("Europe/Paris").format('HH:mm')})
 			}
 		} else if (to=='talktome') {
-			ttm.answer(socket,message)
+			ttm.answer(socket,data.message)
 			socket.emit('read','talktome')
 		} else if (to=='all'||!findSocket(to)) {
 			socket.broadcast.emit('message', {nickname: socket.nickname, message: message, time: moment().tz("Europe/Paris").format('HH:mm')})
-			ttm.notify('message',{socket:socket,message:message})
+			ttm.notify('message',{socket:socket,message:data.message})
 		} else {
 			findSocket(to).emit('message', {nickname: socket.nickname, message: data.message, time: moment().tz("Europe/Paris").format('HH:mm')})
 		}
