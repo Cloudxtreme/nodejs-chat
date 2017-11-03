@@ -57,7 +57,10 @@ function getSentence(text) {
 
 	etext.forEach(function (sentence) {
 		if (sentence && sentence.indexOf('|')==-1 && sentence.indexOf('<')==-1) {
-			res.push(sentence)
+			var escapedSentence = sentence.replace(/\s/g,' ')
+			if (escapedSentence.length > 10) {
+				res.push(escapedSentence)
+			}
 		}
 	})
 	
