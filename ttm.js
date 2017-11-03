@@ -62,6 +62,7 @@ function getSentence(text) {
 	})
 	
 	index = res.length-1
+	index = Math.floor(Math.random()*res.length)
 
 	return res[index]
 }
