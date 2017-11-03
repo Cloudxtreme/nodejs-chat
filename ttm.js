@@ -46,21 +46,24 @@ function extractText(text) {
 	res = res.replace(/\[(.*?)\|/g,'')
 	// remove ]
 	res = res.split('[').join('')
-	res = res.split('<ref>').join('')
-	res = res.split('</ref>').join('')
 
 	return res
 }
 
 function getSentence(text) {
-	var etext = extractText(text).split('.')
-	var index = etext.length-2
+	var etext = extractText(text).split(/\.\s/)
+	var index = 0
+	var res = []
 
-	while (index>=0 && (!etext[index] || etext[index].indexOf('|')!=-1)) {
-		index--
-	}
+	etext.forEach(function (sentence) {
+		if (sentence && sentence.indexOf('|')==-1 && sentence.indexOf('<')==-1) {
+			res.push(sentence)
+		}
+	})
 	
-	return etext[index]
+	index = res.length-1
+
+	return res[index]
 }
 
 function answerWikiWord(word,callback) {
