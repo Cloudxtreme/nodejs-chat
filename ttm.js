@@ -46,6 +46,8 @@ function extractText(text) {
 	res = res.replace(/\[(.*?)\|/g,'')
 	// remove ]
 	res = res.split('[').join('')
+	res = res.split('<ref>').join('')
+	res = res.split('</ref>').join('')
 
 	return res
 }
@@ -53,9 +55,11 @@ function extractText(text) {
 function getSentence(text) {
 	var etext = extractText(text).split('.')
 	var index = etext.length-2
-	while (index>=0 && etext[index].indexOf('|')!=-1) {
+
+	while (index>=0 && (!etext[index] || etext[index].indexOf('|')!=-1)) {
 		index--
 	}
+	
 	return etext[index]
 }
 
