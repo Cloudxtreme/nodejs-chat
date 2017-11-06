@@ -177,6 +177,11 @@ function logMessage(nickname,message,time) {
 	refMessages.set(allMessages)
 }
 
+function leaveMessage(from,to,message) {
+	var refMessages = db.ref("ttm/transmit")
+	refMessages.push({from:from,to:to,message:message,time:moment().tz("Europe/Paris").format('HH:mm')})
+}
+
 function setSNS(sns) {
 	specialNicknames=sns
 }
@@ -597,6 +602,7 @@ exports.sns = setSNS
 exports.notify = receive
 exports.getMessages = getMessages
 exports.loadMessages = loadMessages
+exports.leaveMessage = leaveMessage
 
 exports.banWord = banWord
 exports.db = db

@@ -269,22 +269,21 @@ function ban(user) {
 }
 
 function say(params) {
-	var from = params[0]
-	var message = params[1]
-	var to = params[2]
+	var from = params.shift()
+	var to = params.pop()
+	var message = params.join(' ')
 	var socket = findSocket(from)
 	if (!socket) {
 		return 'no socket corresponding to '+from+' found.'
 	}
-	if (to&&to!='all') {
-		socket = findSocket(to)
-		if (!socket) {
-			return 'no socket corresponding to '+to+' found.'
-		}
+	var socket_to = findSocket(to)
+	if (socket_to) {
 		socket.emit('message',{nickname: from, message: message, time: moment().tz("Europe/Paris").format('HH:mm')})
+		socket_to.emit('message',{nickname: from, message: message, time: moment().tz("Europe/Paris").format('HH:mm')})
 		return 'message from '+from+' sent to '+to+'.'
 	} else {
 		socket.broadcast.emit('message',{nickname: from, message: message, time: moment().tz("Europe/Paris").format('HH:mm')})
+		socket.emit('message',{nickname: from, message: message, time: moment().tz("Europe/Paris").format('HH:mm')})
 		return 'message from '+from+' sent to all.'
 	}
 }
@@ -389,6 +388,19 @@ function getAdminToken(socket) {
 	return token
 }
 
+function leaveMessage(from,to,message) {
+	var res = ''
+	if (to=='talktome') {
+		return 'talk to talktome directly!'
+	} else if (!findSocket(to)) {
+		ttm.leaveMessage(from,to,message)
+		res = 'message: "'+message+'" will be sent to '+to+' on next connection.'
+	} else {
+		res = 'message: "'+message+'" sent to '+to+'.'
+	}
+	return res
+}
+
 function execCommand(command,params,socket) {
 	var res = ''
 	switch (command) {
@@ -435,6 +447,13 @@ function execCommand(command,params,socket) {
 				res = 'admin tokens deleted.'
 			} else {
 				res = getAdminToken(socket)
+			}
+			break
+		case 'message':
+			if (params.length<2) {
+				res = 'not enough parameters.'
+			} else {
+				res = leaveMessage(socket.nickname,params.shift(),params.join(' '))
 			}
 			break
 		default:
