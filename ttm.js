@@ -532,12 +532,12 @@ function answer(socket,message) {
 		}
 		if (message.indexOf('message')!=-1&&message.indexOf(':')!=-1) {
 			var sm = message.split(':')
-			var mail = sm.pop().trim()
-			sm = sm.join(':').split(' ')
-			var to = sm.pop().trim()
+			var toa = sm.shift().split(' ')
+			var to = toa.pop().trim()
 			while (!to) {
-				to = sm.pop().trim()
+				to = toa.pop().trim()
 			}
+			var mail = sm.join(':').trim()
 			var from = socket.nickname
 			leaveMessage(from,to,mail)
 			say(socket,'Your message: "'+mail+'" will be sent to '+to+' on next connection.')
