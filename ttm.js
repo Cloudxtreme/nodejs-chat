@@ -177,10 +177,28 @@ function logMessage(nickname,message,time) {
 	refMessages.set(allMessages)
 }
 
+// leave message
+var mailbox = []
+var refMB = db.ref('ttm/transmit')
+refMB.on("value", function(snapshot) {
+	var object = snapshot.val()
+	mailbox = []
+	for (var property in object) {
+		if (object.hasOwnProperty(property)) {
+			var o = object[property]
+			o.id = property
+			mailbox.push(o)
+		}
+	}
+}, function (errorObject) {
+	console.log("The read failed: " + errorObject.code)
+})
+
 function leaveMessage(from,to,message) {
 	var refMessages = db.ref("ttm/transmit")
 	refMessages.push({from:from,to:to,message:message,time:moment().tz("Europe/Paris").format('HH:mm')})
 }
+// /leave message
 
 function setSNS(sns) {
 	specialNicknames=sns
@@ -562,6 +580,12 @@ function receive(event,data) {
 			var socket = data
 			loadMessages()
 			greet(socket)
+			mailbox.forEach(function(mail) {
+				if (socket.nickname==mail.to) {
+					say(socket,'You have a message from '+mail.from+': "'+mail.message+'".')
+					db.ref('ttm/transmit/'+mail.id).set(null)
+				}
+			})
 			break
 		case 'message':
 			var socket = data.socket

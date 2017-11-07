@@ -397,6 +397,7 @@ function leaveMessage(from,to,message) {
 		ttm.leaveMessage(from,to,message)
 		res = 'message: "'+message+'" will be sent to '+to+' on next connection.'
 	} else {
+		ttm.say(findSocket(to),'You have a message from '+from+': "'+message+'".')
 		res = 'message: "'+message+'" sent to '+to+'.'
 	}
 	return res
