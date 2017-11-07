@@ -197,6 +197,7 @@ refMB.on("value", function(snapshot) {
 function leaveMessage(from,to,message) {
 	var refMessages = db.ref("ttm/transmit")
 	refMessages.push({from:from,to:to,message:message,time:moment().tz("Europe/Paris").format('HH:mm')})
+	// say(socket,'Your message: "'+message+'" will be sent to '+to+' on next connection.') <--- no socket object
 }
 // /leave message
 
@@ -529,7 +530,18 @@ function answer(socket,message) {
 			sentence += '" !'
 			say(socket, sentence)
 		}
-		if (getWordFromSentence(message)) {
+		if (message.indexOf('message')!=-1&&message.indexOf(':')!=-1) {
+			var sm = message.split(':')
+			var mail = sm.pop().trim()
+			sm = sm.join(':').split(' ')
+			var to = sm.pop().trim()
+			while (!to) {
+				to = sm.pop().trim()
+			}
+			var from = socket.nickname
+			leaveMessage(from,to,mail)
+			say(socket,'Your message: "'+mail+'" will be sent to '+to+' on next connection.')
+		} else if (getWordFromSentence(message)) {
 			answerWikiWord(getWordFromSentence(message),function(zeanswer) {
 				say(socket, zeanswer)
 			})
