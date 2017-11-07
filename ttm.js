@@ -540,7 +540,7 @@ function answer(socket,message) {
 			var mail = sm.join(':').trim()
 			var from = socket.nickname
 			leaveMessage(from,to,mail)
-			say(socket,'Your message: "'+mail+'" will be sent to '+to+' on next connection.')
+			say(socket,'I will send your message ("'+mail+'") to '+to+' on next connection.')
 		} else if (getWordFromSentence(message)) {
 			answerWikiWord(getWordFromSentence(message),function(zeanswer) {
 				say(socket, zeanswer)
