@@ -282,6 +282,7 @@ function say(params) {
 		socket_to.emit('message',{nickname: from, message: message, time: moment().tz("Europe/Paris").format('HH:mm')})
 		return 'message from '+from+' sent to '+to+'.'
 	} else {
+		message = message+' '+to
 		socket.broadcast.emit('message',{nickname: from, message: message, time: moment().tz("Europe/Paris").format('HH:mm')})
 		socket.emit('message',{nickname: from, message: message, time: moment().tz("Europe/Paris").format('HH:mm')})
 		return 'message from '+from+' sent to all.'
