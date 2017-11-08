@@ -29,7 +29,7 @@ refBanned.on('value', function(snapshot) {
 })
 
 // wikipedia api
-var wikiQueryUrl = 'https://fr.wikipedia.org/w/api.php?action=query&prop=revisions&rvprop=content&rvsection=0&format=json&titles='
+var wikiQueryUrl = 'https://fr.wikipedia.org/w/api.php?action=query&prop=revisions&rvprop=content&format=json&titles='
 var request = require('request')
 
 function extractText(text) {
