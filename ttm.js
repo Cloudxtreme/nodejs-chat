@@ -546,6 +546,7 @@ function answer(socket,message) {
 		} else if (getWordFromSentence(message)) {
 			answerWikiWord(getWordFromSentence(message),function(zeanswer) {
 				say(socket, zeanswer)
+				logMessage('talktome',zeanswer,moment().tz("Europe/Paris").format('HH:mm'))
 			})
 		} else {
 			genAnswer(socket,message)
