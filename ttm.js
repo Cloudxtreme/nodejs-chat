@@ -97,17 +97,22 @@ function answerWikiWord(word,callback) {
 				callback('Je ne vois pas de quoi vous parlez, désolé.')
 				ok = false
 			}
-			if (thetext.indexOf('#REDIRECT')!=-1) {
+			if (thetext.toLowerCase().indexOf('#redirect')!=-1) {
 				// get another word
 				callback('Je vois de quoi vous parlez, mais pouvez-vous être plus précis ?')
 				//callback('Essayez par exemple de mettre le mot au singulier, ou d\'écrire le nom propre en entier.')
 				
 				// follow redirection 
-				var redirect = thetext.split('#REDIRECT [[')[1].split(']]')[0]
-				if (redirect) {
-					callback('Vous voulez peut-être parler de '+redirect)
-				}
-				
+				var redirText = ['redirect','redirection','REDIRECT','REDIRECTION']
+				redirText.forEach(function(rdrTxt){
+					var redirect = thetext.split('#'+rdrTxt+' [[')[1]
+					if (redirect) {
+						redirect = redirect.split(']]')[0]
+						if (redirect) {
+							callback('Vous voulez peut-être parler de '+redirect)
+						}
+					}
+				})
 				ok = false
 			}
 			if (ok) {
