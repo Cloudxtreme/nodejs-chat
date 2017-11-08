@@ -97,13 +97,13 @@ function answerWikiWord(word,callback) {
 				callback('Je ne vois pas de quoi vous parlez, désolé.')
 				ok = false
 			}
-			if (thetext.indexOf('#REDIRECTION')!=-1) {
+			if (thetext.indexOf('#REDIRECT')!=-1) {
 				// get another word
 				callback('Je vois de quoi vous parlez, mais pouvez-vous être plus précis ?')
 				//callback('Essayez par exemple de mettre le mot au singulier, ou d\'écrire le nom propre en entier.')
 				
 				// follow redirection 
-				var redirect = thetext.split('#REDIRECTION [[')[1].split(']]')[0]
+				var redirect = thetext.split('#REDIRECT [[')[1].split(']]')[0]
 				if (redirect) {
 					callback('Vous voulez peut-être parler de '+redirect)
 				}
