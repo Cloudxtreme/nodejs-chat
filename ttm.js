@@ -103,16 +103,13 @@ function answerWikiWord(word,callback) {
 				//callback('Essayez par exemple de mettre le mot au singulier, ou d\'écrire le nom propre en entier.')
 				
 				// follow redirection 
-				var redirText = ['redirect','redirection','REDIRECT','REDIRECTION']
-				redirText.forEach(function(rdrTxt){
-					var redirect = thetext.split('#'+rdrTxt+' [[')[1]
+				var redirect = thetext.split('[[')[1]
+				if (redirect) {
+					redirect = redirect.split(']]')[0]
 					if (redirect) {
-						redirect = redirect.split(']]')[0]
-						if (redirect) {
-							callback('Vous voulez peut-être parler de '+redirect)
-						}
+						callback('Vous voulez peut-être parler de '+redirect)
 					}
-				})
+				}
 				ok = false
 			}
 			if (ok) {
