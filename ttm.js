@@ -35,17 +35,23 @@ var request = require('request')
 function extractText(text) {
 	var res = text
 	
+	// pre-process
 	res = res.replace(/\{(.*?)\}/g,'')
 	res = res.split('}').join('')
-	// take only the text
-	//res = res.split('}}')[res.split('}}').length-1]
-	// remove ]] and '''
-	res = res.split(']]').join('')
-	res = res.split('\'\'\'').join('')
-	// remove all text between [ and |
-	res = res.replace(/\[(.*?)\|/g,'')
-	// remove ]
+
+	// get all [[ x | y ]]
+	var matched = res.match(/\[\[(.*?)\]\]/g);
+	
+	// replace [[ x | y ]] with content
+	var id = 0;
+	res = res.replace(/\[\[(.*?)\]\]/g,_=>matched[id++].split('[[').join('').split(']]').join('').replace(/(.*?)\|/g,''));
+
+	// post-process
+	res = res.split('\'\'\'').join('');
 	res = res.split('[').join('')
+	res = res.split('=').join('')
+	res = res.split('*').join('.')
+	//res = res.split(' ;').join('.')
 
 	return res
 }
@@ -67,7 +73,7 @@ function getSentence(text) {
 	index = res.length-1
 	index = Math.floor(Math.random()*res.length)
 
-	return res[index]
+	return res[index].trim()
 }
 
 function answerWikiWord(word,callback) {
