@@ -50,7 +50,7 @@ function extractText(text) {
 	res = res.split('\'\'\'').join('');
 	res = res.split('[').join('')
 	res = res.split('=').join('')
-	res = res.split('*').join('.')
+	res = res.split('*').join('. ')
 	//res = res.split(' ;').join('.')
 
 	return res
