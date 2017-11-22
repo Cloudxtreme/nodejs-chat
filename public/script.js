@@ -31,7 +31,15 @@ cmd.push('')
 var lc = 0
 var afk = false
 var token=''
-var sound = 'off'
+
+var soundStates = ['off','up','commenting']
+if (sessionStorage.sound) {
+	var index = soundStates.indexOf(sessionStorage.sound)
+	if (index!=-1) {
+		var volume = soundStates[index]
+		setVolumeIcon(volume)
+	}
+}
 
 if (!nickname) {
 	window.location = '/login'
@@ -80,11 +88,16 @@ function displayMessage(data) {
 	} else {
 		insertMessage(data.nickname, data.message, data.time, false, data.secured)
 	}
+	var sound = soundFromIcon()
 	if (sound==='up') {
 		nmsound.play()
 	} else if (sound==='commenting') {
-		//TODO TTS
-		ahsound.play()
+		if ('speechSynthesis' in window) {
+			var msg = new SpeechSynthesisUtterance(decodeHTML(data.message))
+			window.speechSynthesis.speak(msg)
+		} else {
+			ahsound.play()
+		}
 	}
 	// read
 	if (document.hasFocus()) {
@@ -111,11 +124,16 @@ socket.on('new_client', function(nickname) {
 	document.title = nickname + ': joined in.'
 	messageFromServer(nickname + ' joined in.')
 	addToList({nickname: nickname})
+	var sound = soundFromIcon()
 	if (sound==='up') {
 		loginsound.play()
 	} else if (sound==='commenting') {
-		//TODO TTS
-		ahsound.play()
+		if ('speechSynthesis' in window) {
+			var msg = new SpeechSynthesisUtterance(nickname + ' joined in.')
+			window.speechSynthesis.speak(msg)
+		} else {
+			loginsound.play()
+		}
 	}
 })
 
@@ -124,11 +142,16 @@ socket.on('client_left', function(nickname) {
 	document.title = nickname + ': left the chat.'
 	messageFromServer(nickname + ' left the chat.')
 	removeFromList(nickname)
+	var sound = soundFromIcon()
 	if (sound==='up') {
 		logoutsound.play()
 	} else if (sound==='commenting') {
-		//TODO TTS
-		ahsound.play()
+		if ('speechSynthesis' in window) {
+			var msg = new SpeechSynthesisUtterance(nickname + ' left the chat.')
+			window.speechSynthesis.speak(msg)
+		} else {
+			logoutsound.play()
+		}
 	}
 	if (nickname==dest.name) {
 		selectConnected('all')
@@ -694,21 +717,57 @@ function toggleMobileMenu() {
 }
 
 // sound
-function clickVolume() {
-	//var states = ['off','up','commenting']
+function setVolumeIcon(volume) {
 	var volIcon = $('#volume_icon')
-	//$('#volume_icon').attr('class').split(/\s+/)
-	if (volIcon.attr('class').indexOf('up')!=-1) {
-		volIcon.removeClass('fa-volume-up')
-		sound = 'commenting'
-		volIcon.addClass('fa-commenting')
-	} else if (volIcon.attr('class').indexOf('commenting')!=-1) {
-		volIcon.removeClass('fa-commenting')
-		sound = 'off'
-		volIcon.addClass('fa-volume-off')
-	} else {
-		volIcon.removeClass('fa-volume-off')
-		sound = 'up'
-		volIcon.addClass('fa-volume-up')
+	
+	switch (soundFromIcon()) {
+		case 'up':
+			volIcon.removeClass('fa-volume-up')
+			break
+		case 'off':
+			volIcon.removeClass('fa-volume-off')
+			break
+		case 'commenting':
+			volIcon.removeClass('fa-commenting')
+			break
 	}
+	
+	switch (volume) {
+		case 'up':
+			volIcon.addClass('fa-volume-up')
+			break
+		case 'off':
+			volIcon.addClass('fa-volume-off')
+			break
+		case 'commenting':
+			volIcon.addClass('fa-commenting')
+			break
+	}
+}
+
+function soundFromIcon() {
+	var volIcon = $('#volume_icon')
+	var res = 'off'
+	
+	soundStates.forEach(function(state) {
+		if (volIcon.attr('class').indexOf(state)!=-1) {
+			res = state
+		}
+	})
+	
+	return res
+}
+
+function clickVolume() {
+	var sound = soundFromIcon()
+	var index = soundStates.indexOf(sound)
+	if (index!=-1) {
+		sound = soundStates[(index+1)%3]
+	}
+	setVolumeIcon(sound)
+	sessionStorage.sound = sound
+}
+
+function decodeHTML(text) {
+	return $('<textarea/>').html(text).text()
 }
