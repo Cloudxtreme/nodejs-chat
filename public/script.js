@@ -31,6 +31,7 @@ cmd.push('')
 var lc = 0
 var afk = false
 var token=''
+var sound = 'off'
 
 if (!nickname) {
 	window.location = '/login'
@@ -50,6 +51,8 @@ if (sessionStorage.advanced) {
 		$('#key').attr('src','/img/keyok.png')
 		socket.emit('pubkey',pubkey)
 	}
+} else {
+	$('.keyarea').hide()
 }
 
 var list = []
@@ -58,6 +61,7 @@ var toRead = []
 var nmsound = new Audio('./audio/new_message.mp3')
 var loginsound = new Audio('./audio/signin.mp3')
 var logoutsound = new Audio('./audio/signout.mp3')
+var ahsound = new Audio('./audio/ah.mp3')
 
 // if server requests a change in the nickname
 socket.on('set_nickname', function(new_nickname){
@@ -76,7 +80,12 @@ function displayMessage(data) {
 	} else {
 		insertMessage(data.nickname, data.message, data.time, false, data.secured)
 	}
-	nmsound.play()
+	if (sound==='up') {
+		nmsound.play()
+	} else if (sound==='commenting') {
+		//TODO TTS
+		ahsound.play()
+	}
 	// read
 	if (document.hasFocus()) {
 		socket.emit('read',data.nickname)
@@ -102,7 +111,12 @@ socket.on('new_client', function(nickname) {
 	document.title = nickname + ': joined in.'
 	messageFromServer(nickname + ' joined in.')
 	addToList({nickname: nickname})
-	loginsound.play()
+	if (sound==='up') {
+		loginsound.play()
+	} else if (sound==='commenting') {
+		//TODO TTS
+		ahsound.play()
+	}
 })
 
 // display info when a client lefts
@@ -110,7 +124,12 @@ socket.on('client_left', function(nickname) {
 	document.title = nickname + ': left the chat.'
 	messageFromServer(nickname + ' left the chat.')
 	removeFromList(nickname)
-	logoutsound.play()
+	if (sound==='up') {
+		logoutsound.play()
+	} else if (sound==='commenting') {
+		//TODO TTS
+		ahsound.play()
+	}
 	if (nickname==dest.name) {
 		selectConnected('all')
 	}
@@ -671,5 +690,25 @@ function toggleMobileMenu() {
 		$('#mobile_menu .w3-dropdown-content').hide()
 	} else {
 		$('#mobile_menu .w3-dropdown-content').show()
+	}
+}
+
+// sound
+function clickVolume() {
+	//var states = ['off','up','commenting']
+	var volIcon = $('#volume_icon')
+	//$('#volume_icon').attr('class').split(/\s+/)
+	if (volIcon.attr('class').indexOf('up')!=-1) {
+		volIcon.removeClass('fa-volume-up')
+		sound = 'commenting'
+		volIcon.addClass('fa-commenting')
+	} else if (volIcon.attr('class').indexOf('commenting')!=-1) {
+		volIcon.removeClass('fa-commenting')
+		sound = 'off'
+		volIcon.addClass('fa-volume-off')
+	} else {
+		volIcon.removeClass('fa-volume-off')
+		sound = 'up'
+		volIcon.addClass('fa-volume-up')
 	}
 }
