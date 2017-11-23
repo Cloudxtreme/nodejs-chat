@@ -40,6 +40,7 @@ if (sessionStorage.sound) {
 		setVolumeIcon(volume)
 	}
 }
+var selectedVoice = ''
 
 if (!nickname) {
 	window.location = '/login'
@@ -80,6 +81,14 @@ socket.on('set_nickname', function(new_nickname){
 	sessionStorage.password = ''
 })
 
+function sayAloud(text) {
+	var msg = new SpeechSynthesisUtterance(text)
+	if (findVoice(selectedVoice)) {
+		msg.voice = findVoice(selectedVoice)
+	}
+	window.speechSynthesis.speak(msg)
+}
+
 // insert message in page upon reception
 function displayMessage(data) {
 	document.title = data.nickname + ': new message!'
@@ -93,8 +102,7 @@ function displayMessage(data) {
 		nmsound.play()
 	} else if (sound==='commenting') {
 		if ('speechSynthesis' in window) {
-			var msg = new SpeechSynthesisUtterance(decodeHTML(data.message))
-			window.speechSynthesis.speak(msg)
+			sayAloud(decodeHTML(data.message))
 		} else {
 			ahsound.play()
 		}
@@ -129,8 +137,7 @@ socket.on('new_client', function(nickname) {
 		loginsound.play()
 	} else if (sound==='commenting') {
 		if ('speechSynthesis' in window) {
-			var msg = new SpeechSynthesisUtterance(nickname + ' joined in.')
-			window.speechSynthesis.speak(msg)
+			sayAloud(nickname + ' joined in.')
 		} else {
 			loginsound.play()
 		}
@@ -147,8 +154,7 @@ socket.on('client_left', function(nickname) {
 		logoutsound.play()
 	} else if (sound==='commenting') {
 		if ('speechSynthesis' in window) {
-			var msg = new SpeechSynthesisUtterance(nickname + ' left the chat.')
-			window.speechSynthesis.speak(msg)
+			sayAloud(nickname + ' left the chat.')
 		} else {
 			logoutsound.play()
 		}
@@ -765,9 +771,41 @@ function clickVolume() {
 		sound = soundStates[(index+1)%3]
 	}
 	setVolumeIcon(sound)
+	if ('speechSynthesis' in window && sound==='commenting') {
+		loadVoices()
+		$('#tts_voice_modal').show()
+	}
 	sessionStorage.sound = sound
 }
 
 function decodeHTML(text) {
 	return $('<textarea/>').html(text).text()
+}
+
+function loadVoices() {
+	if ('speechSynthesis' in window && $('#select_voices').find('option').length < 2) {
+		var allVoices = window.speechSynthesis.getVoices()
+		$('#select_voices').find('option').remove()
+		$('#select_voices').append('<option value="">Select voice</option>')
+		allVoices.forEach(function(voice) {
+			$('#select_voices').append('<option value="'+voice.voiceURI+'">'+voice.name+'</option>')
+		})
+	}
+}
+
+$('#select_voices').change(function() {
+	selectedVoice = $('#select_voices option:selected').val()
+	$('#tts_voice_modal').hide()
+})
+
+loadVoices()
+
+function findVoice(voice) {
+	var allVoices = window.speechSynthesis.getVoices()
+	var index = allVoices.map(function(e) {
+		return e.voiceURI
+	}).indexOf(voice)
+	if (index!==-1) {
+		return allVoices[index]
+	}
 }
