@@ -32,6 +32,7 @@ var lc = 0
 var afk = false
 var token=''
 var translate = [{lang:'fr',image:'Vous avez reçu une image.',join:' a rejoint le tchat.',quit:' a quitté le tchat.'},{lang:'en',image:'You have received a picture.',join:' joined in.',quit:' left the chat.'},{lang:'de',image:'Sie haben ein Bild erhalten.',join:' ist dem Chat beigetreten.',quit:' verließ den Chat.'},{lang:'es',image:'Usted ha recibido una imagen.',join:' se unió a la charla.',quit:' dejó la conversación.'},{lang:'ja',image:'写真を受け取りました。',join:'がチャットに参加しました。',quit:'はチャットを辞めました。'}]
+var ttsVolume = 1
 
 var soundStates = ['off','up','commenting']
 /*if (sessionStorage.sound) {
@@ -88,6 +89,7 @@ function sayAloud(text) {
 	var msg = new SpeechSynthesisUtterance(text)
 	if (findVoice(selectedVoice)) {
 		msg.voice = findVoice(selectedVoice)
+		msg.volume = ttsVolume
 	}
 	window.speechSynthesis.speak(msg)
 }
@@ -821,6 +823,10 @@ function loadVoices() {
 $('#select_voices').change(function() {
 	selectedVoice = $('#select_voices option:selected').val()
 	$('#tts_voice_modal').hide()
+})
+
+$('#volume_voice').change(function() {
+	ttsVolume = $('#volume_voice').val()/10
 })
 
 loadVoices()
