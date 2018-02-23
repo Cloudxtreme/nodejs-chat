@@ -31,16 +31,18 @@ cmd.push('')
 var lc = 0
 var afk = false
 var token=''
-var translate = [{lang:'fr',image:'Vous avez reçu une image.'},{lang:'en',image:'You have received a picture.'},{lang:'de',image:'Sie haben ein Bild erhalten.'},{lang:'es',image:'Usted ha recibido una imagen.'},{lang:'ja',image:'写真を受け取りました。'}]
+var translate = [{lang:'fr',image:'Vous avez reçu une image.',join:' a rejoint le tchat.',quit:' a quitté le tchat.'},{lang:'en',image:'You have received a picture.',join:' joined in.',quit:' left the chat.'},{lang:'de',image:'Sie haben ein Bild erhalten.',join:' ist dem Chat beigetreten.',quit:' verließ den Chat.'},{lang:'es',image:'Usted ha recibido una imagen.',join:' se unió a la charla.',quit:' dejó la conversación.'},{lang:'ja',image:'写真を受け取りました。',join:'がチャットに参加しました。',quit:'はチャットを辞めました。'}]
 
 var soundStates = ['off','up','commenting']
-if (sessionStorage.sound) {
+/*if (sessionStorage.sound) {
 	var index = soundStates.indexOf(sessionStorage.sound)
 	if (index!=-1) {
 		var volume = soundStates[index]
 		setVolumeIcon(volume)
 	}
 }
+TODO: restore selectedVoice as well
+*/
 var selectedVoice = ''
 
 if (!nickname) {
@@ -148,7 +150,13 @@ socket.on('new_client', function(nickname) {
 		loginsound.play()
 	} else if (sound==='commenting') {
 		if ('speechSynthesis' in window) {
-			sayAloud(nickname + ' joined in.')
+			var joinedIn = ' joined in.'
+			translate.forEach(function(le) {
+				if (findVoice(selectedVoice)&&findVoice(selectedVoice).lang.indexOf(le.lang)!=-1&&le.join) {
+					joinedIn = le.join
+				}
+			})
+			sayAloud(nickname + joinedIn)
 		} else {
 			loginsound.play()
 		}
@@ -165,7 +173,13 @@ socket.on('client_left', function(nickname) {
 		logoutsound.play()
 	} else if (sound==='commenting') {
 		if ('speechSynthesis' in window) {
-			sayAloud(nickname + ' left the chat.')
+			var leftChat = ' left the chat.'
+			translate.forEach(function(le) {
+				if (findVoice(selectedVoice)&&findVoice(selectedVoice).lang.indexOf(le.lang)!=-1&&le.quit) {
+					leftChat = le.quit
+				}
+			})
+			sayAloud(nickname + leftChat)
 		} else {
 			logoutsound.play()
 		}
