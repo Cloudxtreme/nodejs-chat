@@ -31,6 +31,7 @@ cmd.push('')
 var lc = 0
 var afk = false
 var token=''
+var translate = [{lang:'fr',image:'Vous avez reçu une image.'},{lang:'en',image:'You received an image.'}]
 
 var soundStates = ['off','up','commenting']
 if (sessionStorage.sound) {
@@ -103,7 +104,13 @@ function displayMessage(data) {
 	} else if (sound==='commenting') {
 		if ('speechSynthesis' in window) {
 			if (data.image) {
-				sayAloud('image')
+				var sayImage = 'image'
+				translate.forEach(function(le) {
+					if (findVoice(selectedVoice)&&findVoice(selectedVoice).lang.indexof(le.lang)!=-1) {
+						sayImage = le.image
+					}
+				})
+				sayAloud(sayImage)
 			} else {
 				sayAloud(decodeHTML(data.message))
 			}
