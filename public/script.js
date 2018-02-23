@@ -31,7 +31,7 @@ cmd.push('')
 var lc = 0
 var afk = false
 var token=''
-var translate = [{lang:'fr',image:'Vous avez reçu une image.'},{lang:'en',image:'You received an image.'}]
+var translate = [{lang:'fr',image:'Vous avez reçu une image.'},{lang:'en',image:'You have received a picture.'},{lang:'de',image:'Sie haben ein Bild erhalten.'},{lang:'es',image:'Usted ha recibido una imagen.'},{lang:'ja',image:'写真を受け取りました。'}]
 
 var soundStates = ['off','up','commenting']
 if (sessionStorage.sound) {
@@ -106,7 +106,7 @@ function displayMessage(data) {
 			if (data.image) {
 				var sayImage = 'image'
 				translate.forEach(function(le) {
-					if (findVoice(selectedVoice)&&findVoice(selectedVoice).lang.indexof(le.lang)!=-1) {
+					if (findVoice(selectedVoice)&&findVoice(selectedVoice).lang.indexOf(le.lang)!=-1) {
 						sayImage = le.image
 					}
 				})
