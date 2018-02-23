@@ -89,8 +89,8 @@ function sayAloud(text) {
 	var msg = new SpeechSynthesisUtterance(text)
 	if (findVoice(selectedVoice)) {
 		msg.voice = findVoice(selectedVoice)
-		msg.volume = ttsVolume
 	}
+	msg.volume = ttsVolume
 	window.speechSynthesis.speak(msg)
 }
 
