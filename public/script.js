@@ -102,7 +102,11 @@ function displayMessage(data) {
 		nmsound.play()
 	} else if (sound==='commenting') {
 		if ('speechSynthesis' in window) {
-			sayAloud(decodeHTML(data.message))
+			if (data.image) {
+				sayAloud('image')
+			} else {
+				sayAloud(decodeHTML(data.message))
+			}
 		} else {
 			ahsound.play()
 		}
