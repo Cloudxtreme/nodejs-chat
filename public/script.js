@@ -31,7 +31,7 @@ cmd.push('')
 var lc = 0
 var afk = false
 var token=''
-var translate = [{lang:'fr',image:'Vous avez reçu une image.',join:' a rejoint le tchat.',quit:' a quitté le tchat.'},{lang:'en',image:'You have received a picture.',join:' joined in.',quit:' left the chat.'},{lang:'de',image:'Sie haben ein Bild erhalten.',join:' ist dem Chat beigetreten.',quit:' verließ den Chat.'},{lang:'es',image:'Usted ha recibido una imagen.',join:' se unió a la charla.',quit:' dejó la conversación.'},{lang:'ja',image:'写真を受け取りました。',join:'がチャットに参加しました。',quit:'はチャットを辞めました。'}]
+var translate = [{lang:'fr',image:'Vous avez reçu une image.',join:' a rejoint le tchat.',quit:' a quitté le tchat.',panic:' a paniqué.'},{lang:'en',image:'You have received a picture.',join:' joined in.',quit:' left the chat.',panic:' panicked.'},{lang:'de',image:'Sie haben ein Bild erhalten.',join:' ist dem Chat beigetreten.',quit:' verließ den Chat.',panic:' geriet in Panik.'},{lang:'es',image:'Usted ha recibido una imagen.',join:' se unió a la charla.',quit:' dejó la conversación.',panic:' entró en pánico.'},{lang:'ja',image:'写真を受け取りました。',join:'がチャットに参加しました。',quit:'はチャットを辞めました。',panic:'はパニックになった。'}]
 var ttsVolume = 1
 
 var soundStates = ['off','up','commenting']
@@ -75,6 +75,7 @@ var nmsound = new Audio('./audio/new_message.mp3')
 var loginsound = new Audio('./audio/signin.mp3')
 var logoutsound = new Audio('./audio/signout.mp3')
 var ahsound = new Audio('./audio/ah.mp3')
+var panicsound = ahsound
 
 // if server requests a change in the nickname
 socket.on('set_nickname', function(new_nickname){
@@ -840,3 +841,30 @@ function findVoice(voice) {
 		return allVoices[index]
 	}
 }
+
+// panic
+function panic() {
+	socket.emit('panic')
+	socket.disconnect()
+	location = 'https://google.fr'
+}
+
+socket.on('panic', function(nickname) {
+	messageFromServer(nickname+' panicked.')
+	var sound = soundFromIcon()
+	if (sound==='up') {
+		panicsound.play()
+	} else if (sound==='commenting') {
+		if ('speechSynthesis' in window) {
+			var panicked = ' panicked.'
+			translate.forEach(function(le) {
+				if (findVoice(selectedVoice)&&findVoice(selectedVoice).lang.indexOf(le.lang)!=-1&&le.panic) {
+					panicked = le.join
+				}
+			})
+			sayAloud(nickname + panicked)
+		} else {
+			loginsound.play()
+		}
+	}
+})

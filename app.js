@@ -625,6 +625,10 @@ io.sockets.on('connection', function (socket, nickname) {
 			dest_socket.emit('read',socket.nickname)
 		}
 	})
+	
+	socket.on('panic', function (is_afk) {
+		socket.broadcast.emit('panic',socket.nickname)
+	})
 })
 
 server.listen(server_port,function () {
