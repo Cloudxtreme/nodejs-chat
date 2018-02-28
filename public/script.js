@@ -859,7 +859,7 @@ socket.on('panic', function(nickname) {
 			var panicked = ' panicked.'
 			translate.forEach(function(le) {
 				if (findVoice(selectedVoice)&&findVoice(selectedVoice).lang.indexOf(le.lang)!=-1&&le.panic) {
-					panicked = le.join
+					panicked = le.panic
 				}
 			})
 			sayAloud(nickname + panicked)
