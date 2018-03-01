@@ -45,6 +45,7 @@ var soundStates = ['off','up','commenting']
 TODO: restore selectedVoice as well
 */
 var selectedVoice = ''
+$('#readAloud_button').hide()
 
 if (!nickname) {
 	window.location = '/login'
@@ -802,6 +803,9 @@ function clickVolume() {
 	if ('speechSynthesis' in window && sound==='commenting') {
 		loadVoices()
 		$('#tts_voice_modal').show()
+		$('#readAloud_button').show()
+	} else {
+		$('#readAloud_button').hide()
 	}
 	sessionStorage.sound = sound
 }
@@ -839,6 +843,22 @@ function findVoice(voice) {
 	}).indexOf(voice)
 	if (index!==-1) {
 		return allVoices[index]
+	}
+}
+
+function readAloud() {
+	var sound = soundFromIcon()
+	if (sound==='up') {
+		ahsound.play()
+	} else if (sound==='commenting') {
+		if ('speechSynthesis' in window) {
+			sayAloud($('#message').val())
+		} else {
+			ahsound.play()
+			$('#readAloud_button').hide()
+		}
+	} else {
+		$('#readAloud_button').hide()
 	}
 }
 
