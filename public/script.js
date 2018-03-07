@@ -76,7 +76,7 @@ var nmsound = new Audio('./audio/new_message.mp3')
 var loginsound = new Audio('./audio/signin.mp3')
 var logoutsound = new Audio('./audio/signout.mp3')
 var ahsound = new Audio('./audio/ah.mp3')
-var panicsound = ahsound
+var panicsound = new Audio('./audio/ah.mp3')
 
 // if server requests a change in the nickname
 socket.on('set_nickname', function(new_nickname){
@@ -299,6 +299,12 @@ function sendImage(image) {
 function sendMessage(message) {
 	// send message to others
 	socket.emit('message', {message: message, to: dest.name})
+	// read it if wanted
+	var checked = $('#checkbox_readAloud').is(':checked')
+	var sound = soundFromIcon()
+	if (checked && sound==='commenting') {
+		readAloud()
+	}
 	// if command, store
 	if (message.startsWith('/')) {
 		lc = cmd.length
@@ -884,7 +890,7 @@ socket.on('panic', function(nickname) {
 			})
 			sayAloud(nickname + panicked)
 		} else {
-			loginsound.play()
+			panicsound.play()
 		}
 	}
 })
