@@ -31,7 +31,7 @@ cmd.push('')
 var lc = 0
 var afk = false
 var token=''
-var translate = [{lang:'fr',image:'Vous avez reçu une image.',join:' a rejoint le tchat.',quit:' a quitté le tchat.',panic:' a paniqué.'},{lang:'en',image:'You have received a picture.',join:' joined in.',quit:' left the chat.',panic:' panicked.'},{lang:'de',image:'Sie haben ein Bild erhalten.',join:' ist dem Chat beigetreten.',quit:' verließ den Chat.',panic:' geriet in Panik.'},{lang:'es',image:'Usted ha recibido una imagen.',join:' se unió a la charla.',quit:' dejó la conversación.',panic:' entró en pánico.'},{lang:'ja',image:'写真を受け取りました。',join:'がチャットに参加しました。',quit:'はチャットを辞めました。',panic:'はパニックになった。'}]
+var translate = [{lang:'fr',image:'Vous avez reçu une image.',join:' a rejoint le tchat.',quit:' a quitté le tchat.',panic:' a paniqué.',fail:'Vous avez été déconnectés.'},{lang:'en',image:'You have received a picture.',join:' joined in.',quit:' left the chat.',panic:' panicked.',fail:'You have been disconnected.'},{lang:'de',image:'Sie haben ein Bild erhalten.',join:' ist dem Chat beigetreten.',quit:' verließ den Chat.',panic:' geriet in Panik.',fail:'Ihre Verbindung wurde getrennt.'},{lang:'es',image:'Usted ha recibido una imagen.',join:' se unió a la charla.',quit:' dejó la conversación.',panic:' entró en pánico.',fail:'Usted ha sido desconectado.'},{lang:'ja',image:'写真を受け取りました。',join:'がチャットに参加しました。',quit:'はチャットを辞めました。',panic:'はパニックになった。',fail:'サーバーから切断されていました。'}]
 var ttsVolume = 1
 
 var soundStates = ['off','up','commenting']
@@ -77,6 +77,7 @@ var loginsound = new Audio('./audio/signin.mp3')
 var logoutsound = new Audio('./audio/signout.mp3')
 var ahsound = new Audio('./audio/ah.mp3')
 var panicsound = new Audio('./audio/ah.mp3')
+var failsound = new Audio('./audio/fail.mp3')
 
 // if server requests a change in the nickname
 socket.on('set_nickname', function(new_nickname){
@@ -254,6 +255,22 @@ socket.on('disconnect', function(){
 	messageFromServer('<b>WARNING:</b> lost connexion with server.')
 	messageFromServer('try <a href="/">refreshing</a> the page, or wait for server to reconnect.')
 	selectConnected('all')
+	var sound = soundFromIcon()
+	if (sound==='up') {
+		failsound.play()
+	} else if (sound==='commenting') {
+		if ('speechSynthesis' in window) {
+			var fail = 'You have been disconnected.'
+			translate.forEach(function(le) {
+				if (findVoice(selectedVoice)&&findVoice(selectedVoice).lang.indexOf(le.lang)!=-1&&le.fail) {
+					fail = le.fail
+				}
+			})
+			sayAloud(fail)
+		} else {
+			failsound.play()
+		}
+	}
 })
 
 socket.on('connect', function(){
