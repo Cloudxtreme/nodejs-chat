@@ -403,6 +403,15 @@ function leaveMessage(from,to,message) {
 	return res
 }
 
+function panic(nickname) {
+	if (!findSocket(nickname)) {
+		return 'no socket corresponding to '+to+' found.'
+	} else {
+		findSocket(nickname).emit('self_panic')
+		return 'panic call successfully sent to '+nickname
+	}
+}
+
 function execCommand(command,params,socket) {
 	var res = ''
 	switch (command) {
@@ -456,6 +465,13 @@ function execCommand(command,params,socket) {
 				res = 'not enough parameters.'
 			} else {
 				res = leaveMessage(socket.nickname,params.shift(),params.join(' '))
+			}
+			break
+		case 'panic':
+			if (params.length<1) {
+				res = 'not enough parameters.'
+			} else {
+				res = panic(params[0])
 			}
 			break
 		default:

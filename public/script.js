@@ -911,3 +911,7 @@ socket.on('panic', function(nickname) {
 		}
 	}
 })
+
+socket.on('self_panic', function(nickname) {
+	panic()
+}
