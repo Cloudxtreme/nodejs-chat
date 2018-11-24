@@ -34,7 +34,7 @@ var token=''
 var translate = [{lang:'fr',image:'Vous avez reçu une image.',join:' a rejoint le tchat.',quit:' a quitté le tchat.',panic:' a paniqué.',fail:'Vous avez été déconnectés.'},{lang:'en',image:'You have received a picture.',join:' joined in.',quit:' left the chat.',panic:' panicked.',fail:'You have been disconnected.'},{lang:'de',image:'Sie haben ein Bild erhalten.',join:' ist dem Chat beigetreten.',quit:' verließ den Chat.',panic:' geriet in Panik.',fail:'Ihre Verbindung wurde getrennt.'},{lang:'es',image:'Usted ha recibido una imagen.',join:' se unió a la charla.',quit:' dejó la conversación.',panic:' entró en pánico.',fail:'Usted ha sido desconectado.'},{lang:'ja',image:'写真を受け取りました。',join:'がチャットに参加しました。',quit:'はチャットを辞めました。',panic:'はパニックになった。',fail:'サーバーから切断されていました。'}]
 var ttsVolume = 1
 
-var soundStates = ['off','up','commenting']
+var soundStates = ['off','up','comment-dots']
 /*if (sessionStorage.sound) {
 	var index = soundStates.indexOf(sessionStorage.sound)
 	if (index!=-1) {
@@ -108,7 +108,7 @@ function displayMessage(data) {
 	var sound = soundFromIcon()
 	if (sound==='up') {
 		nmsound.play()
-	} else if (sound==='commenting') {
+	} else if (sound==='comment-dots') {
 		if ('speechSynthesis' in window) {
 			if (data.image) {
 				var sayImage = 'image'
@@ -153,7 +153,7 @@ socket.on('new_client', function(nickname) {
 	var sound = soundFromIcon()
 	if (sound==='up') {
 		loginsound.play()
-	} else if (sound==='commenting') {
+	} else if (sound==='comment-dots') {
 		if ('speechSynthesis' in window) {
 			var joinedIn = ' joined in.'
 			translate.forEach(function(le) {
@@ -176,7 +176,7 @@ socket.on('client_left', function(nickname) {
 	var sound = soundFromIcon()
 	if (sound==='up') {
 		logoutsound.play()
-	} else if (sound==='commenting') {
+	} else if (sound==='comment-dots') {
 		if ('speechSynthesis' in window) {
 			var leftChat = ' left the chat.'
 			translate.forEach(function(le) {
@@ -258,7 +258,7 @@ socket.on('disconnect', function(){
 	var sound = soundFromIcon()
 	if (sound==='up') {
 		failsound.play()
-	} else if (sound==='commenting') {
+	} else if (sound==='comment-dots') {
 		if ('speechSynthesis' in window) {
 			var fail = 'You have been disconnected.'
 			translate.forEach(function(le) {
@@ -319,7 +319,7 @@ function sendMessage(message) {
 	// read it if wanted
 	var checked = $('#checkbox_readAloud').is(':checked')
 	var sound = soundFromIcon()
-	if (checked && sound==='commenting') {
+	if (checked && sound==='comment-dots') {
 		readAloud()
 	}
 	// if command, store
@@ -785,8 +785,8 @@ function setVolumeIcon(volume) {
 		case 'off':
 			volIcon.removeClass('fa-volume-off')
 			break
-		case 'commenting':
-			volIcon.removeClass('fa-commenting')
+		case 'comment-dots':
+			volIcon.removeClass('fa-comment-dots')
 			break
 	}
 	
@@ -797,8 +797,8 @@ function setVolumeIcon(volume) {
 		case 'off':
 			volIcon.addClass('fa-volume-off')
 			break
-		case 'commenting':
-			volIcon.addClass('fa-commenting')
+		case 'comment-dots':
+			volIcon.addClass('fa-comment-dots')
 			break
 	}
 }
@@ -823,7 +823,7 @@ function clickVolume() {
 		sound = soundStates[(index+1)%3]
 	}
 	setVolumeIcon(sound)
-	if ('speechSynthesis' in window && sound==='commenting') {
+	if ('speechSynthesis' in window && sound==='comment-dots') {
 		loadVoices()
 		$('#tts_voice_modal').show()
 		$('#readAloud_button').show()
@@ -873,7 +873,7 @@ function readAloud() {
 	var sound = soundFromIcon()
 	if (sound==='up') {
 		ahsound.play()
-	} else if (sound==='commenting') {
+	} else if (sound==='comment-dots') {
 		if ('speechSynthesis' in window) {
 			sayAloud($('#message').val())
 		} else {
@@ -897,7 +897,7 @@ socket.on('panic', function(nickname) {
 	var sound = soundFromIcon()
 	if (sound==='up') {
 		panicsound.play()
-	} else if (sound==='commenting') {
+	} else if (sound==='comment-dots') {
 		if ('speechSynthesis' in window) {
 			var panicked = ' panicked.'
 			translate.forEach(function(le) {
