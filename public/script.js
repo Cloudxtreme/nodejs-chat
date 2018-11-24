@@ -302,9 +302,9 @@ socket.on('typing',function (typing_nick) {
 		// TODO: if typing_nick = old typing_nick, ...
 		clearTimeout(timeout)
 	}
-	$('#li_'+typing_nick+' .fa-keyboard-o').show()
+	$('#li_'+typing_nick+' .fa-keyboard').show()
 	timeout = setTimeout(function () {
-		$('#li_'+typing_nick+' .fa-keyboard-o').hide()
+		$('#li_'+typing_nick+' .fa-keyboard').hide()
 	},1500)
 })
 
@@ -536,7 +536,7 @@ function displayList() {
 		} else {
 			res += '  <i class="fa fa-arrow-right" aria-hidden="true" style="display: none"></i> '
 		}
-		res += '  <i class="fa fa-keyboard-o" aria-hidden="true" style="display: none"></i> '
+		res += '  <i class="fa fa-keyboard" aria-hidden="true" style="display: none"></i> '
 		res += '</li>'
 	})
 	res += '</ul>'
