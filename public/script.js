@@ -64,6 +64,8 @@ if (sessionStorage.advanced) {
 	if (privkey&&pubkey&&privkey.startsWith('-----BEGIN PGP PRIVATE KEY BLOCK-----')&&pubkey.startsWith('-----BEGIN PGP PUBLIC KEY BLOCK-----')) {
 		$('#key').attr('src','/img/keyok.png')
 		socket.emit('pubkey',pubkey)
+	} else {
+		genKey()
 	}
 } else {
 	$('.keyarea').hide()
