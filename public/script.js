@@ -907,6 +907,14 @@ function findVoice(voice) {
 	}
 }
 
+$('#volume_button').contextmenu(function(e) {
+	if (soundFromIcon()==='comment-dots') {
+		e.preventDefault()
+		loadVoices()
+		$('#tts_voice_modal').show()
+	}
+})
+
 function readAloud() {
 	var sound = soundFromIcon()
 	if (sound==='up') {
