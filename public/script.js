@@ -568,14 +568,15 @@ function focus() {
 	document.title = nickname + ' - ' + title
 	$('#afk').css('color', 'green')
 	socket.emit('afk',false)
-	
+	afk = false
+	isBottom = $(window).scrollTop() + $(window).height() == $(document).height()
 	if (isBottom) {
 		toRead.forEach(function (_nickname) {
 			socket.emit('read',_nickname)
 		})
 		toRead = []
 		$('#unread_messages').hide()
-		$('.unread-alert:visible').hide()
+		$('.unread-alert').remove()
 	}
 }
 
@@ -778,15 +779,18 @@ function checkAFK() {
 	afk=!document.hasFocus()
 	if (afk) {
 		$('#afk').css('color', 'orange')
-		if (!old_afk&&$('.unread-alert:visible').size()==0) {
-			if ($(window).scrollTop()>0) {
-				isBottom = false
-			}
+		if ($(window).scrollTop()>0) {
+			isBottom = false
+		}
+		if (!old_afk&&$('.unread-alert').size()==0) {
 			$('#chat_zone').append('<div class="w3-panel w3-blue w3-display-container unread-alert"><p>Unread messages below.</p>'+
 				'<span onclick="this.parentElement.style.display=\'none\'"class="w3-button w3-large w3-display-topright">&times;</span></div>')
 		}
 	} else {
 		$('#afk').css('color', 'green')
+		if (old_afk) {
+			focus()
+		}
 	}
 	socket.emit('afk',afk)
 }
@@ -993,7 +997,7 @@ $(window).scroll(function() {
 	isBottom = $(window).scrollTop() + $(window).height() == $(document).height()
 	if (isBottom) {
 		$('#unread_messages').hide()
-		$('.unread-alert:visible').hide()
+		$('.unread-alert').remove()
 		unread = 0
 		toRead.forEach(function (_nickname) {
 			socket.emit('read',_nickname)
