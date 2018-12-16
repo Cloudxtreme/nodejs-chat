@@ -1,5 +1,9 @@
 var old_nickname = sessionStorage.nickname
 var old_advanced = sessionStorage.advanced
+var old_sound
+if (sessionStorage.sound) {
+	old_sound = JSON.parse(sessionStorage.sound)
+}
 var hadpw = false
 if (sessionStorage.password) {
 	hadpw = true
@@ -59,6 +63,7 @@ function login() {
 			var response = JSON.parse(this.responseText)
 			console.log(response)
 			if (response.logOK) {
+				sessionStorage.sound = JSON.stringify(old_sound)
 				window.location = '/'
 			} else {
 				$('#login_err').text('Server rejected your request: '+response.reason)

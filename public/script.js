@@ -35,17 +35,27 @@ var translate = [{lang:'fr',image:'Vous avez reçu une image.',join:' a rejoint 
 var ttsVolume = 1
 
 var soundStates = ['off','up','comment-dots']
-/*if (sessionStorage.sound) {
-	var index = soundStates.indexOf(sessionStorage.sound)
+var selectedVoice = ''
+$('#readAloud_button').hide()
+if (sessionStorage.sound) {
+	// sound = {state:x,voice:'',volume:1,ros:true}
+	var sound = JSON.parse(sessionStorage.sound)
+	var index = soundStates.indexOf(sound.state)
 	if (index!=-1) {
 		var volume = soundStates[index]
 		setVolumeIcon(volume)
+		if (sound.volume) {
+			ttsVolume = sound.volume/10
+			$('#volume_voice').val(sound.volume)
+		}
+		if (sound.voice) {
+			selectedVoice = sound.voice
+		}
+		if (sound.ros) {
+			$('#checkbox_readAloud').prop('checked',true)
+		}
 	}
 }
-TODO: restore selectedVoice as well
-*/
-var selectedVoice = ''
-$('#readAloud_button').hide()
 
 if (!nickname) {
 	window.location = '/login'
@@ -832,7 +842,17 @@ function clickVolume() {
 	} else {
 		$('#readAloud_button').hide()
 	}
-	sessionStorage.sound = sound
+	var tmpSound = {state:sound}
+	if (selectedVoice) {
+		tmpSound.voice = selectedVoice
+	}
+	if ($('#checkbox_readAloud').is(':checked')) {
+		tmpSound.ros = true
+	}
+	if (ttsVolume) {
+		tmpSound.volume = ttsVolume*10
+	}
+	sessionStorage.sound = JSON.stringify(tmpSound)
 }
 
 function decodeHTML(text) {
@@ -847,17 +867,33 @@ function loadVoices() {
 		allVoices.forEach(function(voice) {
 			$('#select_voices').append('<option value="'+voice.voiceURI+'">'+voice.name+'</option>')
 		})
+		if (selectedVoice) {
+			$('#select_voices').val(selectedVoice)
+		}
 	}
 }
 
 $('#select_voices').change(function() {
 	selectedVoice = $('#select_voices option:selected').val()
+	var tmpSound = JSON.parse(sessionStorage.sound)
+	tmpSound.voice = selectedVoice
+	sessionStorage.sound = JSON.stringify(tmpSound)
 	$('#tts_voice_modal').hide()
 })
 
 $('#volume_voice').change(function() {
 	ttsVolume = $('#volume_voice').val()/10
+	var tmpSound = JSON.parse(sessionStorage.sound)
+	tmpSound.volume = $('#volume_voice').val()
+	sessionStorage.sound = JSON.stringify(tmpSound)
 })
+
+function rosChange() {
+	var checked = $('#checkbox_readAloud').is(':checked')
+	var tmpSound = JSON.parse(sessionStorage.sound)
+	tmpSound.ros = checked
+	sessionStorage.sound = JSON.stringify(tmpSound)
+}
 
 loadVoices()
 
