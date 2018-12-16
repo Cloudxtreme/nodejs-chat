@@ -30,7 +30,7 @@
       <div id="nickname_tag" class="w3-bar-item w3-right"><span class="w3-hide-small">You are </span><b><span id="nickname">client-x</span></b><span class="w3-hide-small">.</span></div>
       <div id="afk" class="w3-bar-item w3-right" style="color: green" onclick="$('#connected').toggle()"><i class="fa fa-circle" aria-hidden="true"><span class="w3-hide-small"> Connected users</span></i></div>
       <div class="w3-dropdown-hover w3-right keyarea">
-        <div class="w3-bar-item w3-hover-gray"><img src="/img/keyko.png" id="key" class="keyarea" height="20" width="20" hidden onclick="showkey()"></div>
+        <div class="w3-bar-item w3-hover-gray"><img src="/img/keyko.png" id="key" class="keyarea" height="20" width="20" onclick="showkey()"></div>
         <div class="w3-dropdown-content w3-bar-block w3-card-4 w3-light-gray" style="margin-top: 35px">
           <button id="genkey" class="w3-bar-item w3-button" onclick="genKey()">Generate key</button>
           <button class="w3-bar-item w3-button" onclick="genKeyNode()">Get key from local server</button>
@@ -84,6 +84,11 @@
     </section>
     
     <footer id="chat_form" class="w3-bar w3-bottom w3-border w3-light-gray">
+      <div id="unread_messages" class="w3-panel w3-green w3-display-container">
+        <p><span id="unr_count">0</span> unread messages</p>
+        <span onclick="this.parentElement.style.display='none'"
+        class="w3-button w3-large w3-display-topright">&times;</span>
+      </div>
       <input class="w3-bar-item w3-input" type="text" name="message" id="message" placeholder="Type your message here..." size="60" autofocus onkeydown="pressKey(event)" oninput="inputChange()" onfocus="inputChange()"/>
       <button class="w3-bar-item w3-button w3-teal w3-ripple w3-right w3-hide-small" onclick="send()">Send</button>
       <button id="upload_img" class="w3-bar-item w3-button w3-teal w3-ripple w3-right w3-hide-small" onclick="uploadImage()" hidden>Upload image</button>

@@ -57,6 +57,9 @@ if (sessionStorage.sound) {
 	}
 }
 
+var isBottom = true
+var unread = 0
+
 if (!nickname) {
 	window.location = '/login'
 } else if (sessionStorage.password) {
@@ -139,7 +142,7 @@ function displayMessage(data) {
 		}
 	}
 	// read
-	if (document.hasFocus()) {
+	if (document.hasFocus()&&isBottom) {
 		socket.emit('read',data.nickname)
 	} else {
 		toRead.push(data.nickname)
@@ -151,6 +154,10 @@ socket.on('message', function(data) {
 		decrypt(data)
 	} else {
 		displayMessage(data)
+	}
+	if (!isBottom || afk) {
+		$('#unr_count').text(++unread)
+		$('#unread_messages').show()
 	}
 })
 
@@ -435,6 +442,9 @@ function escapeHtml(unsafe) {
 
 // add a message in the page
 function scrollDown() {
+	if (!isBottom || afk) {
+		return
+	}
 	var n = $(document).height()
 	$('html, body').animate({ scrollTop: n }, 50)
 }
@@ -558,10 +568,15 @@ function focus() {
 	document.title = nickname + ' - ' + title
 	$('#afk').css('color', 'green')
 	socket.emit('afk',false)
-	toRead.forEach(function (_nickname) {
-		socket.emit('read',_nickname)
-	})
-	toRead = []
+	
+	if (isBottom) {
+		toRead.forEach(function (_nickname) {
+			socket.emit('read',_nickname)
+		})
+		toRead = []
+		$('#unread_messages').hide()
+		$('.unread-alert:visible').hide()
+	}
 }
 
 function setNickname() {
@@ -759,9 +774,17 @@ socket.on('afk', function(data){
 })
 
 function checkAFK() {
+	var old_afk = afk
 	afk=!document.hasFocus()
 	if (afk) {
 		$('#afk').css('color', 'orange')
+		if (!old_afk&&$('.unread-alert:visible').size()==0) {
+			if ($(window).scrollTop()>0) {
+				isBottom = false
+			}
+			$('#chat_zone').append('<div class="w3-panel w3-blue w3-display-container unread-alert"><p>Unread messages below.</p>'+
+				'<span onclick="this.parentElement.style.display=\'none\'"class="w3-button w3-large w3-display-topright">&times;</span></div>')
+		}
 	} else {
 		$('#afk').css('color', 'green')
 	}
@@ -961,4 +984,20 @@ socket.on('panic', function(nickname) {
 
 socket.on('self_panic', function(nickname) {
 	panic()
+})
+
+// scroll
+$('#unread_messages').hide()
+
+$(window).scroll(function() { 
+	isBottom = $(window).scrollTop() + $(window).height() == $(document).height()
+	if (isBottom) {
+		$('#unread_messages').hide()
+		$('.unread-alert:visible').hide()
+		unread = 0
+		toRead.forEach(function (_nickname) {
+			socket.emit('read',_nickname)
+		})
+		toRead = []
+	}
 })
