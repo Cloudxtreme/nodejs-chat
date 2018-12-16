@@ -63,7 +63,9 @@ function login() {
 			var response = JSON.parse(this.responseText)
 			console.log(response)
 			if (response.logOK) {
-				sessionStorage.sound = JSON.stringify(old_sound)
+				if (old_sound) {
+					sessionStorage.sound = JSON.stringify(old_sound)
+				}
 				window.location = '/'
 			} else {
 				$('#login_err').text('Server rejected your request: '+response.reason)
