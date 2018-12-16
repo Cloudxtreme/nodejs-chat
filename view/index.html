@@ -83,12 +83,13 @@
 
     </section>
     
+    <div id="unread_messages" class="w3-panel w3-green w3-display-container w3-display-bottomright" style="transform: translateY(-50px)">
+      <p><span id="unr_count">0</span> unread messages</p>
+      <span onclick="this.parentElement.style.display='none'"
+      class="w3-button w3-large w3-display-topright">&times;</span>
+    </div>
+
     <footer id="chat_form" class="w3-bar w3-bottom w3-border w3-light-gray">
-      <div id="unread_messages" class="w3-panel w3-green w3-display-container">
-        <p><span id="unr_count">0</span> unread messages</p>
-        <span onclick="this.parentElement.style.display='none'"
-        class="w3-button w3-large w3-display-topright">&times;</span>
-      </div>
       <input class="w3-bar-item w3-input" type="text" name="message" id="message" placeholder="Type your message here..." size="60" autofocus onkeydown="pressKey(event)" oninput="inputChange()" onfocus="inputChange()"/>
       <button class="w3-bar-item w3-button w3-teal w3-ripple w3-right w3-hide-small" onclick="send()">Send</button>
       <button id="upload_img" class="w3-bar-item w3-button w3-teal w3-ripple w3-right w3-hide-small" onclick="uploadImage()" hidden>Upload image</button>

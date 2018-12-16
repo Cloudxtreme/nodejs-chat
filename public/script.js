@@ -783,8 +783,8 @@ function checkAFK() {
 			isBottom = false
 		}
 		if (!old_afk&&$('.unread-alert').size()==0) {
-			$('#chat_zone').append('<div class="w3-panel w3-blue w3-display-container unread-alert"><p>Unread messages below.</p>'+
-				'<span onclick="this.parentElement.style.display=\'none\'"class="w3-button w3-large w3-display-topright">&times;</span></div>')
+			$('#chat_zone').append('<div class="w3-panel w3-blue w3-display-container w3-left unread-alert"><p>Unread messages below.</p>'+
+				'<span onclick="this.parentElement.style.display=\'none\'"class="w3-button w3-large w3-display-topright">&times;</span></div><br class="unread-alert"><br class="unread-alert"><br class="unread-alert"><br class="unread-alert">')
 		}
 	} else {
 		$('#afk').css('color', 'green')
