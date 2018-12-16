@@ -77,6 +77,7 @@ if (sessionStorage.advanced) {
 	} else {
 		genKey()
 	}
+	$('#nickname_tag').addClass('w3-hide-small')
 } else {
 	$('.keyarea').hide()
 }
